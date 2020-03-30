@@ -1,6 +1,6 @@
 import random
 import pygame
-from grid import World
+from grid import TileGrid
 from entity import Entity
 
 
@@ -10,7 +10,7 @@ pygame.init()
 screen = pygame.display.set_mode((1920,1080))
 pygame.display.set_caption("gaylord")
 
-world = World(64, 64+32)
+world = TileGrid(int(1080 / 32), int(1920 / 32))
 character = Entity()
 
 clock = pygame.time.Clock()

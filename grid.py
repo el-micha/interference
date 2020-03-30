@@ -38,13 +38,14 @@ class Tilemap:
 
 
 # holds grid of tile ids.
-class World:
+class TileGrid:
 
     def __init__(self, width, height):
         # grid holds tile IDs
-        self.grid = [[random.choice([0,1,2,3]) for x in range(width)] for y in range(height)]
+        tiles = [13,14,25,26]
+        self.grid = [[random.choice(tiles) for x in range(width)] for y in range(height)]
         self.tilemap = Tilemap("art")
-        self.tile_size = 16 # todo: get this from tilemap obj
+        self.tile_size = 32 # todo: get this from tilemap obj
 
     def draw(self, surface):
         for i, line in enumerate(self.grid):

@@ -43,7 +43,7 @@ class ID:
 
 
 class Entity:
-    def __init__(self, x=16, y=16):
+    def __init__(self, x=32, y=32):
         self.id = ID.request_id(self)
         self.x = x
         self.y = y
@@ -53,6 +53,6 @@ class Entity:
         self.y += dy
 
     def draw(self, surface):
-        print("entity default draw. overwrite")
-        pygame.draw.rect(surface, (200, 100, 200), pygame.Rect(self.x, self.y, 16, 16))
+        #print("entity default draw. overwrite")
+        pygame.draw.rect(surface, (200, 100, 200), pygame.Rect(self.x, self.y, 32, 32))
 
