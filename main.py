@@ -32,7 +32,7 @@ class Game:
 
         # visual stuff
         self.do_highlight = True
-        self.highlight = pygame.image.load("art/90_highlight.png")
+        self.highlight = pygame.image.load("art/91_highlight2.png")
         self.do_point = settings.DEBUG_MODE
 
     def run(self):
@@ -65,7 +65,7 @@ class Game:
         self.character.draw(self.surface)
         mx, my = pygame.mouse.get_pos()
         if self.do_highlight:
-            self.surface.blit(self.highlight, (int(mx/32)*32, int(my/32)*32))
+            self.surface.blit(self.highlight, (int(mx/32)*32 - 64 + 16, int(my/32)*32 - 64 + 16))
         if self.do_point:
             pygame.draw.line(self.surface, (255, 255, 0), (self.character.x + 16, self.character.y + 16 ), pygame.mouse.get_pos(), 1)
         pygame.display.update()
