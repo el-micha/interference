@@ -16,11 +16,6 @@ need components:
 - controllers: characters by players and AI, robots by scripts
 - entity guis for robots, machines, factories, vehicles
 - physics, maybe (flying bullets)
--
-
-
-
-
 
 """
 
@@ -44,8 +39,9 @@ class ID:
 
 
 class Entity:
-    def __init__(self, x=None, y=None):
+    def __init__(self, game, x=None, y=None):
         self.id = ID.request_id(self)
+        self.game = game
         self.x = x
         self.y = y
         self.is_blocking = True
@@ -53,9 +49,31 @@ class Entity:
         self.art_id = 0
         self.size = default.TILE_SIZE
 
-    def move(self, dx, dy):
-        self.x += dx
-        self.y += dy
+    def move(self, dx, dy, require_valid_move=True):
+        if not require_valid_move or self.is_valid_move(dx, dy):
+            self.x += dx
+            self.y += dy
+
+    def is_valid_move(self, dx, dy):
+        new_x = self.x + dx
+        new_y = self.y + dy
+
+        r = int(self.size / 2) - 1
+        above = self.game.world.get_tile(new_x, new_y - r)
+        below = self.game.world.get_tile(new_x, new_y + r)
+        right = self.game.world.get_tile(new_x + r, new_y)
+        left = self.game.world.get_tile(new_x - r, new_y)
+
+        if above and above.is_blocking:
+            return False
+        elif below and below.is_blocking:
+            return False
+        elif right and right.is_blocking:
+            return False
+        elif left and left.is_blocking:
+            return False
+
+        return True
 
     def draw(self, surface):
         # print("entity default draw. overwrite")

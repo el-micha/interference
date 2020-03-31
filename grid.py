@@ -60,7 +60,8 @@ class TileGrid:
     Holds grid of tiles.
     """
 
-    def __init__(self, width, height):
+    def __init__(self, game, width, height):
+        self.game = game
         self.width = width
         self.height = height
         self.grid = None
@@ -77,7 +78,7 @@ class TileGrid:
         for i, line in enumerate(grid_mapping):
             for j, tile_type in enumerate(line):
                 x, y = self.__grid_to_coords__(i, j)
-                self.grid[i][j] = tile_type(x, y)
+                self.grid[i][j] = tile_type(self.game, x, y)
 
     def draw(self, surface):
         for i, line in enumerate(self.grid):
@@ -88,12 +89,33 @@ class TileGrid:
                     art_id = 0
                 surface.blit(self.tile_mapping.get(art_id), (i * self.tile_size, j * self.tile_size))
 
+    def get_tile(self, x, y):
+        i, j = self.__coords_to_grid__(x, y)
+
+        if not self.__is_in_grid__(i, j):
+            return None
+
+        return self.grid[i][j]
+
     def set_tile(self, tile, x, y):
         i, j = self.__coords_to_grid__(x, y)
+
+        if not self.__is_in_grid__(i, j):
+            return
+
         self.grid[i][j] = tile
 
     def remove_tile(self, x, y):
         self.set_tile(None, x, y)
+
+    def __is_in_grid__(self, i, j):
+        if i < 0 or i >= self.height:
+            return False
+
+        if j < 0 or j >= self.width:
+            return False
+
+        return True
 
     @staticmethod
     def __coords_to_grid__(x, y):

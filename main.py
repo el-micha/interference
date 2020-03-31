@@ -15,13 +15,14 @@ class Game:
 
         # pygame stuff
         pygame.init()
-        self.surface = pygame.display.set_mode((1920,1080))
+        self.surface = pygame.display.set_mode((1920, 1080))
         pygame.display.set_caption("inter B=====D ference")
         self.clock = pygame.time.Clock()
 
         # game stuff ...
-        self.world = TileGrid(int(1080 / default.TILE_SIZE), int(1920 / default.TILE_SIZE))
-        self.character = Character(x=default.TILE_SIZE, y=default.TILE_SIZE)
+        self.world = TileGrid(self, int(1080 / default.TILE_SIZE), int(1920 / default.TILE_SIZE))
+        self.character = Character(self, x=default.TILE_SIZE + int(default.TILE_SIZE / 2),
+                                   y=default.TILE_SIZE + int(default.TILE_SIZE / 2))
         self.world.remove_tile(self.character.x, self.character.y)
 
         # simulation stuff
@@ -65,9 +66,10 @@ class Game:
         self.character.draw(self.surface)
         mx, my = pygame.mouse.get_pos()
         if self.do_highlight:
-            self.surface.blit(self.highlight, (int(mx/32)*32 - 64 + 16, int(my/32)*32 - 64 + 16))
+            self.surface.blit(self.highlight, (int(mx / 32) * 32 - 64 + 16, int(my / 32) * 32 - 64 + 16))
         if self.do_point:
-            pygame.draw.line(self.surface, (255, 255, 0), (self.character.x + 16, self.character.y + 16 ), pygame.mouse.get_pos(), 1)
+            pygame.draw.line(self.surface, (255, 255, 0), (self.character.x + 16, self.character.y + 16),
+                             pygame.mouse.get_pos(), 1)
         pygame.display.update()
 
 
