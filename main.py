@@ -21,7 +21,7 @@ class Game:
         # game stuff ...
         self.world = TileGrid(int(1080 / default.TILE_SIZE), int(1920 / default.TILE_SIZE))
         self.character = Character(x=default.TILE_SIZE, y=default.TILE_SIZE)
-        self.world.remove_tile(default.TILE_SIZE * 4, default.TILE_SIZE * 4)
+        self.world.remove_tile(self.character.x, self.character.y)
 
         # simulation stuff
         self.running = True
@@ -66,7 +66,7 @@ class Game:
         if self.do_highlight:
             self.surface.blit(self.highlight, (int(mx/32)*32, int(my/32)*32))
         if self.do_point:
-            pygame.draw.line(self.surface, (255, 255, 0), (self.character.x, self.character.y), pygame.mouse.get_pos(), 1)
+            pygame.draw.line(self.surface, (255, 255, 0), (self.character.x + 16, self.character.y + 16 ), pygame.mouse.get_pos(), 1)
         pygame.display.update()
 
 

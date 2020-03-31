@@ -20,6 +20,12 @@ class EventHandler:
         if pressed[pygame.K_RIGHT] or pressed[pygame.K_d]:
             self.game.character.move(4, 0)
 
-        if pygame.mouse.get_pressed()[0]:
-            x, y = pygame.mouse.get_pos()
-            self.game.world.remove_tile(x, y)
+        mouse_up_events = [event for event in events if event.type == pygame.MOUSEBUTTONUP]
+        if len(mouse_up_events) > 0:
+            last = mouse_up_events[-1]
+            if last.button == 1:
+                mx, my = last.pos
+                self.game.world.remove_tile(mx, my)
+
+
+
