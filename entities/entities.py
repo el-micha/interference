@@ -1,4 +1,3 @@
-
 import pygame
 
 """
@@ -23,6 +22,7 @@ need components:
 
 """
 
+
 class ID:
     """Hands out unique ids and stores all id-d entities sorted by type"""
     id_counter = -1
@@ -41,18 +41,18 @@ class ID:
         return ID.id_counter
 
 
-
 class Entity:
     def __init__(self, x=32, y=32):
         self.id = ID.request_id(self)
         self.x = x
         self.y = y
+        self.is_blocking = True
+        self.color = (0, 0, 0)
 
     def move(self, dx, dy):
         self.x += dx
         self.y += dy
 
     def draw(self, surface):
-        #print("entity default draw. overwrite")
-        pygame.draw.rect(surface, (200, 100, 200), pygame.Rect(self.x, self.y, 32, 32))
-
+        # print("entity default draw. overwrite")
+        pygame.draw.rect(surface, self.color, pygame.Rect(self.x, self.y, 32, 32))

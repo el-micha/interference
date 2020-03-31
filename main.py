@@ -1,8 +1,9 @@
 import random
 import pygame
 from grid import TileGrid
-from entity import Entity
+from entities.characters import Character
 from event import EventHandler
+
 
 class Game:
     def __init__(self):
@@ -18,7 +19,7 @@ class Game:
 
         # game stuff ...
         self.world = TileGrid(int(1080 / 32), int(1920 / 32))
-        self.character = Entity()
+        self.character = Character()
 
         # simulation stuff
         self.running = True
