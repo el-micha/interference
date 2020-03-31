@@ -56,7 +56,7 @@ class Game:
             self.clock.tick(30)
 
     def gameloop(self):
-        pass
+        self.character.tick(self.tick)
 
     def draw(self):
         self.surface.fill((0, 0, 0))
