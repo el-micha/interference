@@ -3,6 +3,7 @@ import pygame
 
 import default
 import noise
+import settings
 
 from entities.resources import Stone, Cole, Silver
 
@@ -63,7 +64,7 @@ class TileGrid:
         self.width = width
         self.height = height
         self.grid = None
-        self.tile_mapping = TileMapping("art")
+        self.tile_mapping = TileMapping(settings.ART_DIR)
         self.tile_size = default.TILE_SIZE
 
         self.generate_tiles()
@@ -99,16 +100,3 @@ class TileGrid:
         for line in self.grid:
             s += " ".join(map(str, line)) + "\n"
         return s
-
-
-# tests
-if False:
-    w = World(10, 10)
-
-    w.grid[3][3] = 1
-
-    print(w)
-
-    tilemap = Tilemap("art")
-    for k, v in tilemap.tilemap.items():
-        print(k, v)

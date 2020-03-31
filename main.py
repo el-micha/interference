@@ -1,6 +1,7 @@
 import pygame
 
 import default
+import settings
 from grid import TileGrid
 from entities.characters import Character
 from event import EventHandler
@@ -29,10 +30,10 @@ class Game:
         self.event_handler = EventHandler(self)
         self.tick = 0
 
-        #visual stuff
+        # visual stuff
         self.do_highlight = True
         self.highlight = pygame.image.load("art/90_highlight.png")
-        self.do_point = True
+        self.do_point = settings.DEBUG_MODE
 
     def run(self):
         while self.running:
