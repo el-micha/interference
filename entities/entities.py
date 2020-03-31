@@ -1,5 +1,7 @@
 import pygame
 
+import default
+
 """
 Design outline
 
@@ -49,6 +51,7 @@ class Entity:
         self.is_blocking = True
         self.color = (0, 0, 0)
         self.art_id = 0
+        self.size = default.TILE_SIZE
 
     def move(self, dx, dy):
         self.x += dx
