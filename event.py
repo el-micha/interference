@@ -19,6 +19,9 @@ class EventHandler:
             self.game.character.move(-4, 0)
         if pressed[pygame.K_RIGHT] or pressed[pygame.K_d]:
             self.game.character.move(4, 0)
+        if pressed[pygame.K_ESCAPE]:
+            # FIXME: Show menu instead of exiting game
+            exit()
 
         mouse_up_events = [event for event in events if event.type == pygame.MOUSEBUTTONUP]
         if len(mouse_up_events) > 0:
