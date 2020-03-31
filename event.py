@@ -10,11 +10,11 @@ class EventHandler:
                 self.game.quit = True
             print(event)
         pressed = pygame.key.get_pressed()
-        if pressed[pygame.K_UP]:
+        if pressed[pygame.K_UP] or pressed[pygame.K_w]:
             self.game.character.move(0, -4)
-        if pressed[pygame.K_DOWN]:
+        if pressed[pygame.K_DOWN] or pressed[pygame.K_s]:
             self.game.character.move(0, 4)
-        if pressed[pygame.K_LEFT]:
+        if pressed[pygame.K_LEFT] or pressed[pygame.K_a]:
             self.game.character.move(-4, 0)
-        if pressed[pygame.K_RIGHT]:
+        if pressed[pygame.K_RIGHT] or pressed[pygame.K_d]:
             self.game.character.move(4, 0)
