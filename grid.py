@@ -1,15 +1,19 @@
-
-import random
 import os
 import pygame
+
+import default
 import noise
 
-class Tilemap:
+from entities.resources import Stone, Cole, Silver
+
+
+class TileMapping:
     """
     Loads images from a directory and creates an id:image map.
     Expects images in the directory to contain their id as a prefix of the form "01_" as in "01_background.png
     Also expects there to be at least a default image with prefix 0_"
     """
+
     def __init__(self, art_directory):
         if not pygame.get_init():
             pygame.init()
@@ -50,38 +54,51 @@ class Tilemap:
             return sizes
 
 
-
-# holds grid of tile ids.
 class TileGrid:
+    """
+    Holds grid of tiles.
+    """
 
     def __init__(self, width, height):
-        # grid holds tile IDs
+        self.width = width
+        self.height = height
+        self.grid = None
+        self.tile_mapping = TileMapping("art")
+        self.tile_size = default.TILE_SIZE
 
+        self.generate_tiles()
 
-        tiles = [13,14,25,26]
-        tiles = [2, 3, 15, 25, 26]
-        #tiles = [25,26]
-
-        grid = noise.smooth_noise(width, height, 3)
-        self.grid = noise.map_noise_to_ids(grid, tiles)
-
-        #self.grid = [[random.choice(tiles) for x in range(width)] for y in range(height)]
-        self.tilemap = Tilemap("art")
-        self.tile_size = 32 # todo: get this from tilemap obj
+    def generate_tiles(self):
+        tile_types = [Stone, Cole, Silver]
+        grid_noise = noise.smooth_noise(self.width, self.height, 3)
+        grid_mapping = noise.map_noise_to_ids(grid_noise, tile_types)
+        self.grid = [[tile_type() for tile_type in line] for line in grid_mapping]
 
     def draw(self, surface):
         for i, line in enumerate(self.grid):
-            for j, tile_id in enumerate(line):
-                surface.blit(self.tilemap.get(tile_id), (i * self.tile_size, j * self.tile_size))
+            for j, tile in enumerate(line):
+                if tile:
+                    art_id = tile.art_id
+                else:
+                    art_id = 0
+                surface.blit(self.tile_mapping.get(art_id), (i * self.tile_size, j * self.tile_size))
+
+    def set_tile(self, tile, x, y):
+        i, j = self.__coords_to_grid__(x, y)
+        self.grid[i][j] = tile
+
+    def remove_tile(self, x, y):
+        self.set_tile(None, x, y)
+
+    @staticmethod
+    def __coords_to_grid__(x, y):
+        return int(x / default.TILE_SIZE), int(y / default.TILE_SIZE)
 
     def __str__(self):
         s = ""
         for line in self.grid:
             s += " ".join(map(str, line)) + "\n"
         return s
-
-
-
 
 
 # tests
@@ -93,5 +110,5 @@ if False:
     print(w)
 
     tilemap = Tilemap("art")
-    for k,v in tilemap.tilemap.items():
+    for k, v in tilemap.tilemap.items():
         print(k, v)

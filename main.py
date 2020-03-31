@@ -1,5 +1,6 @@
-import random
 import pygame
+
+import default
 from grid import TileGrid
 from entities.characters import Character
 from event import EventHandler
@@ -14,12 +15,13 @@ class Game:
         # pygame stuff
         pygame.init()
         self.surface = pygame.display.set_mode((1920,1080))
-        pygame.display.set_caption("inter ~~~ ference")
+        pygame.display.set_caption("inter B=====D ference")
         self.clock = pygame.time.Clock()
 
         # game stuff ...
-        self.world = TileGrid(int(1080 / 32), int(1920 / 32))
-        self.character = Character()
+        self.world = TileGrid(int(1080 / default.TILE_SIZE), int(1920 / default.TILE_SIZE))
+        self.character = Character(x=default.TILE_SIZE, y=default.TILE_SIZE)
+        self.world.remove_tile(default.TILE_SIZE * 4, default.TILE_SIZE * 4)
 
         # simulation stuff
         self.running = True
@@ -66,16 +68,6 @@ class Game:
         if self.do_point:
             pygame.draw.line(self.surface, (255, 255, 0), (self.character.x, self.character.y), pygame.mouse.get_pos(), 1)
         pygame.display.update()
-
-    def get_mouse_tile(self):
-        #TODO: this needs to go into a helper class or sth
-        (x,y) = pygame.mouse.get_pos()
-        return self.world.grid[int(x/32)][int(y/32)]
-
-    def set_mouse_tile(self, id):
-        (x, y) = pygame.mouse.get_pos()
-        self.world.grid[int(x/32)][int(y/32)] = id
-
 
 
 if __name__ == "__main__":

@@ -1,5 +1,6 @@
 import pygame
 
+
 class EventHandler:
     def __init__(self, game):
         self.game = game
@@ -20,6 +21,5 @@ class EventHandler:
             self.game.character.move(4, 0)
 
         if pygame.mouse.get_pressed()[0]:
-            self.game.set_mouse_tile(0)
-
-
+            x, y = pygame.mouse.get_pos()
+            self.game.world.remove_tile(x, y)

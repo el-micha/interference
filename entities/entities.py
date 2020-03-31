@@ -42,12 +42,13 @@ class ID:
 
 
 class Entity:
-    def __init__(self, x=32, y=32):
+    def __init__(self, x=None, y=None):
         self.id = ID.request_id(self)
         self.x = x
         self.y = y
         self.is_blocking = True
         self.color = (0, 0, 0)
+        self.art_id = 0
 
     def move(self, dx, dy):
         self.x += dx
