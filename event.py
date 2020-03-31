@@ -19,6 +19,7 @@ class EventHandler:
         if pressed[pygame.K_RIGHT] or pressed[pygame.K_d]:
             self.game.character.move(4, 0)
 
-
+        if pygame.mouse.get_pressed()[0]:
+            self.game.set_mouse_tile(0)
 
 

@@ -67,14 +67,14 @@ class Game:
             pygame.draw.line(self.surface, (255, 255, 0), (self.character.x, self.character.y), pygame.mouse.get_pos(), 1)
         pygame.display.update()
 
-    # def get_mouse_tile(self):
-    #     #TODO: this needs to go into a helper class or sth
-    #     (x,y) = pygame.mouse.get_pos()
-    #     return self.world.tilemap[int(x/32)][int(y/32)]
-    #
-    # def set_mouse_tile(self, id):
-    #     (x, y) = pygame.mouse.get_pos()
-    #     self.world.tilemap[int(x/32)][int(y/32)] = id
+    def get_mouse_tile(self):
+        #TODO: this needs to go into a helper class or sth
+        (x,y) = pygame.mouse.get_pos()
+        return self.world.grid[int(x/32)][int(y/32)]
+
+    def set_mouse_tile(self, id):
+        (x, y) = pygame.mouse.get_pos()
+        self.world.grid[int(x/32)][int(y/32)] = id
 
 
 
