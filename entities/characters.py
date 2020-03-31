@@ -8,7 +8,7 @@ class Character(Entity):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.color = (200, 100, 200)
+        self.color = (255, 255, 0)
         self.size = int(default.TILE_SIZE / 2)
 
     def draw(self, surface):

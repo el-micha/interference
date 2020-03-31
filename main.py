@@ -24,6 +24,7 @@ class Game:
         self.character = Character(self, x=default.TILE_SIZE + int(default.TILE_SIZE / 2),
                                    y=default.TILE_SIZE + int(default.TILE_SIZE / 2))
         self.world.remove_tile(self.character.x, self.character.y)
+        self.building = pygame.image.load("art/80_building.png")
 
         # simulation stuff
         self.running = True
@@ -63,6 +64,7 @@ class Game:
         self.surface.fill((0, 0, 0))
         # pygame.draw.rect(screen, (random.randint(0,255),random.randint(0,255),random.randint(0,255)), pygame.Rect(random.randint(0,1920), random.randint(0,1080), random.randint(2,1000), random.randint(2,1000)))
         self.world.draw(self.surface)
+        self.surface.blit(self.building, (256, 256))
         self.character.draw(self.surface)
         mx, my = pygame.mouse.get_pos()
         if self.do_highlight:
