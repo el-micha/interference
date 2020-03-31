@@ -22,13 +22,13 @@ while not stop:
             stop = True
         print(event)
     pressed = pygame.key.get_pressed()
-    if pressed[pygame.K_UP]:
+    if pressed[pygame.K_UP] or pressed[pygame.K_w]:
         character.move(0, -4)
-    if pressed[pygame.K_DOWN]:
+    if pressed[pygame.K_DOWN] or pressed[pygame.K_s]:
         character.move(0, 4)
-    if pressed[pygame.K_LEFT]:
+    if pressed[pygame.K_LEFT] or pressed[pygame.K_a]:
         character.move(-4, 0)
-    if pressed[pygame.K_RIGHT]:
+    if pressed[pygame.K_RIGHT] or pressed[pygame.K_d]:
         character.move(4, 0)
 
     screen.fill((0, 0, 0))
