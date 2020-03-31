@@ -27,8 +27,12 @@ class Game:
         self.event_handler = EventHandler(self)
         self.tick = 0
 
-    def run(self):
+        #visual stuff
+        self.do_highlight = True
+        self.highlight = pygame.image.load("art/90_highlight.png")
+        self.do_point = True
 
+    def run(self):
         while self.running:
             events = pygame.event.get()
             self.event_handler.process(events)
@@ -56,7 +60,22 @@ class Game:
         # pygame.draw.rect(screen, (random.randint(0,255),random.randint(0,255),random.randint(0,255)), pygame.Rect(random.randint(0,1920), random.randint(0,1080), random.randint(2,1000), random.randint(2,1000)))
         self.world.draw(self.surface)
         self.character.draw(self.surface)
+        mx, my = pygame.mouse.get_pos()
+        if self.do_highlight:
+            self.surface.blit(self.highlight, (int(mx/32)*32, int(my/32)*32))
+        if self.do_point:
+            pygame.draw.line(self.surface, (255, 255, 0), (self.character.x, self.character.y), pygame.mouse.get_pos(), 1)
         pygame.display.update()
+
+    # def get_mouse_tile(self):
+    #     #TODO: this needs to go into a helper class or sth
+    #     (x,y) = pygame.mouse.get_pos()
+    #     return self.world.tilemap[int(x/32)][int(y/32)]
+    #
+    # def set_mouse_tile(self, id):
+    #     (x, y) = pygame.mouse.get_pos()
+    #     self.world.tilemap[int(x/32)][int(y/32)] = id
+
 
 
 if __name__ == "__main__":

@@ -18,3 +18,7 @@ class EventHandler:
             self.game.character.move(-4, 0)
         if pressed[pygame.K_RIGHT] or pressed[pygame.K_d]:
             self.game.character.move(4, 0)
+
+
+
+
