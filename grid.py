@@ -73,7 +73,11 @@ class TileGrid:
         tile_types = [Stone, Cole, Silver]
         grid_noise = noise.smooth_noise(self.width, self.height, 3)
         grid_mapping = noise.map_noise_to_ids(grid_noise, tile_types)
-        self.grid = [[tile_type() for tile_type in line] for line in grid_mapping]
+        self.grid = [[None for _ in line] for line in grid_mapping]
+        for i, line in enumerate(grid_mapping):
+            for j, tile_type in enumerate(line):
+                x, y = self.__grid_to_coords__(i, j)
+                self.grid[i][j] = tile_type(x, y)
 
     def draw(self, surface):
         for i, line in enumerate(self.grid):
@@ -94,6 +98,10 @@ class TileGrid:
     @staticmethod
     def __coords_to_grid__(x, y):
         return int(x / default.TILE_SIZE), int(y / default.TILE_SIZE)
+
+    @staticmethod
+    def __grid_to_coords__(i, j):
+        return i * default.TILE_SIZE, j * default.TILE_SIZE
 
     def __str__(self):
         s = ""
