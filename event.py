@@ -35,13 +35,14 @@ class EventHandler:
         #         self.game.world.remove_tile(mx, my)
 
         if pygame.mouse.get_pressed() == (1,0,0):
-            # distance character to mouse
+            # distance character to mouse. better: to tile midpoint
             x, y = self.game.character.x, self.game.character.y
             mx, my = pygame.mouse.get_pos()
-            if dist(x, y, mx, my) < self.game.character.reach:
-                tile = self.game.world.get_tile(mx, my)
+            tile = self.game.world.get_tile(mx, my)
+            tilesize = 32
+            if dist(x, y, tile.x + tilesize/2, tile.y + tilesize/2) < self.game.character.reach:
                 if tile.is_minable:
-                    tile.durability -= 2
+                    tile.durability -= 10
                     if tile.durability < 0:
                         self.game.world.remove_tile(mx, my)
 

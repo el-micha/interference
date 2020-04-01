@@ -91,12 +91,11 @@ class TileGrid:
                 surface.blit(self.tile_mapping.get(art_id), (i * self.tile_size, j * self.tile_size))
                 # health bar /mining progress
                 if hasattr(tile, "durability") and tile.durability < 100:
-                    pygame.draw.line(surface, (200,200,100), (tile.x + 1, tile.y + 24), (tile.x + 1 + int(30*tile.durability*0.01), tile.y + 24), 2)
+                    pygame.draw.line(surface, (200, 0, 0), (tile.x + 2, tile.y + 24), (tile.x + 30, tile.y + 24), 3)
+                    pygame.draw.line(surface, (200,200,100), (tile.x + 2, tile.y + 24), (tile.x + int(30*tile.durability*0.01), tile.y + 24), 3)
 
     def get_tile(self, x, y):
-        print(f"x, y: {x}, {y}")
         i, j = self.__coords_to_grid__(x, y)
-        print(f"i, j: {i}, {j}")
         if not self.__is_in_grid__(i, j):
             return None
 
@@ -111,7 +110,7 @@ class TileGrid:
         self.grid[i][j] = tile
 
     def remove_tile(self, x, y):
-        self.set_tile(Tile(x,y), x, y)
+        self.set_tile(Tile(self.game, x, y), x, y)
 
     def __is_in_grid__(self, i, j):
         if i < 0 or i >= self.height:
