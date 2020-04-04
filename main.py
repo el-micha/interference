@@ -4,8 +4,9 @@ import default
 import settings
 from grid import TileGrid
 from entities.characters import Character
-from event import EventHandler
+from controls.handlers import EventHandler
 from gui.inventories import CharacterInventory
+from gui.menus import MainMenu
 
 
 class Game:
@@ -44,6 +45,8 @@ class Game:
         self.graphical_interfaces = []
         self.gui_inventory = CharacterInventory(game=self)
         self.graphical_interfaces.append(self.gui_inventory)
+        self.gui_main_menu = MainMenu(game=self)
+        self.graphical_interfaces.append(self.gui_main_menu)
 
     def run(self):
         while self.running:

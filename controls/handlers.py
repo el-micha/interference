@@ -3,17 +3,22 @@ import pygame
 from entities.resources import Resource
 
 
-class EventHandler:
+class Handler:
     def __init__(self, game):
         self.game = game
 
+
+class EventHandler(Handler):
     def process(self, events):
         for event in events:
             if event.type == pygame.QUIT:
                 self.game.quit = True
 
             if event.type == pygame.KEYDOWN and event.key == pygame.K_i:
-                self.game.graphical_interfaces[0].hidden ^= True
+                self.game.gui_inventory.hidden ^= True
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+                # TODO: Pause the game
+                self.game.gui_main_menu.hidden ^= True
 
         pressed = pygame.key.get_pressed()
         if pressed[pygame.K_UP] or pressed[pygame.K_w]:
@@ -24,9 +29,6 @@ class EventHandler:
             self.game.character.move(-4, 0)
         if pressed[pygame.K_RIGHT] or pressed[pygame.K_d]:
             self.game.character.move(4, 0)
-        if pressed[pygame.K_ESCAPE]:
-            # FIXME: Show menu instead of exiting game
-            exit()
 
         # reuse this for tile selection & highlighting
         # mouse_up_events = [event for event in events if event.type == pygame.MOUSEBUTTONUP]
