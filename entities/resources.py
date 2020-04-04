@@ -12,21 +12,21 @@ class Resource(Tile):
         self.is_blocking = True
 
 
-class Stone(Resource):
+class Rock(Resource):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
         self.art_id = 2
 
 
-class Cole(Resource):
+class ColeOre(Resource):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
         self.art_id = 15
 
 
-class Silver(Resource):
+class SilverOre(Resource):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
