@@ -9,6 +9,9 @@ class Item(Entity):
     is_stackable = False
     is_consumable = False
 
+    def __str__(self):
+        return self.name
+
 
 class Cole(Item):
     name = 'Cole'
