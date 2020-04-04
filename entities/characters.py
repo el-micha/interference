@@ -1,6 +1,7 @@
 import pygame
 
 import default
+from helpers import dist
 from .entities import Entity
 
 
@@ -13,6 +14,23 @@ class Character(Entity):
         self.color = (255, 255, 0)
         self.size = int(default.TILE_SIZE / 2)
         self.reach = 64 + 64
+        self.mining_power = 10
+
+    def mine(self, resource):
+        distance = dist(self.x, self.y, resource.x + default.TILE_SIZE / 2, resource.y + default.TILE_SIZE / 2)
+
+        if resource.is_minable and distance < self.game.character.reach:
+            resource.durability -= self.mining_power
+            if resource.durability < 0:
+                drops = resource.drops()
+                for drop in drops:
+                    print(f'Picked up {drop}')
+                self.inventory.add_items(drops)
+
+                if drops:
+                    self.inventory.print()
+
+                self.game.world.remove_tile(resource.x, resource.y)
 
     def draw(self, surface):
         r = int(self.size / 2)
@@ -38,6 +56,10 @@ class Inventory:
             stack = ItemStack(item, amount=1)
             self.stacks.append(stack)
 
+    def add_items(self, items):
+        for item in items:
+            self.add_item(item)
+
     def remove_item(self, item):
         stack = self.get_stack(item)
 
@@ -50,8 +72,11 @@ class Inventory:
             self.stacks.remove(stack)
 
     def print(self):
+        items = ''
         for stack in self.stacks:
-            print(f'{stack.item}: {stack.amount}')
+            items += f'{stack.amount} {stack.item}, '
+
+        print(f'Inventory: {items}')
 
 
 class ItemStack:

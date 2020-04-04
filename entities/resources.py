@@ -1,3 +1,6 @@
+import random
+
+from entities.items import Stone, Cole, Silver, Crystal
 from entities.tiles import Tile
 
 
@@ -11,23 +14,40 @@ class Resource(Tile):
         self.color = (192, 192, 192)
         self.is_blocking = True
 
+    def drops(self):
+        result = []
+        for drop in self.item_drops:
+            if random.uniform(0, 1) < drop.rate:
+                result.append(drop.item_cls(self.game))
+
+        return result
+
+
+class DropRate:
+    def __init__(self, item_cls, rate):
+        self.item_cls = item_cls
+        self.rate = rate
+
 
 class Rock(Resource):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.art_id = 2
+        self.item_drops = [DropRate(Stone, 1.0), DropRate(Crystal, 0.1)]
+        self.art_id = 15
 
 
 class ColeOre(Resource):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.art_id = 15
+        self.item_drops = [DropRate(Cole, 1.0)]
+        self.art_id = 2
 
 
 class SilverOre(Resource):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
+        self.item_drops = [DropRate(Silver, 1.0)]
         self.art_id = 25

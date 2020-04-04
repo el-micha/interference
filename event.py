@@ -1,8 +1,7 @@
 import pygame
-import math
 
-def dist(x, y, u, v):
-    return math.sqrt((u-x)**2 + (v-y)**2)
+from entities.resources import Resource
+
 
 class EventHandler:
     def __init__(self, game):
@@ -12,7 +11,6 @@ class EventHandler:
         for event in events:
             if event.type == pygame.QUIT:
                 self.game.quit = True
-            print(event)
         pressed = pygame.key.get_pressed()
         if pressed[pygame.K_UP] or pressed[pygame.K_w]:
             self.game.character.move(0, -4)
@@ -34,16 +32,9 @@ class EventHandler:
         #         mx, my = last.pos
         #         self.game.world.remove_tile(mx, my)
 
-        if pygame.mouse.get_pressed() == (1,0,0):
-            # distance character to mouse. better: to tile midpoint
-            x, y = self.game.character.x, self.game.character.y
+        if pygame.mouse.get_pressed() == (1, 0, 0):
             mx, my = pygame.mouse.get_pos()
             tile = self.game.world.get_tile(mx, my)
-            tilesize = 32
-            if dist(x, y, tile.x + tilesize/2, tile.y + tilesize/2) < self.game.character.reach:
-                if tile.is_minable:
-                    tile.durability -= 10
-                    if tile.durability < 0:
-                        self.game.world.remove_tile(mx, my)
 
-
+            if tile and isinstance(tile, Resource):
+                self.game.character.mine(tile)

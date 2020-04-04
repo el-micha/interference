@@ -72,7 +72,7 @@ class TileGrid:
         self.generate_tiles()
 
     def generate_tiles(self):
-        tile_types = [Rock, ColeOre, SilverOre]
+        tile_types = [Rock, Rock, Rock, Rock, Rock, ColeOre, ColeOre, ColeOre, SilverOre]
         grid_noise = noise.smooth_noise(self.width, self.height, 3)
         grid_mapping = noise.map_noise_to_ids(grid_noise, tile_types)
         self.grid = [[None for _ in line] for line in grid_mapping]

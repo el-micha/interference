@@ -27,3 +27,19 @@ class Stone(Item):
 
     is_stackable = True
     is_consumable = False
+
+
+class Silver(Item):
+    name = 'Silver'
+    description = 'Can be used against vampires.'
+
+    is_stackable = True
+    is_consumable = False
+
+
+class Crystal(Item):
+    name = 'Crystal'
+    description = 'A very rare item.'
+
+    is_stackable = False
+    is_consumable = False
