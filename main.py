@@ -5,7 +5,7 @@ import settings
 from grid import TileGrid
 from entities.characters import Character
 from event import EventHandler
-
+from ui import UI
 
 class Game:
     def __init__(self):
@@ -36,6 +36,12 @@ class Game:
         self.do_highlight = True
         self.highlight = pygame.image.load("art/90_highlight.png")
         self.do_point = settings.DEBUG_MODE
+        self.testui = UI(512, 64)
+        childui = UI(16, 16, parent=self.testui, sprite=None, draw_func=lambda surf,pos:pygame.draw.circle(surf, (255, 80, 20), pos, 12, 2))
+        childui2 = UI(16+32, 16+32, parent=self.testui, sprite=None, draw_func=lambda surf, pos: pygame.draw.circle(surf, (20, 80, 255), pos, 12, 2))
+        self.testui.children.append(childui)
+        self.testui.children.append(childui2)
+
 
     def run(self):
         while self.running:
@@ -72,6 +78,7 @@ class Game:
         if self.do_point:
             pygame.draw.line(self.surface, (255, 255, 0), (self.character.x + 16, self.character.y + 16),
                              pygame.mouse.get_pos(), 1)
+        self.testui.draw(self.surface)
         pygame.display.update()
 
 

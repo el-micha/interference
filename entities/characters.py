@@ -10,7 +10,7 @@ class Character(Entity):
 
         self.color = (255, 255, 0)
         self.size = int(default.TILE_SIZE / 2)
-        self.reach = 64
+        self.reach = 64 + 64
 
     def draw(self, surface):
         r = int(self.size / 2)
