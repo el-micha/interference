@@ -59,10 +59,10 @@ class Entity:
         new_y = self.y + dy
 
         r = int(self.size / 2) - 1
-        above = self.game.world.get_tile(new_x, new_y - r)
-        below = self.game.world.get_tile(new_x, new_y + r)
-        right = self.game.world.get_tile(new_x + r, new_y)
-        left = self.game.world.get_tile(new_x - r, new_y)
+        above = self.game.tile_grid.get_tile(new_x, new_y - r)
+        below = self.game.tile_grid.get_tile(new_x, new_y + r)
+        right = self.game.tile_grid.get_tile(new_x + r, new_y)
+        left = self.game.tile_grid.get_tile(new_x - r, new_y)
 
         if above and above.is_blocking:
             return False

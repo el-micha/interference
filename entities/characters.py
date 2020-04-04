@@ -27,10 +27,7 @@ class Character(Entity):
                     print(f'Picked up {drop}')
                 self.inventory.add_items(drops)
 
-                if drops:
-                    self.inventory.print()
-
-                self.game.world.remove_tile(resource.x, resource.y)
+                self.game.tile_grid.remove_tile(resource.x, resource.y)
 
     def draw(self, surface):
         r = int(self.size / 2)
