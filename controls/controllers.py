@@ -3,22 +3,19 @@ import pygame
 from entities.resources import Resource
 
 
-class Handler:
-    def __init__(self, game):
+class Controller:
+    def __init__(self, game, gui=None):
         self.game = game
+        self.gui = gui
 
-
-class EventHandler(Handler):
     def process(self, events):
-        for event in events:
-            if event.type == pygame.QUIT:
-                self.game.quit = True
+        return
 
-            if event.type == pygame.KEYDOWN and event.key == pygame.K_i:
-                self.game.gui_inventory.hidden ^= True
-            if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
-                # TODO: Pause the game
-                self.game.gui_main_menu.hidden ^= True
+
+class CharacterController(Controller):
+    def process(self, events):
+        if self.game.paused:
+            return
 
         pressed = pygame.key.get_pressed()
         if pressed[pygame.K_UP] or pressed[pygame.K_w]:
@@ -44,3 +41,27 @@ class EventHandler(Handler):
 
             if tile and isinstance(tile, Resource):
                 self.game.character.mine(tile)
+
+
+class MainMenuController(Controller):
+    def process(self, events):
+        for event in events:
+            if event.type == pygame.QUIT:
+                self.game.quit = True
+
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+                self.game.paused ^= True
+                self.gui.hidden ^= True
+
+            if not self.gui.hidden and event.type == pygame.KEYDOWN and event.key == pygame.K_q:
+                self.game.quit = True
+
+
+class CharacterInventoryController(Controller):
+    def process(self, events):
+        if self.game.paused:
+            return
+
+        for event in events:
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_i:
+                self.gui.hidden ^= True

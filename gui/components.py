@@ -26,6 +26,9 @@ class GUI:
             p = self.parent.get_abs_coords()
         return p[0] + self.x, p[1] + self.y
 
+    def process(self, events):
+        pass
+
 
 class GenericComponent(GUI):
     def __init__(self, draw_func, *args, **kwargs):
