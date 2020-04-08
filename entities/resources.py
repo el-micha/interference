@@ -1,6 +1,6 @@
 import random
 
-from entities.items import Stone, Cole, Silver, Crystal
+from entities.items import Stone, Coal, Silver, Crystal
 from entities.tiles import Tile
 
 
@@ -37,11 +37,11 @@ class Rock(Resource):
         self.art_id = 15
 
 
-class ColeOre(Resource):
+class CoalOre(Resource):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.item_drops = [DropRate(Cole, 1.0)]
+        self.item_drops = [DropRate(Coal, 1.0)]
         self.art_id = 2
 
 

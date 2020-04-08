@@ -13,9 +13,9 @@ class Item(Entity):
         return self.name
 
 
-class Cole(Item):
-    name = 'Cole'
-    description = 'Cole is mined from cole ore.'
+class Coal(Item):
+    name = 'Coal'
+    description = 'Coal is mined from Coal ore.'
 
     is_stackable = True
     is_consumable = False
