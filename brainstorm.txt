@@ -1,0 +1,20 @@
+
+nach rechts expanden
+lokomotive, die autonom fährt und grabt, der man aber ressourcen und module nachschickt
+hin und her von ressourcen
+sie trifft auf monstersiedlungen
+view von lokomotive zeigt sie immer, oder eine art minimap oder ein modell von allen wagen=modulen
+
+verschiedene tech-strategien nach einiger zeit gameplay:
+wahl zwischen
+    - lokomotive
+    - selber lasern
+    - roboter
+    - maulwürfe
+
+
+situation:
+miner, verschüttet. "links" ist geröll mit verschütteten geräten und technologie, "rechts" ist harter fels mit ressourcen.
+geröll durchwühlbar, stein hart. braucht technologie (evtl vorübergehend gutes tool vorhanden, das sich aber abnutzt und rechtzeitig ersetzt werden muss)
+
+
