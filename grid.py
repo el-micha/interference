@@ -7,7 +7,7 @@ import settings
 
 from entities.resources import Rock, CoalOre, SilverOre
 from entities.tiles import Tile
-
+from helpers import dist
 
 class TileGrid:
     """
@@ -35,8 +35,11 @@ class TileGrid:
                 self.grid[i][j] = tile_type(self.game, x, y)
 
     def draw(self, surface):
+        xc, yc = self.game.character.x, self.game.character.y
         for i, line in enumerate(self.grid):
             for j, tile in enumerate(line):
+                if dist(xc, yc, tile.x, tile.y) > self.game.character.get_view_distance():
+                    continue
                 if tile:
                     art_id = tile.art_id
                 else:

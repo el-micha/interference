@@ -7,12 +7,11 @@ class Field(Entity):
 
         # for a circle: radius, for other forms: max distance from origin
         self.reach = 256
-        self.color = (50, 50, 200, 100)
+        self.color = (50, 50, 200, 60)
 
     def draw(self, surface):
         circle = pygame.Surface((self.reach*2+1, self.reach*2+1), pygame.SRCALPHA)
         pygame.draw.circle(circle, self.color, (self.reach, self.reach), self.reach)
-        circle.set_alpha(100)
         circle.convert()
         surface.blit(circle, (self.x - self.reach, self.y - self.reach))
         # above does not work, quick hack:

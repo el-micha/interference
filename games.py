@@ -25,7 +25,7 @@ class Game:
                                   int(settings.SCREEN_WIDTH / default.TILE_SIZE))
         self.character = Character(self, x=default.TILE_SIZE + int(default.TILE_SIZE / 2),
                                    y=default.TILE_SIZE + int(default.TILE_SIZE / 2))
-        self.tile_grid.replace_tile(self.character.x, self.character.y, Tile(self.character.x, self.character.y))
+        self.tile_grid.replace_tile(self.character.x, self.character.y, Tile(self, self.character.x, self.character.y))
 
         # buildings
         #self.building = pygame.image.load("art/81_coal_drill.png")
