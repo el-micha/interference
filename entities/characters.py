@@ -14,13 +14,25 @@ class Character(Entity):
         self.color = (255, 255, 0)
         self.size = int(default.TILE_SIZE / 2)
         self.reach = 64 + 64
-        self.mining_power = 10
+        self.mining_power = 7
+
+    def get_mining_power(self):
+        #return self.mining_power
+        factor = 1
+        # should go through fields instead and
+        # do everything differently anyway
+        for b in self.game.buildings:
+            if hasattr(b, "field"):
+                if dist(self.x, self.y, b.x, b.y) < b.field.reach:
+                    factor = 4
+                    print("quicker")
+        return self.mining_power * factor
 
     def mine(self, resource):
         distance = dist(self.x, self.y, resource.x + default.TILE_SIZE / 2, resource.y + default.TILE_SIZE / 2)
 
         if resource.is_minable and distance < self.game.character.reach:
-            resource.durability -= self.mining_power
+            resource.durability -= self.get_mining_power()
             if resource.durability < 0:
                 drops = resource.drops()
                 for drop in drops:

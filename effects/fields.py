@@ -6,7 +6,7 @@ class Field(Entity):
         super().__init__(*args, **kwargs)
 
         # for a circle: radius, for other forms: max distance from origin
-        self.reach = 128
+        self.reach = 256
         self.color = (50, 50, 200, 100)
 
     def draw(self, surface):
