@@ -1,7 +1,7 @@
 import random
 
 from entities.items import Stone, Coal, Silver, Crystal
-from entities.tiles import Tile
+from entities.tiles import Tile, RockFloor, CoalFloor, SilverFloor
 
 
 class Resource(Tile):
@@ -21,6 +21,10 @@ class Resource(Tile):
                 result.append(drop.item_cls(self.game))
 
         return result
+
+    def reveals(self):
+        """When mined, this new Tile type is exposed"""
+        return RockFloor(self.game, self.x, self.y)
 
 
 class DropRate:
@@ -44,6 +48,9 @@ class CoalOre(Resource):
         self.item_drops = [DropRate(Coal, 1.0)]
         self.art_id = 2
 
+    def reveals(self):
+        """When mined, this new Tile type is exposed"""
+        return CoalFloor(self.game, self.x, self.y)
 
 class SilverOre(Resource):
     def __init__(self, *args, **kwargs):
@@ -51,3 +58,8 @@ class SilverOre(Resource):
 
         self.item_drops = [DropRate(Silver, 1.0)]
         self.art_id = 25
+
+    def reveals(self):
+        """When mined, this new Tile type is exposed"""
+        new = random.choice([RockFloor, RockFloor, RockFloor, SilverFloor])
+        return new(self.game, self.x, self.y)

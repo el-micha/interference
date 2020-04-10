@@ -2,22 +2,7 @@ import pygame
 
 import default
 
-"""
-Design outline
 
-need components:
-- position, movement
-- area of effect
-- tile properties like hardness etc
-- tile transformations: empty to water / sand
-- tile movement: sand is moved
-- tile descruction and dropping of minerals etc
-- UI, inventory, goals
-- controllers: characters by players and AI, robots by scripts
-- entity guis for robots, machines, factories, vehicles
-- physics, maybe (flying bullets)
-
-"""
 
 
 class ID:

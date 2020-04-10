@@ -8,7 +8,7 @@ from controls.controllers import CharacterController, MainMenuController, Charac
 from gui.inventories import CharacterInventory
 from gui.menus import MainMenu
 from gui.pointers import TileHighlighter, LinePointer
-
+from entities.tiles import Tile
 
 class Game:
     def __init__(self):
@@ -24,7 +24,7 @@ class Game:
                                   int(settings.SCREEN_WIDTH / default.TILE_SIZE))
         self.character = Character(self, x=default.TILE_SIZE + int(default.TILE_SIZE / 2),
                                    y=default.TILE_SIZE + int(default.TILE_SIZE / 2))
-        self.tile_grid.remove_tile(self.character.x, self.character.y)
+        self.tile_grid.replace_tile(self.character.x, self.character.y, Tile(self.character.x, self.character.y))
         self.building = pygame.image.load("art/80_building.png")
 
         # runtime management

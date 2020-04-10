@@ -3,7 +3,7 @@ import pygame
 import default
 from helpers import dist
 from .entities import Entity
-
+from entities.tiles import Tile
 
 class Character(Entity):
     def __init__(self, *args, **kwargs):
@@ -27,7 +27,7 @@ class Character(Entity):
                     print(f'Picked up {drop}')
                 self.inventory.add_items(drops)
 
-                self.game.tile_grid.remove_tile(resource.x, resource.y)
+                self.game.tile_grid.replace_tile(resource.x, resource.y, resource.reveals())
 
     def draw(self, surface):
         r = int(self.size / 2)
