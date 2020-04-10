@@ -5,8 +5,8 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 ART_DIR = os.path.join(BASE_DIR, 'art')
 
-SCREEN_WIDTH = 1920
-SCREEN_HEIGHT = 1080
+SCREEN_WIDTH = 1920 - 512
+SCREEN_HEIGHT = 1080 - 256-128
 
 
 DEBUG_MODE = False

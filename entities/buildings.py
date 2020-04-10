@@ -11,6 +11,8 @@ class Building(Entity):
     def draw(self, surface):
         surface.blit(self.sprite, (self.x, self.y))
 
+    def __get_sprite_size__(self):
+        return self.sprite.get_size()
 
 class CoalDrill(Building):
     def __init__(self, *args, **kwargs):
@@ -24,7 +26,9 @@ class EnergyDissipator(Building):
         super().__init__(*args, **kwargs)
 
         self.sprite = pygame.image.load("art/82_energy_dissipator.png")
-        self.field = Field(self.game, x=self.x, y=self.y)
+
+        xsprite, ysprite = self.__get_sprite_size__()
+        self.field = Field(self.game, x=self.x + int(xsprite/2), y=self.y + int(ysprite/2))
 
     def draw(self, surface):
         super().draw(surface)
