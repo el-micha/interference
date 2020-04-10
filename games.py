@@ -9,6 +9,7 @@ from gui.inventories import CharacterInventory
 from gui.menus import MainMenu
 from gui.pointers import TileHighlighter, LinePointer
 from entities.tiles import Tile
+from entities.buildings import CoalDrill, EnergyDissipator
 
 class Game:
     def __init__(self):
@@ -25,7 +26,10 @@ class Game:
         self.character = Character(self, x=default.TILE_SIZE + int(default.TILE_SIZE / 2),
                                    y=default.TILE_SIZE + int(default.TILE_SIZE / 2))
         self.tile_grid.replace_tile(self.character.x, self.character.y, Tile(self.character.x, self.character.y))
-        self.building = pygame.image.load("art/80_building.png")
+
+        # buildings
+        #self.building = pygame.image.load("art/81_coal_drill.png")
+        self.buildings = [CoalDrill(self, x=100, y=200), EnergyDissipator(self, x=200, y=300)]
 
         # runtime management
         self.running = True
@@ -79,8 +83,11 @@ class Game:
     def draw(self):
         self.surface.fill((0, 0, 0))
         self.tile_grid.draw(self.surface)
-        self.surface.blit(self.building, (256, 256))
+        #self.surface.blit(self.building, (256, 256))
         self.character.draw(self.surface)
+        # map(lambda x:x.draw(self.surface), self.buildings)
+        for building in self.buildings:
+            building.draw(self.surface)
         self.draw_interfaces()
 
         pygame.display.update()

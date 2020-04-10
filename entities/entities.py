@@ -29,9 +29,6 @@ class Entity:
         self.game = game
         self.x = x
         self.y = y
-        self.is_blocking = True
-        self.color = (0, 0, 0)
-        self.art_id = 0
         self.size = default.TILE_SIZE
 
     def move(self, dx, dy, require_valid_move=True):
@@ -62,4 +59,4 @@ class Entity:
 
     def draw(self, surface):
         # print("entity default draw. overwrite")
-        pygame.draw.rect(surface, self.color, pygame.Rect(self.x, self.y, 32, 32))
+        pygame.draw.rect(surface, (123, 234, 56), pygame.Rect(self.x, self.y, 32, 32))

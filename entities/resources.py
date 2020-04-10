@@ -49,8 +49,8 @@ class CoalOre(Resource):
         self.art_id = 2
 
     def reveals(self):
-        """When mined, this new Tile type is exposed"""
         return CoalFloor(self.game, self.x, self.y)
+
 
 class SilverOre(Resource):
     def __init__(self, *args, **kwargs):
@@ -59,7 +59,7 @@ class SilverOre(Resource):
         self.item_drops = [DropRate(Silver, 1.0)]
         self.art_id = 25
 
+
     def reveals(self):
-        """When mined, this new Tile type is exposed"""
         new = random.choice([RockFloor, RockFloor, RockFloor, SilverFloor])
         return new(self.game, self.x, self.y)
