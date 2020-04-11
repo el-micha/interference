@@ -1,6 +1,7 @@
 import pygame
 
 import default
+from effects.fields import MiningField, ViewField
 from helpers import dist
 from .entities import Entity
 
@@ -14,22 +15,25 @@ class Character(Entity):
         self.color = (255, 255, 0)
         self.size = int(default.TILE_SIZE / 2)
         self.reach = 64 + 64
-        self.mining_power = 6
+        self.mining_power = 2
         self.view_distance = 100
 
     def get_view_distance(self):
-        return self.view_distance * self.get_field_factor()
-
-    def get_field_factor(self):
-        factor = 1
-        for b in self.game.buildings:
-            if hasattr(b, "field"):
-                if dist(self.x, self.y, b.x, b.y) < b.field.reach:
-                    factor = 2
-        return factor
+        view_field_factors = self.__get_field_factors__(ViewField, 'view_factor')
+        return self.view_distance * view_field_factors
 
     def get_mining_power(self):
-        return self.mining_power * self.get_field_factor()
+        mining_field_factors = self.__get_field_factors__(MiningField, 'mining_factor')
+        return self.mining_power * mining_field_factors
+
+    def __get_field_factors__(self, field_type, factor_attr):
+        factor = 1
+        for b in self.game.buildings:
+            for field in b.fields:
+                if isinstance(field, field_type):
+                    if dist(self.x, self.y, b.x, b.y) < field.reach:
+                        factor += getattr(field, factor_attr)
+        return factor
 
     def mine(self, resource):
         distance = dist(self.x, self.y, resource.x + default.TILE_SIZE / 2, resource.y + default.TILE_SIZE / 2)

@@ -1,6 +1,6 @@
 import pygame
 
-from effects.fields import Field
+from effects.fields import MiningField, ViewField
 from .entities import Entity
 from .items import Coal
 from .resources import Stone
@@ -15,6 +15,7 @@ class Building(Entity):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
+        self.fields = []
         self.sprite = pygame.image.load("art/80_building.png")
 
     def draw(self, surface):
@@ -55,8 +56,13 @@ class EnergyDissipator(Building):
         self.sprite = pygame.image.load("art/82_energy_dissipator.png")
 
         xsprite, ysprite = self.__get_sprite_size__()
-        self.field = Field(self.game, x=self.x + int(xsprite / 2), y=self.y + int(ysprite / 2))
+        self.fields = [
+            MiningField(self.game, x=self.x + int(xsprite / 2), y=self.y + int(ysprite / 2)),
+            ViewField(self.game, x=self.x + int(xsprite / 2), y=self.y + int(ysprite / 2)),
+        ]
 
     def draw(self, surface):
         super().draw(surface)
-        self.field.draw(surface)
+
+        for field in self.fields:
+            field.draw(surface)

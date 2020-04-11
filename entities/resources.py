@@ -59,7 +59,6 @@ class SilverOre(Resource):
         self.item_drops = [DropRate(Silver, 1.0)]
         self.art_id = 25
 
-
     def reveals(self):
         new = random.choice([RockFloor, RockFloor, RockFloor, SilverFloor])
         return new(self.game, self.x, self.y)
