@@ -55,6 +55,7 @@ class Character(Entity):
         for amount, resource_cls in building.construction_costs:
             self.inventory.remove_items(resource_cls, amount)
 
+        building.make_floor_blocking()
         self.game.buildings.append(building)
 
     def can_construct(self, building):

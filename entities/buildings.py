@@ -56,11 +56,25 @@ class Building(Entity):
         return tiles
 
     def is_constructable(self):
+        return self.is_floor_suitable() and not self.is_floor_blocked()
+
+    def is_floor_suitable(self):
         for tile in self.get_tiles_below():
             if type(tile) not in self.suitable_floors:
                 return False
 
         return True
+
+    def is_floor_blocked(self):
+        for tile in self.get_tiles_below():
+            if tile.is_blocking:
+                return True
+
+        return False
+
+    def make_floor_blocking(self):
+        for tile in self.get_tiles_below():
+            tile.is_blocking = True
 
 
 class CoalDrill(Building):
@@ -74,13 +88,14 @@ class CoalDrill(Building):
 
         self.sprite = pygame.image.load("art/81_coal_drill.png")
 
-    def is_constructable(self):
+    def is_floor_suitable(self):
         tiles = self.get_tiles_below()
         if CoalFloor not in [type(x) for x in tiles]:
             return False
         if not all([type(tile) in self.suitable_floors for tile in tiles]):
             return False
         return True
+
 
 class EnergyDissipator(Building):
     name = 'Energy Dissipator'
