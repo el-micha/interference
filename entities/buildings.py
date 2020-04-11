@@ -67,13 +67,20 @@ class CoalDrill(Building):
     name = 'Coal Drill'
     keyboard_shortcut = 'c'
     construction_costs = [(1, Stone)]
-    suitable_floors = [CoalFloor]
+    suitable_floors = [CoalFloor, RockFloor]
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
         self.sprite = pygame.image.load("art/81_coal_drill.png")
 
+    def is_constructable(self):
+        tiles = self.get_tiles_below()
+        if CoalFloor not in [type(x) for x in tiles]:
+            return False
+        if not all([type(tile) in self.suitable_floors for tile in tiles]):
+            return False
+        return True
 
 class EnergyDissipator(Building):
     name = 'Energy Dissipator'

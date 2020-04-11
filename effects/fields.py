@@ -13,7 +13,6 @@ class Field(Entity):
     def draw(self, surface):
         circle = pygame.Surface((self.reach * 2 + 1, self.reach * 2 + 1), pygame.SRCALPHA)
         pygame.draw.circle(circle, self.color, (self.reach, self.reach), self.reach)
-        circle.convert()
         surface.blit(circle, (self.x - self.reach, self.y - self.reach))
         # above does not work, quick hack:
         # pygame.draw.circle(surface, self.color, (self.x, self.y), self.reach)
