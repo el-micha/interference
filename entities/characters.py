@@ -3,7 +3,7 @@ import pygame
 import default
 from helpers import dist
 from .entities import Entity
-from entities.tiles import Tile
+
 
 class Character(Entity):
     def __init__(self, *args, **kwargs):
@@ -55,7 +55,7 @@ class Inventory:
 
     def get_stack(self, item):
         for stack in self.stacks:
-            if stack.item.__class__ == item.__class__:
+            if stack.item.__class__ == item.__class__ or stack.item.__class__ == item:
                 return stack
 
         return None

@@ -6,11 +6,11 @@ class MainMenu(GUI):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.width = 300
-        self.height = 500
+        self.width = layouts.WINDOW_WIDTH_MD
+        self.height = layouts.WINDOW_HEIGHT_LG
 
-        self.x = layouts.ALIGN_CENTER - self.width // 2
-        self.y = layouts.MARGIN_TOP
+        self.x = layouts.X_6 - self.width / 2
+        self.y = layouts.Y_1
 
         window = Window(
             width=self.width,
@@ -29,8 +29,8 @@ class MainMenu(GUI):
         )
         window.add_child(text_rows)
 
-        text_rows.add_child(TextLabel('Main Menu', layouts.TEXT_COLOR))
-        text_rows.add_child(TextLabel('=========', layouts.TEXT_COLOR))
+        text_rows.add_child(TextLabel('(esc) Main Menu', layouts.TEXT_COLOR))
+        text_rows.add_child(TextLabel('===============', layouts.TEXT_COLOR))
         text_rows.add_child(TextLabel('', layouts.TEXT_COLOR))
         text_rows.add_child(TextLabel('(q) Quit game', layouts.TEXT_COLOR))
 

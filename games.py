@@ -4,12 +4,15 @@ import default
 import settings
 from grid import TileGrid
 from entities.characters import Character
-from controls.controllers import CharacterController, MainMenuController, CharacterInventoryController
+from controls.controllers import CharacterController, MainMenuController, CharacterInventoryController, \
+    ConstructionController
 from gui.inventories import CharacterInventory
+from gui.constructions import BuildingMenu
 from gui.menus import MainMenu
 from gui.pointers import TileHighlighter, LinePointer
 from entities.tiles import Tile
 from entities.buildings import CoalDrill, EnergyDissipator
+
 
 class Game:
     def __init__(self):
@@ -28,7 +31,7 @@ class Game:
         self.tile_grid.replace_tile(self.character.x, self.character.y, Tile(self, self.character.x, self.character.y))
 
         # buildings
-        #self.building = pygame.image.load("art/81_coal_drill.png")
+        # self.building = pygame.image.load("art/81_coal_drill.png")
         self.buildings = [CoalDrill(self, x=100, y=200), EnergyDissipator(self, x=200, y=300)]
 
         # runtime management
@@ -44,7 +47,8 @@ class Game:
         self.register_controller(CharacterController(self))
         self.register_interface(LinePointer(game=self))
         self.register_interface(TileHighlighter(game=self))
-        self.register_interface(CharacterInventory(game=self), CharacterInventoryController)
+        self.register_interface(CharacterInventory(game=self, hidden=False), CharacterInventoryController)
+        self.register_interface(BuildingMenu(game=self, hidden=False), ConstructionController)
         self.register_interface(MainMenu(game=self), MainMenuController)
 
     def register_interface(self, interface, controller_cls=None):
@@ -83,7 +87,7 @@ class Game:
     def draw(self):
         self.surface.fill((0, 0, 0))
         self.tile_grid.draw(self.surface)
-        #self.surface.blit(self.building, (256, 256))
+        # self.surface.blit(self.building, (256, 256))
         self.character.draw(self.surface)
         # map(lambda x:x.draw(self.surface), self.buildings)
         for building in self.buildings:

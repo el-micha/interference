@@ -1,15 +1,18 @@
 from gui import layouts
-from gui.components import GUI, TextLabel, Rows, Window
+from gui.components import GUI, Window, Rows, TextLabel
+from entities.buildings import CoalDrill, EnergyDissipator
 
 
-class CharacterInventory(GUI):
+class BuildingMenu(GUI):
+    constructable_buildings = [CoalDrill, EnergyDissipator]
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
         self.width = layouts.WINDOW_WIDTH_SM
-        self.height = layouts.WINDOW_HEIGHT_XL
+        self.height = layouts.WINDOW_HEIGHT_MD
 
-        self.x = layouts.X_10
+        self.x = layouts.X_8
         self.y = layouts.Y_0
 
     def draw(self, surface):
@@ -32,15 +35,12 @@ class CharacterInventory(GUI):
         )
         window.add_child(text_rows)
 
-        text_rows.add_child(TextLabel('(i) Inventory', layouts.TEXT_COLOR))
+        text_rows.add_child(TextLabel('(b) Buildings', layouts.TEXT_COLOR))
         text_rows.add_child(TextLabel('=============', layouts.TEXT_COLOR))
         text_rows.add_child(TextLabel('', layouts.TEXT_COLOR))
 
-        for stack in self.game.character.inventory.stacks:
-            if stack.amount == 1:
-                label = f'{stack.item}'
-            else:
-                label = f'{stack.item}: {stack.amount}'
-            text_rows.add_child(TextLabel(label, layouts.TEXT_COLOR))
+        for building in self.constructable_buildings:
+            if building.is_affordable(self.game.character.inventory):
+                text_rows.add_child(TextLabel(f'({building.keyboard_shortcut}) {building.name}', layouts.TEXT_COLOR))
 
         super().draw(surface)
