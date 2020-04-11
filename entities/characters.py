@@ -48,6 +48,28 @@ class Character(Entity):
 
                 self.game.tile_grid.replace_tile(resource.x, resource.y, resource.reveals())
 
+    def construct(self, building):
+        if not self.can_construct(building):
+            return
+
+        for amount, resource_cls in building.construction_costs:
+            self.inventory.remove_items(resource_cls, amount)
+
+        self.game.buildings.append(building)
+
+    def can_construct(self, building):
+        if not building.is_affordable(self.inventory):
+            return False
+
+        if not building.is_constructable():
+            return False
+
+        distance = dist(self.x, self.y, building.x, building.y)
+        if self.reach < distance:
+            return False
+
+        return True
+
     def draw(self, surface):
         r = int(self.size / 2)
         pygame.draw.circle(surface, self.color, (self.x, self.y), r)

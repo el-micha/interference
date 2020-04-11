@@ -1,6 +1,7 @@
 from .entities import Entity
 import random
 
+
 class Tile(Entity):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -22,6 +23,7 @@ class CoalFloor(Tile):
         super().__init__(*args, **kwargs)
 
         self.art_id = random.choice([34, 35])
+
 
 class SilverFloor(Tile):
     def __init__(self, *args, **kwargs):

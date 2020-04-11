@@ -1,9 +1,11 @@
 import pygame
 
+import default
 from effects.fields import MiningField, ViewField
 from .entities import Entity
 from .items import Coal
 from .resources import Stone
+from .tiles import RockFloor, CoalFloor
 
 
 class Building(Entity):
@@ -11,6 +13,7 @@ class Building(Entity):
     description = None
     keyboard_shortcut = None
     construction_costs = []
+    suitable_floors = []
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -42,11 +45,29 @@ class Building(Entity):
 
         return True
 
+    def get_tiles_below(self):
+        width, height = self.get_sprite_size()
+        tiles = []
+        for x in range(self.x, self.x + width, default.TILE_SIZE):
+            for y in range(self.y, self.y + height, default.TILE_SIZE):
+                tile = self.game.tile_grid.get_tile(x, y)
+                tiles.append(tile)
+
+        return tiles
+
+    def is_constructable(self):
+        for tile in self.get_tiles_below():
+            if type(tile) not in self.suitable_floors:
+                return False
+
+        return True
+
 
 class CoalDrill(Building):
     name = 'Coal Drill'
     keyboard_shortcut = 'c'
     construction_costs = [(1, Stone)]
+    suitable_floors = [CoalFloor]
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -58,6 +79,7 @@ class EnergyDissipator(Building):
     name = 'Energy Dissipator'
     keyboard_shortcut = 'e'
     construction_costs = [(1, Stone), (1, Coal)]
+    suitable_floors = [RockFloor, CoalFloor]
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

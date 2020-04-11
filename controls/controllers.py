@@ -96,7 +96,7 @@ class ConstructionController(Controller):
                 if self.game.construction_mode:
                     self.disable_construction_mode()
                 self.enable_construction_mode(EnergyDissipator)
-            elif event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+            elif event.type == pygame.KEYDOWN and (event.key == pygame.K_ESCAPE or event.key == pygame.K_q):
                 if self.game.construction_mode:
                     self.disable_construction_mode()
 
@@ -113,7 +113,7 @@ class ConstructionController(Controller):
         mx, my = pygame.mouse.get_pos()
         building = building_type(self.game, mx, my)
 
-        self.building_placer = BuildingPlacer(building)
+        self.building_placer = BuildingPlacer(game=self.game, building=building)
         self.game.interfaces.append(self.building_placer)
         self.game.construction_mode = True
 
@@ -127,13 +127,5 @@ class ConstructionController(Controller):
             return
 
         building = self.building_placer.building
-        if not building.is_affordable(self.game.character.inventory):
-            return
-
-        # TODO: Check if building can be built at current position
-
-        for amount, resource_cls in building.construction_costs:
-            self.game.character.inventory.remove_items(resource_cls, amount)
-
-        self.game.buildings.append(building)
+        self.game.character.construct(building)
         self.disable_construction_mode()
