@@ -76,16 +76,18 @@ class Inventory:
         for item in items:
             self.add_item(item)
 
-    def remove_item(self, item):
+    def remove_items(self, item, amount=1):
         stack = self.get_stack(item)
 
         if not stack:
             raise RuntimeError('Tried to remove non-existent item from inventory.')
 
-        if stack.amount > 1:
-            stack.modify(-1)
-        else:
+        if stack.amount > amount:
+            stack.modify(-1 * amount)
+        elif stack.amount == amount:
             self.stacks.remove(stack)
+        else:
+            raise RuntimeError('Tried to remove more items from inventory than available.')
 
     def print(self):
         items = ''

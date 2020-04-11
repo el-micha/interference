@@ -132,7 +132,8 @@ class ConstructionController(Controller):
 
         # TODO: Check if building can be built at current position
 
-        # TODO: Remove required resources from inventory
+        for amount, resource_cls in building.construction_costs:
+            self.game.character.inventory.remove_items(resource_cls, amount)
 
         self.game.buildings.append(building)
         self.disable_construction_mode()
