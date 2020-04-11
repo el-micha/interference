@@ -31,12 +31,12 @@ class Game:
         self.tile_grid.replace_tile(self.character.x, self.character.y, Tile(self, self.character.x, self.character.y))
 
         # buildings
-        # self.building = pygame.image.load("art/81_coal_drill.png")
-        self.buildings = [CoalDrill(self, x=100, y=200), EnergyDissipator(self, x=200, y=300)]
+        self.buildings = []
 
         # runtime management
         self.running = True
         self.paused = False
+        self.construction_mode = False
         self.quit = False
         self.tick = 0
 
@@ -44,12 +44,12 @@ class Game:
         self.interfaces = []
         self.controllers = []
 
+        self.register_interface(MainMenu(game=self), MainMenuController)
         self.register_controller(CharacterController(self))
         self.register_interface(LinePointer(game=self))
         self.register_interface(TileHighlighter(game=self))
         self.register_interface(CharacterInventory(game=self, hidden=False), CharacterInventoryController)
         self.register_interface(BuildingMenu(game=self, hidden=False), ConstructionController)
-        self.register_interface(MainMenu(game=self), MainMenuController)
 
     def register_interface(self, interface, controller_cls=None):
         self.interfaces.append(interface)

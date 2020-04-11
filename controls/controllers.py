@@ -1,6 +1,8 @@
 import pygame
 
+from entities.buildings import CoalDrill, EnergyDissipator
 from entities.resources import Resource
+from gui.pointers import BuildingPlacer
 
 
 class Controller:
@@ -36,6 +38,9 @@ class CharacterController(Controller):
         #         self.game.tile_grid.remove_tile(mx, my)
 
         if pygame.mouse.get_pressed() == (1, 0, 0):
+            if self.game.construction_mode:
+                return
+
             mx, my = pygame.mouse.get_pos()
             tile = self.game.tile_grid.get_tile(mx, my)
 
@@ -45,6 +50,9 @@ class CharacterController(Controller):
 
 class MainMenuController(Controller):
     def process(self, events):
+        if self.game.construction_mode:
+            return
+
         for event in events:
             if event.type == pygame.QUIT:
                 self.game.quit = True
@@ -68,6 +76,11 @@ class CharacterInventoryController(Controller):
 
 
 class ConstructionController(Controller):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.building_placer = None
+
     def process(self, events):
         if self.game.paused:
             return
@@ -75,3 +88,51 @@ class ConstructionController(Controller):
         for event in events:
             if event.type == pygame.KEYDOWN and event.key == pygame.K_b:
                 self.gui.hidden ^= True
+            elif event.type == pygame.KEYDOWN and event.key == pygame.K_c:
+                if self.game.construction_mode:
+                    self.disable_construction_mode()
+                self.enable_construction_mode(CoalDrill)
+            elif event.type == pygame.KEYDOWN and event.key == pygame.K_e:
+                if self.game.construction_mode:
+                    self.disable_construction_mode()
+                self.enable_construction_mode(EnergyDissipator)
+            elif event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+                if self.game.construction_mode:
+                    self.disable_construction_mode()
+
+        if pygame.mouse.get_pressed() == (1, 0, 0):
+            if not self.game.construction_mode:
+                return
+
+            self.construct_building()
+
+    def enable_construction_mode(self, building_type):
+        if not building_type.is_affordable(self.game.character.inventory):
+            return
+
+        mx, my = pygame.mouse.get_pos()
+        building = building_type(self.game, mx, my)
+
+        self.building_placer = BuildingPlacer(building)
+        self.game.interfaces.append(self.building_placer)
+        self.game.construction_mode = True
+
+    def disable_construction_mode(self):
+        self.game.interfaces.remove(self.building_placer)
+        self.building_placer = None
+        self.game.construction_mode = False
+
+    def construct_building(self):
+        if not self.game.construction_mode:
+            return
+
+        building = self.building_placer.building
+        if not building.is_affordable(self.game.character.inventory):
+            return
+
+        # TODO: Check if building can be built at current position
+
+        # TODO: Remove required resources from inventory
+
+        self.game.buildings.append(building)
+        self.disable_construction_mode()

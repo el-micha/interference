@@ -21,8 +21,17 @@ class Building(Entity):
     def draw(self, surface):
         surface.blit(self.sprite, (self.x, self.y))
 
-    def __get_sprite_size__(self):
+    def get_sprite_size(self):
         return self.sprite.get_size()
+
+    def set_position(self, x, y):
+        self.x = x
+        self.y = y
+
+        xsprite, ysprite = self.get_sprite_size()
+        for field in self.fields:
+            field.x = self.x + int(xsprite / 2)
+            field.y = self.y + int(ysprite / 2)
 
     @classmethod
     def is_affordable(cls, inventory):
@@ -37,7 +46,7 @@ class Building(Entity):
 class CoalDrill(Building):
     name = 'Coal Drill'
     keyboard_shortcut = 'c'
-    construction_costs = [(10, Stone)]
+    construction_costs = [(1, Stone)]
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -48,14 +57,14 @@ class CoalDrill(Building):
 class EnergyDissipator(Building):
     name = 'Energy Dissipator'
     keyboard_shortcut = 'e'
-    construction_costs = [(5, Stone), (10, Coal)]
+    construction_costs = [(1, Stone), (1, Coal)]
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
         self.sprite = pygame.image.load("art/82_energy_dissipator.png")
 
-        xsprite, ysprite = self.__get_sprite_size__()
+        xsprite, ysprite = self.get_sprite_size()
         self.fields = [
             MiningField(self.game, x=self.x + int(xsprite / 2), y=self.y + int(ysprite / 2)),
             ViewField(self.game, x=self.x + int(xsprite / 2), y=self.y + int(ysprite / 2)),
