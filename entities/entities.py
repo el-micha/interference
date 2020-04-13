@@ -3,8 +3,6 @@ import pygame
 import default
 
 
-
-
 class ID:
     """Hands out unique ids and stores all id-d entities sorted by type"""
     id_counter = -1
@@ -30,6 +28,7 @@ class Entity:
         self.x = x
         self.y = y
         self.size = default.TILE_SIZE
+        self.color = (123, 234, 56)
 
     def move(self, dx, dy, require_valid_move=True):
         if not require_valid_move or self.is_valid_move(dx, dy):
@@ -58,5 +57,5 @@ class Entity:
         return True
 
     def draw(self, surface):
-        # print("entity default draw. overwrite")
-        pygame.draw.rect(surface, (123, 234, 56), pygame.Rect(self.x, self.y, 32, 32))
+        length = self.size / 2
+        pygame.draw.rect(surface, self.color, pygame.Rect(self.x - length, self.y - length, self.size, self.size))
