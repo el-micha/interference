@@ -2,6 +2,7 @@ import pygame
 
 import default
 import settings
+from entities.trains import Train, Engine, BoringHead, Cart
 from grid import TileGrid
 from entities.characters import Character
 from controls.controllers import CharacterController, MainMenuController, CharacterInventoryController, \
@@ -10,8 +11,7 @@ from gui.inventories import CharacterInventory
 from gui.constructions import BuildingMenu
 from gui.menus import MainMenu
 from gui.pointers import TileHighlighter, LinePointer
-from entities.tiles import Tile
-from entities.buildings import CoalDrill, EnergyDissipator
+from entities.tiles import Tile, RockFloor
 
 
 class Game:
@@ -30,8 +30,27 @@ class Game:
                                    y=default.TILE_SIZE + int(default.TILE_SIZE / 2))
         self.tile_grid.replace_tile(self.character.x, self.character.y, Tile(self, self.character.x, self.character.y))
 
-        # buildings
+        # Entities
         self.buildings = []
+        self.trains = []
+
+        # FIXME: Remove hardcoded trains
+        east_train = Train(game=self, x=default.TILE_SIZE + int(default.TILE_SIZE / 2),
+                           y=default.TILE_SIZE * 2 + int(default.TILE_SIZE / 2), direction=(1, 0))
+        east_train.add_wagon(BoringHead(self))
+        east_train.add_wagon(Engine(self))
+        east_train.add_wagon(Cart(self))
+        self.trains.append(east_train)
+
+        south_train = Train(game=self, x=default.TILE_SIZE + int(default.TILE_SIZE / 2),
+                            y=default.TILE_SIZE * 3 + int(default.TILE_SIZE / 2), direction=(0, 1))
+        south_train.add_wagon(Engine(self))
+        self.trains.append(south_train)
+
+        for train in self.trains:
+            for wagon in train.wagons:
+                self.tile_grid.replace_tile(wagon.x, wagon.y, RockFloor(self, wagon.x, wagon.y))
+                self.tile_grid.replace_tile(wagon.x - 1, wagon.y - 1, RockFloor(self, wagon.x, wagon.y))
 
         # runtime management
         self.running = True
@@ -76,6 +95,8 @@ class Game:
             self.clock.tick(60)
 
     def game_loop(self):
+        for train in self.trains:
+            train.ride()
         self.tick += 1
 
     def process_controllers(self):
@@ -92,6 +113,8 @@ class Game:
         # map(lambda x:x.draw(self.surface), self.buildings)
         for building in self.buildings:
             building.draw(self.surface)
+        for train in self.trains:
+            train.draw(self.surface)
         self.draw_interfaces()
 
         pygame.display.update()
