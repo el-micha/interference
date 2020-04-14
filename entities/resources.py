@@ -9,7 +9,7 @@ class Resource(Tile):
         super().__init__(*args, **kwargs)
 
         self.durability = 100
-        self.is_minable = True
+        self.is_mineable = True
         self.item_drops = []
         self.color = (192, 192, 192)
         self.is_blocking = True
@@ -24,7 +24,7 @@ class Resource(Tile):
 
     def reveals(self):
         """When mined, this new Tile type is exposed"""
-        return RockFloor(self.game, self.x, self.y)
+        return RockFloor(self.game, self.pos)
 
 
 class DropRate:
@@ -49,7 +49,7 @@ class CoalOre(Resource):
         self.art_id = 2
 
     def reveals(self):
-        return CoalFloor(self.game, self.x, self.y)
+        return CoalFloor(self.game, self.pos)
 
 
 class SilverOre(Resource):
@@ -61,4 +61,4 @@ class SilverOre(Resource):
 
     def reveals(self):
         new = random.choice([RockFloor, RockFloor, RockFloor, SilverFloor])
-        return new(self.game, self.x, self.y)
+        return new(self.game, self.pos)

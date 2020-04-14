@@ -1,5 +1,6 @@
 import pygame
 
+from helpers import *
 import default
 import settings
 from entities.trains import Train, Engine, BoringHead, Cart
@@ -26,31 +27,30 @@ class Game:
         # game stuff ...
         self.tile_grid = TileGrid(self, int(settings.SCREEN_HEIGHT / default.TILE_SIZE),
                                   int(settings.SCREEN_WIDTH / default.TILE_SIZE))
-        self.character = Character(self, x=default.TILE_SIZE + int(default.TILE_SIZE / 2),
-                                   y=default.TILE_SIZE + int(default.TILE_SIZE / 2))
-        self.tile_grid.replace_tile(self.character.x, self.character.y, Tile(self, self.character.x, self.character.y))
+        self.character = Character(self, (default.TILE_SIZE + int(default.TILE_SIZE / 2),
+                                   default.TILE_SIZE + int(default.TILE_SIZE / 2)))
+        self.tile_grid.replace_tile(self.character.pos, Tile(self, self.character.pos))
 
         # Entities
         self.buildings = []
         self.trains = []
 
         # FIXME: Remove hardcoded trains
-        east_train = Train(game=self, x=default.TILE_SIZE + int(default.TILE_SIZE / 2),
-                           y=default.TILE_SIZE * 2 + int(default.TILE_SIZE / 2), direction=(1, 0))
+        east_train = Train(game=self, pos=(default.TILE_SIZE + int(default.TILE_SIZE / 2), default.TILE_SIZE * 2 + int(default.TILE_SIZE / 2)), direction=(1, 0))
         east_train.add_wagon(BoringHead(self))
         east_train.add_wagon(Engine(self))
         east_train.add_wagon(Cart(self))
         self.trains.append(east_train)
 
-        south_train = Train(game=self, x=default.TILE_SIZE + int(default.TILE_SIZE / 2),
-                            y=default.TILE_SIZE * 3 + int(default.TILE_SIZE / 2), direction=(0, 1))
+        south_train = Train(game=self, pos=(default.TILE_SIZE + int(default.TILE_SIZE / 2),
+                            default.TILE_SIZE * 3 + int(default.TILE_SIZE / 2)), direction=(0, 1))
         south_train.add_wagon(Engine(self))
         self.trains.append(south_train)
 
         for train in self.trains:
             for wagon in train.wagons:
-                self.tile_grid.replace_tile(wagon.x, wagon.y, RockFloor(self, wagon.x, wagon.y))
-                self.tile_grid.replace_tile(wagon.x - 1, wagon.y - 1, RockFloor(self, wagon.x, wagon.y))
+                self.tile_grid.replace_tile(wagon.pos, RockFloor(self, wagon.pos))
+                self.tile_grid.replace_tile(add(wagon.pos, (-1, -1)), RockFloor(self, wagon.pos))
 
         # runtime management
         self.running = True

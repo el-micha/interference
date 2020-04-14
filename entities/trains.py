@@ -1,7 +1,7 @@
 import default
 from entities.entities import Entity
 from entities.inventories import Inventory
-
+from helpers import *
 
 TRAIN_SPRITE_SIZE = (default.TILE_SIZE / 2)
 
@@ -50,24 +50,21 @@ class Train(Entity):
     def add_wagon(self, wagon):
         dx, dy = self.direction
         if dx:
-            wagon.x = self.x - dx * self.length
-            wagon.y = self.y
+            wagon.pos = add(self.pos, (-dx * self.length, 0))
         elif dy:
-            wagon.x = self.x
-            wagon.y = self.y - dy * self.length
+            wagon.pos = add(self.pos, (0, -dy * self.length))
 
         self.wagons.append(wagon)
 
     def ride(self):
-        dx, dy = self.direction
-        reach_x = self.x + dx * self.size / 2
-        reach_y = self.y + dy * self.size / 2
+        dx, dy = dir = self.direction
+        reach = add(self.pos, times(dir, self.size / 2))
 
-        tile = self.game.tile_grid.get_tile(reach_x, reach_y)
-        if tile and tile.is_minable:
+        tile = self.game.tile_grid.get_tile(reach)
+        if tile and tile.is_mineable:
             self.mine(tile)
         elif tile and not tile.is_blocking and self.speed > 0:
-            self.move(dx * self.speed, dy * self.speed)
+            self.move(times(dir, self.speed))
 
     def mine(self, resource):
         resource.durability -= self.mining_power
@@ -75,18 +72,18 @@ class Train(Entity):
             drops = resource.drops()
             self.inventory.add_items(drops)
 
-            self.game.tile_grid.replace_tile(resource.x, resource.y, resource.reveals())
+            self.game.tile_grid.replace_tile(resource.pos, resource.reveals())
 
-    def move(self, dx, dy, *args, **kwargs):
+    def move(self, delta, *args, **kwargs):
         # First check if all wagons can be moved
         for wagon in self.wagons:
-            if not wagon.is_valid_move(dx, dy):
+            if not wagon.is_valid_move(delta):
                 return
 
         # Move train
-        super().move(dx, dy, *args, **kwargs)
+        super().move(delta, *args, **kwargs)
         for wagon in self.wagons:
-            wagon.move(dx, dy, *args, **kwargs)
+            wagon.move(delta, *args, **kwargs)
 
     def draw(self, *args, **kwargs):
         for wagon in self.wagons:
@@ -110,7 +107,7 @@ class Wagon(Entity):
 
         # TODO: Replace with proper art
         rendered_text = self.game.font.render(self.icon, True, (255, 255, 255))
-        surface.blit(rendered_text, (self.x, self.y - self.size / 2))
+        surface.blit(rendered_text, (self.pos[0], self.pos[1] - self.size / 2))
 
 
 class Engine(Wagon):

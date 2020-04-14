@@ -6,7 +6,7 @@ from .entities import Entity
 from .items import Coal
 from .resources import Stone
 from .tiles import RockFloor, CoalFloor
-from helpers import dist
+from helpers import *
 
 class Building(Entity):
     name = None
@@ -22,19 +22,16 @@ class Building(Entity):
         self.sprite = pygame.image.load("art/80_building.png")
 
     def draw(self, surface):
-        surface.blit(self.sprite, (self.x, self.y))
+        surface.blit(self.sprite, sub(self.pos, times(self.size, 0.5)))
 
     def get_size(self):
         return self.sprite.get_size()
 
-    def set_position(self, x, y):
-        self.x = x
-        self.y = y
+    def set_position(self, pos):
+        self.pos = pos
 
-        xsprite, ysprite = self.get_size()
         for field in self.fields:
-            field.x = self.x + int(xsprite / 2)
-            field.y = self.y + int(ysprite / 2)
+            field.pos = self.pos
 
     @classmethod
     def is_affordable(cls, inventory):
@@ -48,9 +45,9 @@ class Building(Entity):
     def get_tiles_below(self):
         width, height = self.get_size()
         tiles = []
-        for x in range(self.x, self.x + width, default.TILE_SIZE):
-            for y in range(self.y, self.y + height, default.TILE_SIZE):
-                tile = self.game.tile_grid.get_tile(x, y)
+        for x in range(self.pos[0], self.pos[0] + width, default.TILE_SIZE):
+            for y in range(self.pos[1], self.pos[1] + height, default.TILE_SIZE):
+                tile = self.game.tile_grid.get_tile((x, y))
                 tiles.append(tile)
         return tiles
 
@@ -133,7 +130,7 @@ class CoalDrill(Building):
         neigh = []
         for building in (set(self.game.buildings) - {self}):
             # TODO: implement real neighbourhood
-            if dist(self.x, self.y, building.x, building.x) < 32 * 5:
+            if dist(self.pos, building.pos) < 32 * 5:
                 neigh.append(building)
         print(f"found {len(neigh)} neighbours")
         return neigh
@@ -167,7 +164,7 @@ class EnergyDissipator(Building):
 
         xsprite, ysprite = self.get_size()
         self.fields = [
-            EnergyField(self.game, x=self.x + int(xsprite / 2), y=self.y + int(ysprite / 2)),
+            EnergyField(self.game, self.pos),
         ]
 
         self.stored_coal = 0

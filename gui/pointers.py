@@ -46,12 +46,12 @@ class BuildingPlacer(GUI):
             mx, my = pygame.mouse.get_pos()
             x = int(mx / default.TILE_SIZE) * default.TILE_SIZE
             y = int(my / default.TILE_SIZE) * default.TILE_SIZE
-            self.building.set_position(x, y)
+            self.building.set_position((x, y))
 
             if not self.game.character.can_construct(self.building):
                 width, height = self.building.get_size()
                 rect_surface = pygame.Surface((width, height), pygame.SRCALPHA)
                 rect_surface.fill((255, 0, 0, 60))
-                surface.blit(rect_surface, (self.building.x, self.building.y))
+                surface.blit(rect_surface, self.building.pos)
 
             self.building.draw(surface)

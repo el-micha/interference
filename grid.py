@@ -31,14 +31,14 @@ class TileGrid:
         self.grid = [[None for _ in line] for line in grid_mapping]
         for i, line in enumerate(grid_mapping):
             for j, tile_type in enumerate(line):
-                x, y = self.__grid_to_coords__(i, j)
-                self.grid[i][j] = tile_type(self.game, x, y)
+                pos = self.__grid_to_coords__(i, j)
+                self.grid[i][j] = tile_type(self.game, pos)
 
     def draw(self, surface):
-        xc, yc = self.game.character.x, self.game.character.y
+        cpos = self.game.character.pos
         for i, line in enumerate(self.grid):
             for j, tile in enumerate(line):
-                if dist(xc, yc, tile.x, tile.y) > self.game.character.get_view_distance():
+                if dist(cpos, tile.pos) > self.game.character.get_view_distance():
                     continue
                 if tile:
                     art_id = tile.art_id
@@ -47,29 +47,29 @@ class TileGrid:
                 surface.blit(self.tile_mapping.get(art_id), (i * self.tile_size, j * self.tile_size))
                 # health bar /mining progress
                 if hasattr(tile, "durability") and tile.durability < 100:
-                    pygame.draw.line(surface, (200, 0, 0), (tile.x + 2, tile.y + 24), (tile.x + 30, tile.y + 24), 3)
-                    pygame.draw.line(surface, (200, 200, 100), (tile.x + 2, tile.y + 24), (tile.x + int(30*tile.durability*0.01), tile.y + 24), 3)
+                    pygame.draw.line(surface, (200, 0, 0), (tile.pos[0] + 2, tile.pos[1] + 24), (tile.pos[0] + 30, tile.pos[1] + 24), 3)
+                    pygame.draw.line(surface, (200, 200, 100), (tile.pos[0] + 2, tile.pos[1] + 24), (tile.pos[0] + int(30*tile.durability*0.01), tile.pos[1] + 24), 3)
 
-    def get_tile(self, x, y):
-        i, j = self.__coords_to_grid__(x, y)
+    def get_tile(self, point):
+        i, j = self.__coords_to_grid__(point)
         if not self.__is_in_grid__(i, j):
             return None
 
         return self.grid[i][j]
 
-    def set_tile(self, tile, x, y):
-        i, j = self.__coords_to_grid__(x, y)
+    def set_tile(self, tile, point):
+        i, j = self.__coords_to_grid__(point)
 
         if not self.__is_in_grid__(i, j):
             return
 
         self.grid[i][j] = tile
 
-    def remove_tile(self, x, y):
-        self.set_tile(Tile(self.game, x, y), x, y)
+    def remove_tile(self, point):
+        self.set_tile(Tile(self.game, point), point)
 
-    def replace_tile(self, x, y, new_tile):
-        self.set_tile(new_tile, x, y)
+    def replace_tile(self, point, new_tile):
+        self.set_tile(new_tile, point)
 
     def __is_in_grid__(self, i, j):
         if i < 0 or i >= self.height:
@@ -81,7 +81,8 @@ class TileGrid:
         return True
 
     @staticmethod
-    def __coords_to_grid__(x, y):
+    def __coords_to_grid__(point):
+        x, y = point
         return int(x / default.TILE_SIZE), int(y / default.TILE_SIZE)
 
     @staticmethod

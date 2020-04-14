@@ -42,15 +42,15 @@ class Character(Entity):
             for field in b.fields:
                 if not type(field) == EnergyField:
                     continue
-                energy += field.get_effect((self.x, self.y))
+                energy += field.get_effect(self.pos)
         return energy
 
 
 
     def mine(self, resource):
-        distance = dist(self.x, self.y, resource.x + default.TILE_SIZE / 2, resource.y + default.TILE_SIZE / 2)
+        distance = dist(self.pos, resource.pos)
 
-        if resource.is_minable and distance < self.game.character.reach:
+        if resource.is_mineable and distance < self.game.character.reach:
             resource.durability -= self.get_mining_power()
             if resource.durability < 0:
                 drops = resource.drops()
@@ -58,7 +58,7 @@ class Character(Entity):
                     print(f'Picked up {drop}')
                 self.inventory.add_items(drops)
 
-                self.game.tile_grid.replace_tile(resource.x, resource.y, resource.reveals())
+                self.game.tile_grid.replace_tile(resource.pos, resource.reveals())
 
     def construct(self, building):
         if not self.can_construct(building):
@@ -77,7 +77,7 @@ class Character(Entity):
         if not building.is_constructable():
             return False
 
-        distance = dist(self.x, self.y, building.x, building.y)
+        distance = dist(self.pos, building.pos)
         if self.reach < distance:
             return False
 
@@ -85,4 +85,4 @@ class Character(Entity):
 
     def draw(self, surface):
         r = int(self.size / 2)
-        pygame.draw.circle(surface, self.color, (self.x, self.y), r)
+        pygame.draw.circle(surface, self.color, self.pos, r)

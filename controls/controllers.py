@@ -21,13 +21,13 @@ class CharacterController(Controller):
 
         pressed = pygame.key.get_pressed()
         if pressed[pygame.K_UP] or pressed[pygame.K_w]:
-            self.game.character.move(0, -4)
+            self.game.character.move((0, -4))
         if pressed[pygame.K_DOWN] or pressed[pygame.K_s]:
-            self.game.character.move(0, 4)
+            self.game.character.move((0, 4))
         if pressed[pygame.K_LEFT] or pressed[pygame.K_a]:
-            self.game.character.move(-4, 0)
+            self.game.character.move((-4, 0))
         if pressed[pygame.K_RIGHT] or pressed[pygame.K_d]:
-            self.game.character.move(4, 0)
+            self.game.character.move((4, 0))
 
         # reuse this for tile selection & highlighting
         # mouse_up_events = [event for event in events if event.type == pygame.MOUSEBUTTONUP]
@@ -41,8 +41,8 @@ class CharacterController(Controller):
             if self.game.construction_mode:
                 return
 
-            mx, my = pygame.mouse.get_pos()
-            tile = self.game.tile_grid.get_tile(mx, my)
+            mpos = pygame.mouse.get_pos()
+            tile = self.game.tile_grid.get_tile(mpos)
 
             if tile and isinstance(tile, Resource):
                 self.game.character.mine(tile)
@@ -110,8 +110,8 @@ class ConstructionController(Controller):
         if not building_type.is_affordable(self.game.character.inventory):
             return
 
-        mx, my = pygame.mouse.get_pos()
-        building = building_type(self.game, mx, my)
+        mpos = pygame.mouse.get_pos()
+        building = building_type(self.game, mpos)
 
         self.building_placer = BuildingPlacer(game=self.game, building=building)
         self.game.interfaces.append(self.building_placer)
