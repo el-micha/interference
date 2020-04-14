@@ -95,9 +95,12 @@ class Game:
             self.clock.tick(60)
 
     def game_loop(self):
+        self.tick += 1
         for train in self.trains:
             train.ride()
         self.tick += 1
+        for building in self.buildings:
+            building.tick(self.tick)
 
     def process_controllers(self):
         events = pygame.event.get()

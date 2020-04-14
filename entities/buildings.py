@@ -101,6 +101,7 @@ class CoalDrill(Building):
         #self.distribution_rate = 9999999 # should probably be limited or deleted
 
     def tick(self, tick):
+        self.print_stats()
         # these two could be generalized if we need more kinds of drills, hence res instead of coal
         self.mine_resources()
         self.distribute_resources()
@@ -112,6 +113,8 @@ class CoalDrill(Building):
         # calculate fair share for each consumer
         # give to fullest consumer first, and if they cannot take their whole fair share, split the rest for the other consumers
         consumers = list(sorted(self.get_consumers(), key=lambda c: -c.stored_coal))
+        if len(consumers) == 0:
+            return
         remaining_consumers = len(consumers)
         fair_share = self.stored_res / remaining_consumers
         for consumer in consumers:
@@ -128,12 +131,16 @@ class CoalDrill(Building):
 
     def get_neighbours(self):
         neigh = []
-        for building in set(self.game.buildings) - set(self):
+        for building in (set(self.game.buildings) - {self}):
             # TODO: implement real neighbourhood
-            if dist(self.x, self.y, building.x, building.x) < 32 * 3:
+            if dist(self.x, self.y, building.x, building.x) < 32 * 5:
                 neigh.append(building)
         print(f"found {len(neigh)} neighbours")
         return neigh
+
+    def print_stats(self):
+        print(f"- - - Coal drill {self.id}: - - -")
+        print(f"stored res: {self.stored_res}")
 
     def get_mining_rate(self):
         return self.base_mining_rate
@@ -168,6 +175,7 @@ class EnergyDissipator(Building):
         self.coal_consumption = 1
 
     def tick(self, tick):
+        self.print_stats()
         available_energy = self.stored_coal / self.coal_consumption
         if available_energy > 1:
             self.stored_coal -= self.coal_consumption
@@ -178,7 +186,13 @@ class EnergyDissipator(Building):
 
     def set_fields(self, active):
         for field in self.fields:
-            field.is_active = active
+            field.active = active
+
+    def print_stats(self):
+        print(f"- - - Energy dissipator {self.id}: - - -")
+        print(f"stored coal: {self.stored_coal}")
+        print(f"coal capacity: {self.coal_capacity}")
+        print(f"coal consumption: {self.coal_consumption}")
 
     def draw(self, surface):
         super().draw(surface)

@@ -16,25 +16,36 @@ class Character(Entity):
         self.color = (255, 255, 0)
         self.size = int(default.TILE_SIZE / 2)
         self.reach = 64 + 64
-        self.mining_power = 2
-        self.view_distance = 100
+        self.base_mining_power = 2
+        self.base_view_distance = 100
 
     def get_view_distance(self):
-        view_field_factors = self.__get_field_factors__(EnergyField, 'view_factor')
-        return self.view_distance * view_field_factors
+        view_field_factors = 1 + self.get_available_energy()
+        return self.base_view_distance * view_field_factors
 
     def get_mining_power(self):
-        mining_field_factors = self.__get_field_factors__(EnergyField, 'mining_factor')
-        return self.mining_power * mining_field_factors
+        mining_field_factors = 1 + self.get_available_energy() * 2
+        return self.base_mining_power * mining_field_factors
 
-    def __get_field_factors__(self, field_type, factor_attr):
-        factor = 1
+    # def __get_field_factors__(self, field_type, factor_attr):
+    #     factor = 1
+    #     for b in self.game.buildings:
+    #         for field in b.fields:
+    #             if isinstance(field, field_type):
+    #                 if dist(self.x, self.y, b.x, b.y) < field.reach:
+    #                     factor += getattr(field, factor_attr)
+    #     return factor
+
+    def get_available_energy(self):
+        energy = 0
         for b in self.game.buildings:
             for field in b.fields:
-                if isinstance(field, field_type):
-                    if dist(self.x, self.y, b.x, b.y) < field.reach:
-                        factor += getattr(field, factor_attr)
-        return factor
+                if not type(field) == EnergyField:
+                    continue
+                energy += field.get_effect((self.x, self.y))
+        return energy
+
+
 
     def mine(self, resource):
         distance = dist(self.x, self.y, resource.x + default.TILE_SIZE / 2, resource.y + default.TILE_SIZE / 2)
