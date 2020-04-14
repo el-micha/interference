@@ -1,7 +1,7 @@
 import pygame
 
 import default
-from effects.fields import MiningField, ViewField
+from effects.fields import EnergyField
 from helpers import dist
 from .entities import Entity
 from .inventories import Inventory
@@ -20,11 +20,11 @@ class Character(Entity):
         self.view_distance = 100
 
     def get_view_distance(self):
-        view_field_factors = self.__get_field_factors__(ViewField, 'view_factor')
+        view_field_factors = self.__get_field_factors__(EnergyField, 'view_factor')
         return self.view_distance * view_field_factors
 
     def get_mining_power(self):
-        mining_field_factors = self.__get_field_factors__(MiningField, 'mining_factor')
+        mining_field_factors = self.__get_field_factors__(EnergyField, 'mining_factor')
         return self.mining_power * mining_field_factors
 
     def __get_field_factors__(self, field_type, factor_attr):

@@ -49,7 +49,7 @@ class BuildingPlacer(GUI):
             self.building.set_position(x, y)
 
             if not self.game.character.can_construct(self.building):
-                width, height = self.building.get_sprite_size()
+                width, height = self.building.get_size()
                 rect_surface = pygame.Surface((width, height), pygame.SRCALPHA)
                 rect_surface.fill((255, 0, 0, 60))
                 surface.blit(rect_surface, (self.building.x, self.building.y))
