@@ -45,9 +45,11 @@ class Building(Entity):
 
     def get_tiles_below(self):
         width, height = self.get_size()
+        w = int(width/2)
+        h = int(height/2)
         tiles = []
-        for x in range(self.pos[0], self.pos[0] + width, default.TILE_SIZE):
-            for y in range(self.pos[1], self.pos[1] + height, default.TILE_SIZE):
+        for x in range(self.pos[0] - w, self.pos[0] + w, default.TILE_SIZE):
+            for y in range(self.pos[1] - h , self.pos[1] + h, default.TILE_SIZE):
                 tile = self.game.tile_grid.get_tile((x, y))
                 tiles.append(tile)
         return tiles
@@ -99,7 +101,7 @@ class CoalDrill(Building):
         #self.distribution_rate = 9999999 # should probably be limited or deleted
 
     def tick(self, tick):
-        self.print_stats()
+        # self.print_stats()
         # these two could be generalized if we need more kinds of drills, hence res instead of coal
         self.mine_resources()
         self.distribute_resources()
@@ -124,7 +126,7 @@ class CoalDrill(Building):
 
     def get_consumers(self):
         cons = [x for x in self.get_neighbours() if hasattr(x, "stored_coal")]
-        print(f"found {len(cons)} consumers")
+        # print(f"found {len(cons)} consumers")
         return cons
 
     def get_neighbours(self):
@@ -133,7 +135,7 @@ class CoalDrill(Building):
             # TODO: implement real neighbourhood
             if dist(self.pos, building.pos) < 32 * 5:
                 neigh.append(building)
-        print(f"found {len(neigh)} neighbours")
+        # print(f"found {len(neigh)} neighbours")
         return neigh
 
     def print_stats(self):
@@ -173,7 +175,7 @@ class EnergyDissipator(Building):
         self.coal_consumption = 1
 
     def tick(self, tick):
-        self.print_stats()
+        # self.print_stats()
         available_energy = self.stored_coal / self.coal_consumption
         if available_energy > 1:
             self.stored_coal -= self.coal_consumption

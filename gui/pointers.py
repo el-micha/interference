@@ -55,7 +55,6 @@ class BuildingPlacer(GUI):
             pos = sub(pos, (default.TILE_SIZE/2, default.TILE_SIZE/2))
 
             pos = round(add(pos, times(size, 0.5)))
-            print(pos)
 
             self.building.set_position(pos)
 
