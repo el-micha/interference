@@ -25,3 +25,7 @@ def times(p, scalar):
 
 def pointwise_mult(p1, p2):
     return p1[0] * p2[0], p1[1] * p2[1]
+
+
+def round(p):
+    return int(p[0]), int(p[1])

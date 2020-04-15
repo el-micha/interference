@@ -1,5 +1,6 @@
 import pygame
 
+from entities.buildings import EnergyDissipator, CoalDrill
 from helpers import *
 import default
 import settings
@@ -12,8 +13,8 @@ from gui.inventories import CharacterInventory
 from gui.constructions import BuildingMenu
 from gui.menus import MainMenu
 from gui.pointers import TileHighlighter, LinePointer
-from entities.tiles import Tile, RockFloor
-
+from entities.tiles import Tile, RockFloor, CoalFloor
+import random
 
 class Game:
     def __init__(self):
@@ -29,11 +30,18 @@ class Game:
                                   int(settings.SCREEN_WIDTH / default.TILE_SIZE))
         self.character = Character(self, (default.TILE_SIZE + int(default.TILE_SIZE / 2),
                                    default.TILE_SIZE + int(default.TILE_SIZE / 2)))
-        self.tile_grid.replace_tile(self.character.pos, Tile(self, self.character.pos))
+        self.tile_grid.replace_tile(self.character.pos, Tile)
+        for i in range(4):
+            for j in range(4):
+                self.tile_grid.replace_tile((32 * (1+i), 32 * (i+j)), random.choice([RockFloor, CoalFloor]))
 
         # Entities
         self.buildings = []
         self.trains = []
+
+
+        # b = EnergyDissipator(self, pos=(48,48))
+        # self.buildings.append(b)
 
         # FIXME: Remove hardcoded trains
         east_train = Train(game=self, pos=(default.TILE_SIZE + int(default.TILE_SIZE / 2), default.TILE_SIZE * 2 + int(default.TILE_SIZE / 2)), direction=(1, 0))
@@ -49,8 +57,8 @@ class Game:
 
         for train in self.trains:
             for wagon in train.wagons:
-                self.tile_grid.replace_tile(wagon.pos, RockFloor(self, wagon.pos))
-                self.tile_grid.replace_tile(add(wagon.pos, (-1, -1)), RockFloor(self, wagon.pos))
+                self.tile_grid.replace_tile(wagon.pos, RockFloor)
+                self.tile_grid.replace_tile(add(wagon.pos, (-1, -1)), RockFloor)
 
         # runtime management
         self.running = True

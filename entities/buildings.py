@@ -20,9 +20,10 @@ class Building(Entity):
 
         self.fields = []
         self.sprite = pygame.image.load("art/80_building.png")
+        self.size = self.get_size() # TODO: to entity
 
     def draw(self, surface):
-        surface.blit(self.sprite, sub(self.pos, times(self.size, 0.5)))
+        surface.blit(self.sprite, sub(self.pos, times(self.get_size(), 0.5)))
 
     def get_size(self):
         return self.sprite.get_size()

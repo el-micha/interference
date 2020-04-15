@@ -2,8 +2,9 @@ import pygame
 
 import default
 import settings
+from grid import TileGrid
 from gui.components import GUI
-from helpers import dist
+from helpers import dist, sub, times, round, add
 
 
 class LinePointer(GUI):
@@ -43,15 +44,24 @@ class BuildingPlacer(GUI):
 
     def draw(self, surface):
         if not self.hidden:
-            mx, my = pygame.mouse.get_pos()
-            x = int(mx / default.TILE_SIZE) * default.TILE_SIZE
-            y = int(my / default.TILE_SIZE) * default.TILE_SIZE
-            self.building.set_position((x, y))
+            size = self.building.get_size()
+            mpos = pygame.mouse.get_pos()
+            mpos = add(mpos, (default.TILE_SIZE/2, default.TILE_SIZE/2))
+
+            pos = sub(mpos, times(size, 0.5))
+
+            (i, j) = TileGrid.__coords_to_grid__(pos)
+            pos = TileGrid.__grid_to_coords__(i, j)
+            pos = sub(pos, (default.TILE_SIZE/2, default.TILE_SIZE/2))
+
+            pos = round(add(pos, times(size, 0.5)))
+            print(pos)
+
+            self.building.set_position(pos)
 
             if not self.game.character.can_construct(self.building):
-                width, height = self.building.get_size()
-                rect_surface = pygame.Surface((width, height), pygame.SRCALPHA)
+                rect_surface = pygame.Surface(size, pygame.SRCALPHA)
                 rect_surface.fill((255, 0, 0, 60))
-                surface.blit(rect_surface, self.building.pos)
+                surface.blit(rect_surface, sub(self.building.pos, times(size, 0.5)))
 
             self.building.draw(surface)

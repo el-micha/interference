@@ -26,17 +26,10 @@ class Entity:
         self.id = ID.request_id(self)
         self.game = game
         self.pos = pos
-        if self.pos is not None:
-            self.width = self.pos[0]
-            self.height = self.pos[1]
-        else:
-            self.width = default.TILE_SIZE / 2
-            self.height = default.TILE_SIZE / 2
-
         self.size = size
         if self.size is None:
             self.size = default.TILE_SIZE, default.TILE_SIZE
-
+        self.width, self.height = self.size
         # is overlapping
         # tiles underneath
 
@@ -58,7 +51,7 @@ class Entity:
     def is_valid_move(self, delta):
         new_x, new_y = add(self.pos, delta)
 
-        r = int(self.size / 2) - 1
+        r = int(self.size[0] / 2) - 1
         above = self.game.tile_grid.get_tile((new_x, new_y - r))
         below = self.game.tile_grid.get_tile((new_x, new_y + r))
         right = self.game.tile_grid.get_tile((new_x + r, new_y))
@@ -76,4 +69,5 @@ class Entity:
         return True
 
     def draw(self, surface):
-        pygame.draw.rect(surface, self.color, pygame.Rect(self.pos[0] - int(self.width/2), self.pos[1] - int(self.height/2), self.width, self.height))
+        draw_pos = round(sub(self.pos, times(self.size, 0.5)))
+        pygame.draw.rect(surface, self.color, pygame.Rect(draw_pos[0], draw_pos[1], self.width, self.height))

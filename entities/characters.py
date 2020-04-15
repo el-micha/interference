@@ -2,7 +2,7 @@ import pygame
 
 import default
 from effects.fields import EnergyField
-from helpers import dist
+from helpers import *
 from .entities import Entity
 from .inventories import Inventory
 
@@ -14,7 +14,7 @@ class Character(Entity):
         self.inventory = Inventory()
 
         self.color = (255, 255, 0)
-        self.size = int(default.TILE_SIZE / 2)
+        self.size = int(default.TILE_SIZE / 2), int(default.TILE_SIZE / 2)
         self.reach = 64 + 64
         self.base_mining_power = 2
         self.base_view_distance = 100
@@ -84,5 +84,5 @@ class Character(Entity):
         return True
 
     def draw(self, surface):
-        r = int(self.size / 2)
+        r = int(self.size[0] / 2)
         pygame.draw.circle(surface, self.color, self.pos, r)

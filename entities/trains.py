@@ -13,7 +13,7 @@ class Train(Entity):
         self.wagons = []
         self.direction = direction
         self.inventory = Inventory()
-        self.size = TRAIN_SPRITE_SIZE
+        self.size = TRAIN_SPRITE_SIZE, TRAIN_SPRITE_SIZE
 
     @property
     def capacity(self):
@@ -43,7 +43,7 @@ class Train(Entity):
     def length(self):
         total_length = 0
         for wagon in self.wagons:
-            total_length += wagon.size
+            total_length += wagon.size[0]
 
         return total_length
 
@@ -58,7 +58,7 @@ class Train(Entity):
 
     def ride(self):
         dx, dy = dir = self.direction
-        reach = add(self.pos, times(dir, self.size / 2))
+        reach = add(self.pos, times(dir, self.size[0] / 2))
 
         tile = self.game.tile_grid.get_tile(reach)
         if tile and tile.is_mineable:
@@ -99,7 +99,7 @@ class Wagon(Entity):
         self.capacity = 0
         self.mining_power = 0
         self.speed = 0
-        self.size = TRAIN_SPRITE_SIZE
+        self.size = TRAIN_SPRITE_SIZE, TRAIN_SPRITE_SIZE
         self.color = (127, 0, 255)
 
     def draw(self, surface):
@@ -107,7 +107,7 @@ class Wagon(Entity):
 
         # TODO: Replace with proper art
         rendered_text = self.game.font.render(self.icon, True, (255, 255, 255))
-        surface.blit(rendered_text, (self.pos[0], self.pos[1] - self.size / 2))
+        surface.blit(rendered_text, (self.pos[0], self.pos[1] - self.size[0] / 2))
 
 
 class Engine(Wagon):
