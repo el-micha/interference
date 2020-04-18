@@ -22,19 +22,27 @@ class ID:
 
 
 class Entity:
-    def __init__(self, game, pos=None, size=None):
+    """
+    An entity has:
+    - a position in world coordinates pos = (x, y)
+    - a size = (width, height)
+    - a draw function which respects sprite size and world coords
+    """
+    def __init__(self, game, pos=(64, 64), size=None):
         self.id = ID.request_id(self)
         self.game = game
         self.pos = pos
         self.size = size
         if self.size is None:
             self.size = default.TILE_SIZE, default.TILE_SIZE
-        self.width, self.height = self.size
-        # is overlapping
-        # tiles underneath
+        self.sprite = pygame.Surface(self.size, pygame.SRCALPHA)
+        self.sprite.fill((255,255,0,128))
 
-        self.color = (123, 234, 56)
-
+        # properties
+        self.width = property(self.size[0])
+        self.height = property(self.size[1])
+        self.x = property(self.pos[0])
+        self.y = property(self.pos[1])
 
     def intersects(self, point):
         """Assume a rectangular form around self.pos. Overwrite this if round or other form."""
@@ -70,4 +78,5 @@ class Entity:
 
     def draw(self, surface):
         draw_pos = round(sub(self.pos, times(self.size, 0.5)))
-        pygame.draw.rect(surface, self.color, pygame.Rect(draw_pos[0], draw_pos[1], self.width, self.height))
+        surface.blit(self.sprite, draw_pos)
+
