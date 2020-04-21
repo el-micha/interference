@@ -14,6 +14,7 @@ from gui.constructions import BuildingMenu
 from gui.menus import MainMenu
 from gui.pointers import TileHighlighter, LinePointer
 from entities.tiles import Tile, RockFloor, CoalFloor
+from effects.explosion import Explosion
 import random
 
 class Game:
@@ -39,7 +40,7 @@ class Game:
         self.buildings = []
         self.trains = []
 
-
+        self.explosion = Explosion(self, pos=(128,128))
         # b = EnergyDissipator(self, pos=(48,48))
         # self.buildings.append(b)
 
@@ -127,6 +128,8 @@ class Game:
         for train in self.trains:
             train.draw(self.surface)
         self.draw_interfaces()
+
+        self.explosion.draw(self.surface)
 
         pygame.display.update()
 
