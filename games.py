@@ -111,6 +111,8 @@ class Game:
         for building in self.buildings:
             building.tick(self.tick)
 
+        self.explosion.tick(self.tick)
+
     def process_controllers(self):
         events = pygame.event.get()
 

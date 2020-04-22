@@ -17,7 +17,7 @@ class Character(Entity):
         self.size = int(default.TILE_SIZE / 2), int(default.TILE_SIZE / 2)
         self.reach = 64 + 64
         self.base_mining_power = 2
-        self.base_view_distance = 100
+        self.base_view_distance = 200
 
     def get_view_distance(self):
         view_field_factors = 1 + self.get_available_energy()

@@ -83,6 +83,36 @@ class TileGrid:
 
         return True
 
+    def get_tiles_within_radius(self, point, r_max, r_min=1):
+        """Return list of all tiles with distance greater than r_min and smaller than r_max around point.
+        Create circles with increasing radii. Sample each circle with a max distance smaller than tilesize.
+        Radius increase also small, so no tiles can slip through
+        At least consider circles with r_min and r_max, even if distance is too small.
+        This method could be massively improved by sampling an outer circle and considering rows of tiles at a time.
+        """
+        oversampling_factor = 1.42 # at least sqrt(2) due to diagonal
+        sample_distance = self.tile_size / oversampling_factor
+        num_circles = int((r_max - r_min) / sample_distance)
+        radii = [r_min] + [r_min + sample_distance * (i + 0.5) for i in range(num_circles)] + [r_max]
+        tiles = set()
+        for r in radii:
+            tiles.update(self.get_tiles_on_circle(point, r, oversampling_factor))
+        return tiles
+
+    def get_tiles_on_circle(self, point, radius, oversampling_factor=1.5):
+        num_samples = int(2 * math.pi * radius / self.tile_size * oversampling_factor) # factor 1.5 for small corners
+        tiles = [] # dont forget to check for None
+        for i in range(num_samples):
+            x = point[0] + math.sin(i * (2 * math.pi) / (num_samples)) * radius
+            y = point[1] + math.cos(i * (2 * math.pi) / (num_samples)) * radius
+            tile = self.get_tile((int(x), int(y)))
+
+            pygame.draw.circle(self.game.surface, (255, 255, 255), (int(x), int(y)), 2)
+
+            if tile is not None:
+                tiles.append(tile)
+        return set(tiles)
+
     @staticmethod
     def __coords_to_grid__(point):
         x, y = point
