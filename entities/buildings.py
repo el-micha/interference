@@ -6,7 +6,7 @@ from .entities import Entity
 from .items import Coal
 from .resources import Stone
 from .tiles import RockFloor, CoalFloor
-from helpers import *
+from entities.coordinates import Vector
 
 class Building(Entity):
     name = None
@@ -20,17 +20,10 @@ class Building(Entity):
 
         self.fields = []
         self.sprite = pygame.image.load("art/80_building.png")
-        self.size = self.get_size() # TODO: to entity
-
-    def draw(self, surface):
-        surface.blit(self.sprite, sub(self.pos, times(self.get_size(), 0.5)))
-
-    def get_size(self):
-        return self.sprite.get_size()
+        self.size = Vector(*self.sprite.get_size())
 
     def set_position(self, pos):
         self.pos = pos
-
         for field in self.fields:
             field.pos = self.pos
 
@@ -40,19 +33,7 @@ class Building(Entity):
             stack = inventory.get_stack(resource_cls)
             if not stack or stack.amount < amount:
                 return False
-
         return True
-
-    def get_tiles_below(self):
-        width, height = self.get_size()
-        w = int(width/2)
-        h = int(height/2)
-        tiles = []
-        for x in range(self.pos[0] - w, self.pos[0] + w, default.TILE_SIZE):
-            for y in range(self.pos[1] - h , self.pos[1] + h, default.TILE_SIZE):
-                tile = self.game.tile_grid.get_tile((x, y))
-                tiles.append(tile)
-        return tiles
 
     def is_constructable(self):
         return self.is_floor_suitable() and not self.is_floor_blocked()
@@ -61,14 +42,12 @@ class Building(Entity):
         for tile in self.get_tiles_below():
             if type(tile) not in self.suitable_floors:
                 return False
-
         return True
 
     def is_floor_blocked(self):
         for tile in self.get_tiles_below():
             if tile.is_blocking:
                 return True
-
         return False
 
     def make_floor_blocking(self):
@@ -93,6 +72,7 @@ class CoalDrill(Building):
         super().__init__(*args, **kwargs)
 
         self.sprite = pygame.image.load("art/81_coal_drill.png")
+        self.size = Vector(*self.sprite.get_size())
 
         # resources per tick
         self.base_mining_rate = 3
@@ -133,7 +113,7 @@ class CoalDrill(Building):
         neigh = []
         for building in (set(self.game.buildings) - {self}):
             # TODO: implement real neighbourhood
-            if dist(self.pos, building.pos) < 32 * 5:
+            if Vector.dist(self.pos, building.pos) < 32 * 5:
                 neigh.append(building)
         # print(f"found {len(neigh)} neighbours")
         return neigh
@@ -164,8 +144,8 @@ class EnergyDissipator(Building):
         super().__init__(*args, **kwargs)
 
         self.sprite = pygame.image.load("art/82_energy_dissipator.png")
+        self.size = Vector(*self.sprite.get_size())
 
-        xsprite, ysprite = self.get_size()
         self.fields = [
             EnergyField(self.game, self.pos),
         ]
@@ -196,8 +176,6 @@ class EnergyDissipator(Building):
 
     def draw(self, surface):
         super().draw(surface)
-
         for field in self.fields:
-            if not field.active:
-                continue
-            field.draw(surface)
+            if field.active:
+                field.draw(surface)

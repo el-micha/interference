@@ -1,25 +1,25 @@
-from entities.entities import Entity
+
 import pygame
+from entities.coordinates import Vector
 
+class Sprite:
+    def __init__(self):
+        pass
 
-class Sprite(Entity):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-    def draw(self, surface):
+    def draw(self, surface, point):
         pass
 
 class ExplosionSprite(Sprite):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(self):
         self.radius = 10
         self.color = (240, 200, 20, 128)
         self.sprites = self.circles()
 
-    def draw(self, surface):
+    def draw(self, surface, point):
         try:
             circle = next(self.sprites)
-            surface.blit(circle, (self.pos[0] - self.radius, self.pos[1] - self.radius))
+            drawx, drawy = (point - Vector(self.radius, self.radius)).round()
+            surface.blit(circle, (drawx, drawy))
         except:
             #TODO: callback to destroy
             pass

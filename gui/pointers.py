@@ -4,8 +4,7 @@ import default
 import settings
 from grid import TileGrid
 from gui.components import GUI
-from helpers import dist, sub, times, round, add
-
+from entities.coordinates import Vector
 
 class LinePointer(GUI):
     def __init__(self, *args, **kwargs):
@@ -15,7 +14,7 @@ class LinePointer(GUI):
 
     def draw(self, surface):
         if settings.DEBUG_MODE and not self.game.paused:
-            pygame.draw.line(surface, (255, 255, 0), (self.game.character.x + 16, self.game.character.y + 16),
+            pygame.draw.line(surface, (255, 255, 0), (self.game.character.pos.x + 16, self.game.character.pos.y + 16),
                              pygame.mouse.get_pos(), 1)
 
 
@@ -44,23 +43,23 @@ class BuildingPlacer(GUI):
 
     def draw(self, surface):
         if not self.hidden:
-            size = self.building.get_size()
+            size = self.building.size
             mpos = pygame.mouse.get_pos()
-            mpos = add(mpos, (default.TILE_SIZE/2, default.TILE_SIZE/2))
+            mpos = mpos + Vector(default.TILE_SIZE, default.TILE_SIZE) * 0.5
 
-            pos = sub(mpos, times(size, 0.5))
+            pos = mpos - size * 0.5
 
             (i, j) = TileGrid.__coords_to_grid__(pos)
             pos = TileGrid.__grid_to_coords__(i, j)
-            pos = sub(pos, (default.TILE_SIZE/2, default.TILE_SIZE/2))
+            pos = pos - Vector(default.TILE_SIZE, default.TILE_SIZE) * 0.5
 
-            pos = round(add(pos, times(size, 0.5)))
+            pos = (pos + size * 0.5).round()
 
             self.building.set_position(pos)
 
             if not self.game.character.can_construct(self.building):
                 rect_surface = pygame.Surface(size, pygame.SRCALPHA)
                 rect_surface.fill((255, 0, 0, 60))
-                surface.blit(rect_surface, sub(self.building.pos, times(size, 0.5)))
+                surface.blit(rect_surface, self.building.pos - size * 0.5)
 
             self.building.draw(surface)

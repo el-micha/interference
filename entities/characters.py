@@ -2,7 +2,7 @@ import pygame
 
 import default
 from effects.fields import EnergyField
-from helpers import *
+from entities.coordinates import Vector
 from .entities import Entity
 from .inventories import Inventory
 
@@ -45,10 +45,8 @@ class Character(Entity):
                 energy += field.get_effect(self.pos)
         return energy
 
-
-
     def mine(self, resource):
-        distance = dist(self.pos, resource.pos)
+        distance = Vector.dist(self.pos, resource.pos)
 
         if resource.is_mineable and distance < self.game.character.reach:
             resource.durability -= self.get_mining_power()
@@ -77,7 +75,7 @@ class Character(Entity):
         if not building.is_constructable():
             return False
 
-        distance = dist(self.pos, building.pos)
+        distance = Vector.dist(self.pos, building.pos)
         if self.reach < distance:
             return False
 

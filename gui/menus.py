@@ -1,6 +1,6 @@
 from gui import layouts
 from gui.components import GUI, Window, Rows, TextLabel
-
+from entities.coordinates import Vector
 
 class MainMenu(GUI):
     def __init__(self, *args, **kwargs):
@@ -8,9 +8,9 @@ class MainMenu(GUI):
 
         self.width = layouts.WINDOW_WIDTH_MD
         self.height = layouts.WINDOW_HEIGHT_LG
+        self.size = Vector(self.width, self.height)
 
-        self.x = layouts.X_6 - self.width / 2
-        self.y = layouts.Y_1
+        self.pos = Vector(layouts.X_6 - self.width / 2, layouts.Y_1)
 
         window = Window(
             width=self.width,
@@ -23,8 +23,7 @@ class MainMenu(GUI):
         text_rows = Rows(
             width=window.width - 20,
             height=window.height - 20,
-            x=10,
-            y=10,
+            pos = Vector(10, 10),
             background_alpha=1,
         )
         window.add_child(text_rows)

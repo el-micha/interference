@@ -7,17 +7,18 @@ import settings
 
 from entities.resources import Rock, CoalOre, SilverOre
 from entities.tiles import Tile
-from helpers import *
+from entities.coordinates import Vector
+import math
 
 class TileGrid:
     """
     Holds grid of tiles.
     """
 
-    def __init__(self, game, width, height):
+    def __init__(self, game, num_cols, num_rows):
         self.game = game
-        self.width = width
-        self.height = height
+        self.num_cols = num_cols
+        self.num_rows = num_rows
         self.grid = None
         self.tile_mapping = TileMapping(settings.ART_DIR)
         self.tile_size = default.TILE_SIZE
@@ -26,19 +27,19 @@ class TileGrid:
 
     def generate_tiles(self):
         tile_types = [Rock, Rock, Rock, Rock, Rock, CoalOre, CoalOre, CoalOre, SilverOre]
-        grid_noise = noise.smooth_noise(self.width, self.height, 3)
+        grid_noise = noise.smooth_noise(self.num_cols, self.num_rows, 3)
         grid_mapping = noise.map_noise_to_ids(grid_noise, tile_types)
         self.grid = [[None for _ in line] for line in grid_mapping]
         for i, line in enumerate(grid_mapping):
             for j, tile_type in enumerate(line):
                 pos = self.__grid_to_coords__(i, j)
-                self.grid[i][j] = tile_type(self.game, pos)
+                self.grid[i][j] = tile_type(self.game, pos, Vector(default.TILE_SIZE, default.TILE_SIZE))
 
     def draw(self, surface):
         cpos = self.game.character.pos
         for i, line in enumerate(self.grid):
             for j, tile in enumerate(line):
-                if dist(cpos, tile.pos) > self.game.character.get_view_distance():
+                if Vector.dist(cpos, tile.pos) > self.game.character.get_view_distance():
                     continue
                 if tile:
                     art_id = tile.art_id
@@ -46,11 +47,11 @@ class TileGrid:
                     art_id = 0
                 # could use the tile's own draw instead...
                 offset = int(self.tile_size / 2)
-                surface.blit(self.tile_mapping.get(art_id), sub(tile.pos, times(tile.size, 0.5)))
-                # health bar /mining progress
-                if hasattr(tile, "durability") and tile.durability < 100:
-                    pygame.draw.line(surface, (200, 0, 0), (tile.pos[0] - offset + 2, tile.pos[1]- offset + 24), (tile.pos[0]- offset + 30, tile.pos[1]- offset + 24), 3)
-                    pygame.draw.line(surface, (200, 200, 100), (tile.pos[0]- offset + 2, tile.pos[1]- offset + 24), (tile.pos[0]- offset + int(30*tile.durability*0.01), tile.pos[1]- offset + 24), 3)
+                surface.blit(self.tile_mapping.get(art_id), tile.pos - tile.size * 0.5)
+                # health bar /mining progress TODO: restore and improve
+                # if hasattr(tile, "durability") and tile.durability < 100:
+                #     pygame.draw.line(surface, (200, 0, 0), (tile.pos[0] - offset + 2, tile.pos[1]- offset + 24), (tile.pos[0]- offset + 30, tile.pos[1]- offset + 24), 3)
+                #     pygame.draw.line(surface, (200, 200, 100), (tile.pos[0]- offset + 2, tile.pos[1]- offset + 24), (tile.pos[0]- offset + int(30*tile.durability*0.01), tile.pos[1]- offset + 24), 3)
 
     def get_tile(self, point):
         i, j = self.__coords_to_grid__(point)
@@ -75,10 +76,10 @@ class TileGrid:
         self.set_tile(new_tile_type(self.game, pos=exact_pos), exact_pos)
 
     def __is_in_grid__(self, i, j):
-        if i < 0 or i >= self.height:
+        if i < 0 or i >= self.num_rows:
             return False
 
-        if j < 0 or j >= self.width:
+        if j < 0 or j >= self.num_cols:
             return False
 
         return True
@@ -103,9 +104,9 @@ class TileGrid:
         num_samples = int(2 * math.pi * radius / self.tile_size * oversampling_factor) # factor 1.5 for small corners
         tiles = [] # dont forget to check for None
         for i in range(num_samples):
-            x = point[0] + math.sin(i * (2 * math.pi) / (num_samples)) * radius
-            y = point[1] + math.cos(i * (2 * math.pi) / (num_samples)) * radius
-            tile = self.get_tile((int(x), int(y)))
+            x = point[0] + math.sin(i * (2 * math.pi) / num_samples) * radius
+            y = point[1] + math.cos(i * (2 * math.pi) / num_samples) * radius
+            tile = self.get_tile(Vector(int(x), int(y)))
 
             pygame.draw.circle(self.game.surface, (255, 255, 255), (int(x), int(y)), 2)
 
@@ -120,7 +121,7 @@ class TileGrid:
 
     @staticmethod
     def __grid_to_coords__(i, j):
-        return i * default.TILE_SIZE + int(default.TILE_SIZE/2), j * default.TILE_SIZE + int(default.TILE_SIZE/2)
+        return Vector(i * default.TILE_SIZE + int(default.TILE_SIZE/2), j * default.TILE_SIZE + int(default.TILE_SIZE/2))
 
     def __str__(self):
         s = ""

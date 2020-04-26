@@ -1,10 +1,9 @@
 import pygame
-
+from entities.coordinates import Vector
 
 class GUI:
-    def __init__(self, x=0, y=0, hidden=True, game=None):
-        self.x = x
-        self.y = y
+    def __init__(self, pos=Vector(0,0), hidden=True, game=None):
+        self.pos = pos
         self.parent = None
         self.children = []
         self.hidden = hidden
@@ -21,10 +20,10 @@ class GUI:
 
     def get_abs_coords(self):
         """Calculate absolute coordinates for drawing"""
-        p = (0, 0)
+        p = Vector(0, 0)
         if self.parent is not None:
             p = self.parent.get_abs_coords()
-        return p[0] + self.x, p[1] + self.y
+        return self.pos + p
 
     def process(self, events):
         pass
@@ -75,7 +74,7 @@ class Rows(Window):
         self.row_height = row_height
 
     def add_child(self, child):
-        child.y = self.y + self.row_height * len(self.children)
+        child.pos.y = self.pos.y + self.row_height * len(self.children)
         super().add_child(child)
 
 

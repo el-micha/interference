@@ -1,19 +1,18 @@
 import default
 from entities.entities import Entity
 from entities.inventories import Inventory
-from helpers import *
-
+from entities.coordinates import Vector
 TRAIN_SPRITE_SIZE = (default.TILE_SIZE / 2)
 
 
 class Train(Entity):
-    def __init__(self, direction=None, *args, **kwargs):
+    def __init__(self, direction: Vector, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
         self.wagons = []
         self.direction = direction
         self.inventory = Inventory()
-        self.size = TRAIN_SPRITE_SIZE, TRAIN_SPRITE_SIZE
+        self.size = Vector(TRAIN_SPRITE_SIZE, TRAIN_SPRITE_SIZE)
 
     @property
     def capacity(self):
@@ -43,35 +42,33 @@ class Train(Entity):
     def length(self):
         total_length = 0
         for wagon in self.wagons:
-            total_length += wagon.size[0]
+            total_length += wagon.size.x
 
         return total_length
 
     def add_wagon(self, wagon):
         dx, dy = self.direction
         if dx:
-            wagon.pos = add(self.pos, (-dx * self.length, 0))
+            wagon.pos = self.pos + Vector(-dx * self.length, 0)
         elif dy:
-            wagon.pos = add(self.pos, (0, -dy * self.length))
+            wagon.pos = self.pos + Vector(0, -dy * self.length)
 
         self.wagons.append(wagon)
 
     def ride(self):
-        dx, dy = dir = self.direction
-        reach = add(self.pos, times(dir, self.size[0] / 2))
+        reach = self.pos + self.direction * self.size.x / 2
 
         tile = self.game.tile_grid.get_tile(reach)
         if tile and tile.is_mineable:
             self.mine(tile)
         elif tile and not tile.is_blocking and self.speed > 0:
-            self.move(times(dir, self.speed))
+            self.move(self.direction * self.speed)
 
     def mine(self, resource):
         resource.durability -= self.mining_power
         if resource.durability < 0:
             drops = resource.drops()
             self.inventory.add_items(drops)
-
             self.game.tile_grid.replace_tile(resource.pos, resource.reveals())
 
     def move(self, delta, *args, **kwargs):
@@ -99,7 +96,7 @@ class Wagon(Entity):
         self.capacity = 0
         self.mining_power = 0
         self.speed = 0
-        self.size = TRAIN_SPRITE_SIZE, TRAIN_SPRITE_SIZE
+        self.size = Vector(TRAIN_SPRITE_SIZE, TRAIN_SPRITE_SIZE)
         self.color = (127, 0, 255)
 
     def draw(self, surface):
@@ -107,7 +104,7 @@ class Wagon(Entity):
 
         # TODO: Replace with proper art
         rendered_text = self.game.font.render(self.icon, True, (255, 255, 255))
-        surface.blit(rendered_text, (self.pos[0], self.pos[1] - self.size[0] / 2))
+        surface.blit(rendered_text, (self.pos.x, self.pos.y - self.size.x / 2))
 
 
 class Engine(Wagon):

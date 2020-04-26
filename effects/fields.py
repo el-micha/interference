@@ -1,6 +1,6 @@
 from entities.entities import Entity
 import pygame
-from helpers import dist
+from entities.coordinates import Vector
 
 class Field(Entity):
     def __init__(self, *args, **kwargs):
@@ -15,7 +15,7 @@ class Field(Entity):
     def get_effect(self, point):
         if not self.active:
             return 0
-        distance = dist(self.pos, point)
+        distance = Vector.dist(self.pos, point)
         if distance <= self.reach:
             return self.amplitude
         else:
@@ -24,7 +24,7 @@ class Field(Entity):
     def draw(self, surface):
         circle = pygame.Surface((self.reach * 2 + 1, self.reach * 2 + 1), pygame.SRCALPHA)
         pygame.draw.circle(circle, self.color, (self.reach, self.reach), self.reach)
-        surface.blit(circle, (self.pos[0] - self.reach, self.pos[1] - self.reach))
+        surface.blit(circle, (int(self.pos.x - self.reach), int(self.pos.y - self.reach)))
 
 
 class EnergyField(Field):

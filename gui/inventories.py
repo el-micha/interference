@@ -1,6 +1,6 @@
 from gui import layouts
 from gui.components import GUI, TextLabel, Rows, Window
-
+from entities.coordinates import Vector
 
 class CharacterInventory(GUI):
     def __init__(self, *args, **kwargs):
@@ -8,9 +8,9 @@ class CharacterInventory(GUI):
 
         self.width = layouts.WINDOW_WIDTH_SM
         self.height = layouts.WINDOW_HEIGHT_XL
+        self.size = Vector(self.width, self.height)
 
-        self.x = layouts.X_10
-        self.y = layouts.Y_0
+        self.pos = Vector(layouts.X_10, layouts.Y_0)
 
     def draw(self, surface):
         self.children = []
@@ -26,8 +26,7 @@ class CharacterInventory(GUI):
         text_rows = Rows(
             width=window.width - 20,
             height=window.height - 20,
-            x=10,
-            y=10,
+            pos = Vector(10, 10),
             background_alpha=1,
         )
         window.add_child(text_rows)
