@@ -1,7 +1,7 @@
 import random
 
-from entities.items import Stone, Coal, Silver, Crystal
-from entities.tiles import Tile, RockFloor, CoalFloor, SilverFloor
+from entities.items import Stone, Coal, Silver, Crystal, IronOre, Iron, Parts, Tools
+from entities.tiles import Tile, RockFloor, CoalFloor, SilverFloor, IronFloor
 
 
 class Resource(Tile):
@@ -41,7 +41,7 @@ class Rock(Resource):
         self.art_id = 15
 
 
-class CoalOre(Resource):
+class CoalVein(Resource):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -52,7 +52,19 @@ class CoalOre(Resource):
         return CoalFloor
 
 
-class SilverOre(Resource):
+class IronVein(Resource):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.item_drops = [DropRate(IronOre, 1.0)]
+        self.art_id = 28
+
+    def reveals(self):
+        new = random.choice([RockFloor, IronFloor])
+        return new
+
+
+class SilverVein(Resource):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 

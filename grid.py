@@ -5,7 +5,7 @@ import default
 import noise
 import settings
 
-from entities.resources import Rock, CoalOre, SilverOre
+from entities.resources import Rock, CoalVein, SilverVein, IronVein
 from entities.tiles import Tile
 from entities.coordinates import Vector
 import math
@@ -26,7 +26,7 @@ class TileGrid:
         self.generate_tiles()
 
     def generate_tiles(self):
-        tile_types = [Rock, Rock, Rock, Rock, Rock, CoalOre, CoalOre, CoalOre, SilverOre]
+        tile_types = [Rock, IronVein, IronVein, Rock, Rock, Rock, CoalVein, CoalVein, CoalVein, CoalVein, SilverVein]
         grid_noise = noise.smooth_noise(self.num_cols, self.num_rows, 3)
         grid_mapping = noise.map_noise_to_ids(grid_noise, tile_types)
         self.grid = [[None for _ in line] for line in grid_mapping]

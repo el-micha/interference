@@ -48,6 +48,7 @@ class Entity:
 
     def get_tiles_below(self):
         w, h = (self.size * 0.5).round()
+        print(self)
         px, py = self.pos.round()
         tiles = []
         for x in range(px - w, px + w, default.TILE_SIZE):

@@ -42,3 +42,38 @@ class Crystal(Item):
 
     is_stackable = False
     is_consumable = False
+
+
+class IronOre(Item):
+    name = 'Iron Ore'
+    description = 'Smelt in a furnace to get Iron.'
+
+    is_stackable = True
+    is_consumable = False
+
+
+class Iron(Item):
+    name = 'Raw Iron'
+    description = 'Smelt in a furnace to get Iron.'
+
+    is_stackable = True
+    is_consumable = False
+
+
+class Parts(Item):
+    name = 'Machine Parts'
+    description = 'Needed to build machines.'
+
+    is_stackable = True
+    is_consumable = False
+
+
+class Tools(Item):
+    name = 'Set of tools'
+    description = 'Use in a workshop to craft machine parts.'
+
+    is_stackable = True
+    is_consumable = False
+
+
+

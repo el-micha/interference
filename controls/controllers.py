@@ -111,7 +111,7 @@ class ConstructionController(Controller):
             return
 
         mpos = pygame.mouse.get_pos()
-        building = building_type(self.game, mpos)
+        building = building_type(self.game, Vector(*mpos))
 
         self.building_placer = BuildingPlacer(game=self.game, building=building)
         self.game.interfaces.append(self.building_placer)

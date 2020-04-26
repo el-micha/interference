@@ -180,3 +180,13 @@ class EnergyDissipator(Building):
         for field in self.fields:
             if field.active:
                 field.draw(surface)
+
+
+class Furnace(Building):
+    name = 'Energy Dissipator'
+    keyboard_shortcut = 'f'
+    construction_costs = [(1, Stone)]
+    suitable_floors = [RockFloor, CoalFloor]
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)

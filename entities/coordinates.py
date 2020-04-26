@@ -31,7 +31,7 @@ class Vector:
         return int(self.x), int(self.y)
 
     def __str__(self):
-        return f"({self.x}, {self.y})"
+        return f"({self.x} / {self.y})"
 
     def __iter__(self):
         return (a for a in (self.x, self.y))

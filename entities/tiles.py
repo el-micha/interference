@@ -31,3 +31,11 @@ class SilverFloor(Tile):
         super().__init__(*args, **kwargs)
 
         self.art_id = random.choice([36])
+
+
+class IronFloor(Tile):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.art_id = random.choice([37])
+
