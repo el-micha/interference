@@ -47,10 +47,11 @@ class Entity:
         self.height = property(self.size.y)
 
     def get_tiles_below(self):
-        w, h = self.size * 0.5
+        w, h = (self.size * 0.5).round()
+        px, py = self.pos.round()
         tiles = []
-        for x in range(self.pos.x - w, self.pos.x + w, default.TILE_SIZE):
-            for y in range(self.pos.y - h , self.pos.y + h, default.TILE_SIZE):
+        for x in range(px - w, px + w, default.TILE_SIZE):
+            for y in range(py - h , py + h, default.TILE_SIZE):
                 tile = self.game.tile_grid.get_tile(Vector(x, y))
                 tiles.append(tile)
         return tiles

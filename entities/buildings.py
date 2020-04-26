@@ -16,13 +16,14 @@ class Building(Entity):
     suitable_floors = []
 
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+        super().__init__(size=None, *args, **kwargs)
 
         self.fields = []
         self.sprite = pygame.image.load("art/80_building.png")
         self.size = Vector(*self.sprite.get_size())
 
     def set_position(self, pos):
+        print(f"setting pos to {pos}")
         self.pos = pos
         for field in self.fields:
             field.pos = self.pos

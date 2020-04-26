@@ -47,7 +47,7 @@ class TileGrid:
                     art_id = 0
                 # could use the tile's own draw instead...
                 offset = int(self.tile_size / 2)
-                surface.blit(self.tile_mapping.get(art_id), tile.pos - tile.size * 0.5)
+                surface.blit(self.tile_mapping.get(art_id), (tile.pos - tile.size * 0.5).round())
                 # health bar /mining progress TODO: restore and improve
                 # if hasattr(tile, "durability") and tile.durability < 100:
                 #     pygame.draw.line(surface, (200, 0, 0), (tile.pos[0] - offset + 2, tile.pos[1]- offset + 24), (tile.pos[0]- offset + 30, tile.pos[1]- offset + 24), 3)

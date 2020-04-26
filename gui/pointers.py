@@ -44,7 +44,7 @@ class BuildingPlacer(GUI):
     def draw(self, surface):
         if not self.hidden:
             size = self.building.size
-            mpos = pygame.mouse.get_pos()
+            mpos = Vector(*pygame.mouse.get_pos())
             mpos = mpos + Vector(default.TILE_SIZE, default.TILE_SIZE) * 0.5
 
             pos = mpos - size * 0.5
@@ -55,11 +55,10 @@ class BuildingPlacer(GUI):
 
             pos = (pos + size * 0.5).round()
 
-            self.building.set_position(pos)
+            self.building.set_position(Vector(*pos))
 
             if not self.game.character.can_construct(self.building):
-                rect_surface = pygame.Surface(size, pygame.SRCALPHA)
+                rect_surface = pygame.Surface(size.round(), pygame.SRCALPHA)
                 rect_surface.fill((255, 0, 0, 60))
-                surface.blit(rect_surface, self.building.pos - size * 0.5)
-
+                surface.blit(rect_surface, (self.building.pos - size * 0.5).round())
             self.building.draw(surface)

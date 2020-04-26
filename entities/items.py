@@ -1,8 +1,7 @@
 
-from .entities import Entity
 
 
-class Item(Entity):
+class Item:
     name = None
     description = None
 

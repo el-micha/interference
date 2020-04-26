@@ -18,7 +18,7 @@ class Resource(Tile):
         result = []
         for drop in self.item_drops:
             if random.uniform(0, 1) < drop.rate:
-                result.append(drop.item_cls(self.game))
+                result.append(drop.item_cls())
 
         return result
 

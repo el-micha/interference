@@ -29,8 +29,8 @@ class Game:
         # game stuff ...
         self.tile_grid = TileGrid(self, int(settings.SCREEN_HEIGHT / default.TILE_SIZE),
                                   int(settings.SCREEN_WIDTH / default.TILE_SIZE))
-        self.character = Character(self, Vector((default.TILE_SIZE + int(default.TILE_SIZE / 2),
-                                   default.TILE_SIZE + int(default.TILE_SIZE / 2))))
+        self.character = Character(self, Vector(default.TILE_SIZE + int(default.TILE_SIZE / 2),
+                                   default.TILE_SIZE + int(default.TILE_SIZE / 2)), Vector(8, 8))
         self.tile_grid.replace_tile(self.character.pos, Tile)
         for i in range(4):
             for j in range(4):
@@ -43,14 +43,14 @@ class Game:
 
         # FIXME: Remove hardcoded trains
         east_train = Train(game=self, pos=Vector(default.TILE_SIZE + int(default.TILE_SIZE / 2), default.TILE_SIZE * 2 + int(default.TILE_SIZE / 2)), direction=Vector(1, 0))
-        east_train.add_wagon(BoringHead(self))
-        east_train.add_wagon(Engine(self))
-        east_train.add_wagon(Cart(self))
+        east_train.add_wagon(BoringHead(self, None, None))
+        east_train.add_wagon(Engine(self, None, None))
+        east_train.add_wagon(Cart(self, None, None))
         self.trains.append(east_train)
 
         south_train = Train(game=self, pos=Vector(default.TILE_SIZE + int(default.TILE_SIZE / 2),
                             default.TILE_SIZE * 3 + int(default.TILE_SIZE / 2)), direction=Vector(0, 1))
-        south_train.add_wagon(Engine(self))
+        south_train.add_wagon(Engine(self, None, None))
         self.trains.append(south_train)
 
         for train in self.trains:

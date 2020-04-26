@@ -4,7 +4,7 @@ from entities.coordinates import Vector
 
 class Field(Entity):
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+        super().__init__(size=None, *args, **kwargs)
 
         # for a circle: radius, for other forms: max distance from origin
         self.reach = 256

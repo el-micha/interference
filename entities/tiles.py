@@ -1,10 +1,11 @@
 from .entities import Entity
 import random
-
+from entities.coordinates import Vector
+import default
 
 class Tile(Entity):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(self, game, pos, size=Vector(default.TILE_SIZE, default.TILE_SIZE), *args, **kwargs):
+        super().__init__(game, pos, size=size, *args, **kwargs)
 
         self.is_mineable = False
         self.art_id = 0

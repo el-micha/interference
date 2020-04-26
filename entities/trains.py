@@ -6,13 +6,12 @@ TRAIN_SPRITE_SIZE = (default.TILE_SIZE / 2)
 
 
 class Train(Entity):
-    def __init__(self, direction: Vector, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(self, direction: Vector, size=Vector(TRAIN_SPRITE_SIZE, TRAIN_SPRITE_SIZE), *args, **kwargs):
+        super().__init__(size=size, *args, **kwargs)
 
         self.wagons = []
         self.direction = direction
         self.inventory = Inventory()
-        self.size = Vector(TRAIN_SPRITE_SIZE, TRAIN_SPRITE_SIZE)
 
     @property
     def capacity(self):
@@ -56,7 +55,7 @@ class Train(Entity):
         self.wagons.append(wagon)
 
     def ride(self):
-        reach = self.pos + self.direction * self.size.x / 2
+        reach = self.pos + self.direction * self.size.x * 0.5
 
         tile = self.game.tile_grid.get_tile(reach)
         if tile and tile.is_mineable:

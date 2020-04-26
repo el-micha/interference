@@ -62,7 +62,7 @@ class Window(GUI):
         if self.border_color:
             pygame.draw.rect(window, self.border_color, pygame.Rect(0, 0, self.width, self.height), 4)
 
-        surface.blit(window, self.get_abs_coords())
+        surface.blit(window, self.get_abs_coords().round())
 
         super().draw(surface)
 
@@ -88,4 +88,4 @@ class TextLabel(GUI):
 
     def draw(self, surface):
         rendered_text = self.game.font.render(self.text, True, self.text_color, self.background_color)
-        surface.blit(rendered_text, self.get_abs_coords())
+        surface.blit(rendered_text, self.get_abs_coords().round())

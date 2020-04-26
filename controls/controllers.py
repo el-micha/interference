@@ -3,7 +3,7 @@ import pygame
 from entities.buildings import CoalDrill, EnergyDissipator
 from entities.resources import Resource
 from gui.pointers import BuildingPlacer
-
+from entities.coordinates import Vector
 
 class Controller:
     def __init__(self, game, gui=None):
@@ -21,13 +21,13 @@ class CharacterController(Controller):
 
         pressed = pygame.key.get_pressed()
         if pressed[pygame.K_UP] or pressed[pygame.K_w]:
-            self.game.character.move((0, -4))
+            self.game.character.move(Vector(0, -4))
         if pressed[pygame.K_DOWN] or pressed[pygame.K_s]:
-            self.game.character.move((0, 4))
+            self.game.character.move(Vector(0, 4))
         if pressed[pygame.K_LEFT] or pressed[pygame.K_a]:
-            self.game.character.move((-4, 0))
+            self.game.character.move(Vector(-4, 0))
         if pressed[pygame.K_RIGHT] or pressed[pygame.K_d]:
-            self.game.character.move((4, 0))
+            self.game.character.move(Vector(4, 0))
 
         # reuse this for tile selection & highlighting
         # mouse_up_events = [event for event in events if event.type == pygame.MOUSEBUTTONUP]
