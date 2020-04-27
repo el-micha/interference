@@ -10,7 +10,7 @@ class MainMenu(GUI):
         self.height = layouts.WINDOW_HEIGHT_LG
         self.size = Vector(self.width, self.height)
 
-        self.pos = Vector(layouts.X_6 - self.width / 2, layouts.Y_1)
+        self.pos = Vector(layouts.X_6 - self.width * 0.5, layouts.Y_1)
 
         window = Window(
             width=self.width,

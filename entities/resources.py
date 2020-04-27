@@ -60,7 +60,7 @@ class IronVein(Resource):
         self.art_id = 28
 
     def reveals(self):
-        new = random.choice([RockFloor, IronFloor])
+        new = random.choice([IronFloor])
         return new
 
 

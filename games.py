@@ -32,8 +32,8 @@ class Game:
         self.character = Character(self, Vector(default.TILE_SIZE + int(default.TILE_SIZE / 2),
                                    default.TILE_SIZE + int(default.TILE_SIZE / 2)), Vector(8, 8))
         self.tile_grid.replace_tile(self.character.pos, Tile)
-        for i in range(4):
-            for j in range(4):
+        for i in range(5):
+            for j in range(5):
                 self.tile_grid.replace_tile(Vector(32 * (1+i), 32 * (1+j)), random.choice([RockFloor, CoalFloor]))
 
         # Entities
