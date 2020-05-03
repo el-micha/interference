@@ -10,11 +10,8 @@ from entities.tiles import Tile
 from entities.coordinates import Vector
 import math
 
-class TileGrid:
-    """
-    Holds grid of tiles.
-    """
 
+class TileGrid:
     def __init__(self, game, num_cols, num_rows):
         self.game = game
         self.num_cols = num_cols
@@ -41,13 +38,10 @@ class TileGrid:
             for j, tile in enumerate(line):
                 if Vector.dist(cpos, tile.pos) > self.game.character.get_view_distance():
                     continue
-                if tile:
-                    art_id = tile.art_id
-                else:
-                    art_id = 0
+                tile.draw(surface)
                 # could use the tile's own draw instead...
-                offset = int(self.tile_size / 2)
-                surface.blit(self.tile_mapping.get(art_id), (tile.pos - tile.size * 0.5).round())
+                #offset = int(self.tile_size / 2)
+                #surface.blit(self.tile_mapping.get(art_id), (tile.pos - tile.size * 0.5).round())
                 # health bar /mining progress TODO: restore and improve
                 # if hasattr(tile, "durability") and tile.durability < 100:
                 #     pygame.draw.line(surface, (200, 0, 0), (tile.pos[0] - offset + 2, tile.pos[1]- offset + 24), (tile.pos[0]- offset + 30, tile.pos[1]- offset + 24), 3)
@@ -138,7 +132,6 @@ class TileMapping:
     Expects images in the directory to contain their id as a prefix of the form "01_" as in "01_background.png
     Also expects there to be at least a default image with prefix 0_"
     """
-
     def __init__(self, art_directory):
         if not pygame.get_init():
             pygame.init()

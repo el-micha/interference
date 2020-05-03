@@ -14,6 +14,12 @@ need components:
 - entity guis for robots, machines, factories, vehicles
 - physics, maybe (flying bullets)
 
+Ideas:
+Visibility: 
+Field called Light makes things (tiles, buildings, entities) visible
+Character has a vision device with a range which is affected by available energy.
+Some buildings can emit Light too.
+
 
 =======================================================================================================================
 
