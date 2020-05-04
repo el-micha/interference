@@ -3,7 +3,8 @@ import pygame
 import default
 import settings
 from grid import TileGrid
-from gui.components import GUI
+from gui.components import GUI, TextLabel, Rows, Window
+from gui import layouts
 from entities.coordinates import Vector
 
 class LinePointer(GUI):
@@ -25,13 +26,42 @@ class TileHighlighter(GUI):
         self.hidden = False
         self.icon = pygame.image.load("art/90_highlight.png")
 
+        self.width = layouts.WINDOW_WIDTH_XS
+        self.height = layouts.WINDOW_HEIGHT_XS
+        self.pos = Vector(layouts.X_0, layouts.Y_11)
+
     def draw(self, surface):
-        if not self.game.paused and not self.game.construction_mode:
-            mx, my = pygame.mouse.get_pos()
-            surface.blit(
-                self.icon,
-                (int(mx / default.TILE_SIZE) * default.TILE_SIZE, int(my / default.TILE_SIZE) * default.TILE_SIZE),
-            )
+        #FIXME: this leads to performance problems! why is this code called in every draw?
+        if self.game.paused or self.game.construction_mode:
+            return
+
+        mx, my = pygame.mouse.get_pos()
+        surface.blit(
+            self.icon,
+            (int(mx / default.TILE_SIZE) * default.TILE_SIZE, int(my / default.TILE_SIZE) * default.TILE_SIZE),
+        )
+
+        tile = self.game.tile_grid.get_tile((mx, my))
+        tile_type = tile.__class__.__name__
+
+        window = Window(
+            width=self.width,
+            height=self.height,
+            background_color=layouts.WINDOW_BACKGROUND_COLOR,
+            border_color=layouts.WINDOW_BORDER_COLOR,
+        )
+        self.add_child(window)
+
+        text_rows = Rows(
+            width=window.width - 20,
+            height=window.height - 20,
+            pos=Vector(10, 10),
+            background_alpha=1,
+        )
+        window.add_child(text_rows)
+
+        text_rows.add_child(TextLabel(tile_type, layouts.TEXT_COLOR))
+        super().draw(surface)
 
 
 class BuildingPlacer(GUI):
