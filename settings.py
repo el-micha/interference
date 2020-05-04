@@ -9,7 +9,7 @@ SCREEN_WIDTH = 1920 - 512
 SCREEN_HEIGHT = 1080 - 256-128
 
 
-DEBUG_MODE = False
+DEBUG_MODE = True
 
 
 # You can override the default settings by creating a local_settings.py file

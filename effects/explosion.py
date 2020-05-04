@@ -6,7 +6,7 @@ class Explosion(Entity):
     def __init__(self, *args,  **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.sprite = ExplosionSprite(self.game, self.pos)
+        self.sprite = ExplosionSprite()
         self.radius = 0
         self.max_radius = 200
         self.growth = 1
@@ -14,7 +14,7 @@ class Explosion(Entity):
 
     def draw(self, surface):
         if self.active:
-            self.sprite.draw(surface)
+            self.sprite.draw(surface, self.pos)
 
     def tick(self, tick):
         if not self.active:

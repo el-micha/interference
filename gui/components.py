@@ -1,9 +1,10 @@
 import pygame
 from entities.coordinates import Vector
 
+
 class GUI:
-    def __init__(self, pos=Vector(0,0), hidden=True, game=None):
-        self.pos = pos
+    def __init__(self, pos=None, hidden=True, game=None):
+        self.pos = pos if pos is not None else Vector(0, 0)
         self.parent = None
         self.children = []
         self.hidden = hidden

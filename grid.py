@@ -39,13 +39,7 @@ class TileGrid:
                 if Vector.dist(cpos, tile.pos) > self.game.character.get_view_distance():
                     continue
                 tile.draw(surface, self.tile_mapping)
-                # could use the tile's own draw instead...
-                #offset = int(self.tile_size / 2)
-                #surface.blit(self.tile_mapping.get(art_id), (tile.pos - tile.size * 0.5).round())
-                # health bar /mining progress TODO: restore and improve
-                # if hasattr(tile, "durability") and tile.durability < 100:
-                #     pygame.draw.line(surface, (200, 0, 0), (tile.pos[0] - offset + 2, tile.pos[1]- offset + 24), (tile.pos[0]- offset + 30, tile.pos[1]- offset + 24), 3)
-                #     pygame.draw.line(surface, (200, 200, 100), (tile.pos[0]- offset + 2, tile.pos[1]- offset + 24), (tile.pos[0]- offset + int(30*tile.durability*0.01), tile.pos[1]- offset + 24), 3)
+
 
     def get_tile(self, point):
         i, j = self.__coords_to_grid__(point)
@@ -98,8 +92,8 @@ class TileGrid:
         num_samples = int(2 * math.pi * radius / self.tile_size * oversampling_factor) # factor 1.5 for small corners
         tiles = [] # dont forget to check for None
         for i in range(num_samples):
-            x = point[0] + math.sin(i * (2 * math.pi) / num_samples) * radius
-            y = point[1] + math.cos(i * (2 * math.pi) / num_samples) * radius
+            x = point.x + math.sin(i * (2 * math.pi) / num_samples) * radius
+            y = point.y + math.cos(i * (2 * math.pi) / num_samples) * radius
             tile = self.get_tile(Vector(int(x), int(y)))
 
             pygame.draw.circle(self.game.surface, (255, 255, 255), (int(x), int(y)), 2)

@@ -14,7 +14,7 @@ class LinePointer(GUI):
 
     def draw(self, surface):
         if settings.DEBUG_MODE and not self.game.paused:
-            pygame.draw.line(surface, (255, 255, 0), (self.game.character.pos.x + 16, self.game.character.pos.y + 16),
+            pygame.draw.line(surface, (255, 255, 0), (self.game.character.pos.x, self.game.character.pos.y),
                              pygame.mouse.get_pos(), 1)
 
 

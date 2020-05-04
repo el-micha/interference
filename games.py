@@ -41,6 +41,8 @@ class Game:
         self.buildings = []
         self.trains = []
 
+        #self.exp = Explosion(self, pos=Vector(32, 32), size=Vector(32, 32))
+
 
         # FIXME: Remove hardcoded trains
         east_train = Train(game=self, pos=Vector(default.TILE_SIZE + int(default.TILE_SIZE / 2), default.TILE_SIZE * 2 + int(default.TILE_SIZE / 2)), direction=Vector(1, 0))
@@ -126,8 +128,6 @@ class Game:
         for train in self.trains:
             train.draw(self.surface)
         self.draw_interfaces()
-
-
 
         pygame.display.update()
 
