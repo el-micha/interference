@@ -90,7 +90,9 @@ class Entity:
 
     def draw(self, surface):
         if isinstance(self.sprite, pygame.Surface):
-            draw_pos = (self.pos - (self.size * 0.5)).round()
+            #TODO: using spritesize now, is this always correct?
+            sprite_size = Vector(*self.sprite.get_size())
+            draw_pos = (self.pos - (sprite_size * 0.5)).round()
             surface.blit(self.sprite, draw_pos)
         elif isinstance(self.sprite, Sprite):
             self.sprite.draw(surface, self.pos)

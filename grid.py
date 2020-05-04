@@ -38,7 +38,7 @@ class TileGrid:
             for j, tile in enumerate(line):
                 if Vector.dist(cpos, tile.pos) > self.game.character.get_view_distance():
                     continue
-                tile.draw(surface)
+                tile.draw(surface, self.tile_mapping)
                 # could use the tile's own draw instead...
                 #offset = int(self.tile_size / 2)
                 #surface.blit(self.tile_mapping.get(art_id), (tile.pos - tile.size * 0.5).round())

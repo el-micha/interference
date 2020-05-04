@@ -2,6 +2,7 @@ from .entities import Entity
 import random
 from entities.coordinates import Vector
 import default
+import pygame
 
 class Tile(Entity):
     def __init__(self, game, pos, size=Vector(default.TILE_SIZE, default.TILE_SIZE), *args, **kwargs):
@@ -10,6 +11,19 @@ class Tile(Entity):
         self.is_mineable = False
         self.art_id = 0
         self.is_blocking = False
+
+    def draw(self, surface, tile_mapping):
+        self.sprite = tile_mapping.get(self.art_id)
+        super().draw(surface)
+        # healthbar TODO: move this somewhere more appropriate...
+        if hasattr(self, "durability") and self.durability < 100:
+            max_bar_length = self.size.x * 0.9
+            y_position = self.size.y * 0.5 * 0.7
+            start = self.pos - Vector(max_bar_length * 0.5, -y_position)
+            max_end = start + Vector(max_bar_length, 0)
+            end = start + Vector(max_bar_length * self.durability * 0.01, 0)
+            pygame.draw.line(surface, (200, 0, 0), start.round(), max_end.round(), 3)
+            pygame.draw.line(surface, (200, 200, 100), start.round(), end.round(), 3)
 
 
 class RockFloor(Tile):

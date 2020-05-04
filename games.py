@@ -4,6 +4,7 @@ from entities.buildings import EnergyDissipator, CoalDrill
 from entities.coordinates import Vector
 import default
 import settings
+from entities.entities import ID
 from entities.trains import Train, Engine, BoringHead, Cart
 from grid import TileGrid
 from entities.characters import Character
@@ -107,7 +108,6 @@ class Game:
         self.tick += 1
         for building in self.buildings:
             building.tick(self.tick)
-
 
     def process_controllers(self):
         events = pygame.event.get()
