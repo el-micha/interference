@@ -31,7 +31,6 @@ class TileHighlighter(GUI):
         self.pos = Vector(layouts.X_0, layouts.Y_11)
 
     def draw(self, surface):
-        #FIXME: this leads to performance problems! why is this code called in every draw?
         if self.game.paused or self.game.construction_mode:
             return
 
@@ -44,6 +43,7 @@ class TileHighlighter(GUI):
         tile = self.game.tile_grid.get_tile((mx, my))
         tile_type = tile.__class__.__name__
 
+        self.children = []
         window = Window(
             width=self.width,
             height=self.height,

@@ -5,7 +5,7 @@ from effects.fields import EnergyField
 from entities.coordinates import Vector
 from .entities import Entity
 from .inventories import Inventory
-
+from effects.fields import LightField
 
 class Character(Entity):
     def __init__(self, *args, **kwargs):
@@ -17,11 +17,13 @@ class Character(Entity):
         self.size = Vector(int(default.TILE_SIZE / 2), int(default.TILE_SIZE / 2))
         self.reach = 64 + 64
         self.base_mining_power = 2
-        self.base_view_distance = 200
+        #self.base_view_distance = 200
 
-    def get_view_distance(self):
-        view_field_factors = 1 + self.get_available_energy()
-        return self.base_view_distance * view_field_factors
+        self.light_field = LightField(self.game, self, pos=self.pos, radius=200)
+
+    # def get_view_distance(self):
+    #     view_field_factors = 1 + self.get_available_energy()
+    #     return self.base_view_distance * view_field_factors
 
     def get_mining_power(self):
         mining_field_factors = 1 + self.get_available_energy() * 2

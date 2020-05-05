@@ -13,6 +13,8 @@ class Tile(Entity):
         self.is_blocking = False
 
     def draw(self, surface, tile_mapping):
+        if not self.is_visible():
+            return
         self.sprite = tile_mapping.get(self.art_id)
         super().draw(surface)
         # healthbar TODO: move this somewhere more appropriate...

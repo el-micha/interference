@@ -1,7 +1,7 @@
 import pygame
 
 import default
-from effects.fields import EnergyField
+from effects.fields import EnergyField, LightField
 from .entities import Entity
 from .items import Coal
 from .resources import Stone
@@ -24,9 +24,9 @@ class Building(Entity):
 
     def set_position(self, pos):
         print(f"setting pos to {pos}")
-        self.pos = pos
-        for field in self.fields:
-            field.pos = self.pos
+        self.pos.set(pos)
+        # for field in self.fields:
+        #     field.pos.set(self.pos)
 
     @classmethod
     def is_affordable(cls, inventory):
@@ -80,6 +80,8 @@ class CoalDrill(Building):
         self.stored_res = 0
         self.capacity = self.base_mining_rate * 60 * 3 # 3 seconds until storage full
         #self.distribution_rate = 9999999 # should probably be limited or deleted
+
+        self.light_field = LightField(self.game, self, self.pos, 50)
 
     def tick(self, tick):
         # self.print_stats()
@@ -148,7 +150,8 @@ class EnergyDissipator(Building):
         self.size = Vector(*self.sprite.get_size())
 
         self.fields = [
-            EnergyField(self.game, self.pos),
+            EnergyField(self.game, self, self.pos, 256),
+            LightField(self.game, self, self.pos, 80)
         ]
 
         self.stored_coal = 0

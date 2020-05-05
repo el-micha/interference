@@ -33,13 +33,9 @@ class TileGrid:
                 self.grid[i][j] = tile_type(self.game, pos, Vector(default.TILE_SIZE, default.TILE_SIZE))
 
     def draw(self, surface):
-        cpos = self.game.character.pos
         for i, line in enumerate(self.grid):
             for j, tile in enumerate(line):
-                if Vector.dist(cpos, tile.pos) > self.game.character.get_view_distance():
-                    continue
                 tile.draw(surface, self.tile_mapping)
-
 
     def get_tile(self, point):
         i, j = self.__coords_to_grid__(point)

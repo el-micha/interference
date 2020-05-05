@@ -38,7 +38,7 @@ class Rock(Resource):
         super().__init__(*args, **kwargs)
 
         self.item_drops = [DropRate(Stone, 1.0), DropRate(Crystal, 0.1)]
-        self.art_id = 15
+        self.art_id = random.choice([15])
 
 
 class CoalVein(Resource):
@@ -46,7 +46,7 @@ class CoalVein(Resource):
         super().__init__(*args, **kwargs)
 
         self.item_drops = [DropRate(Coal, 1.0)]
-        self.art_id = 2
+        self.art_id = random.choice([1, 2, 3])
 
     def reveals(self):
         return CoalFloor

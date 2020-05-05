@@ -2,6 +2,7 @@ import pygame
 import default
 from entities.coordinates import Vector
 from effects.visuals import Sprite
+from effects.fields import Field, LightField
 
 class ID:
     """Hands out unique ids and stores all id-d entities sorted by type"""
@@ -34,7 +35,7 @@ class Entity:
     def __init__(self, game, pos: Vector, size: Vector):
         self.id = ID.request_id(self)
         self.game = game
-        self.pos = pos
+        self.pos = pos # considdle: .set or =, that is the riddle
         self.size = size
         if self.size is None:
             self.size = Vector(default.TILE_SIZE, default.TILE_SIZE)
@@ -45,6 +46,7 @@ class Entity:
         # properties
         self.width = property(self.size.x)
         self.height = property(self.size.y)
+
 
     def get_tiles_below(self):
         w, h = (self.size * 0.5).round()
@@ -66,7 +68,11 @@ class Entity:
 
     def move(self, delta, require_valid_move=True):
         if not require_valid_move or self.is_valid_move(delta):
-            self.pos = self.pos + delta
+            # self.pos = self.pos + delta changes self.pos object,
+            # so fields and other stuff referencing character's pos object
+            # are not changed unless we change pos' x,y manually
+            self.pos.set(self.pos + delta)
+            # self.pos = self.pos + delta
 
     def is_valid_move(self, delta):
         new_x, new_y = self.pos + delta
@@ -87,6 +93,13 @@ class Entity:
             return False
 
         return True
+
+    def is_visible(self):
+        light_fields = Field.get_fields_of_type(LightField)
+        for field in light_fields:
+            if field.get_effect(self.pos) > 0:
+                return True
+        return False
 
     def draw(self, surface):
         if isinstance(self.sprite, pygame.Surface):

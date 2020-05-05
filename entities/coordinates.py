@@ -13,6 +13,14 @@ class Vector:
     def __add__(self, other):
         return Vector(self.x + other.x, self.y + other.y)
 
+    # def increment(self, other):
+    #     self.x += other.x
+    #     self.y += other.y
+
+    def set(self, p):
+        self.x = p.x
+        self.y = p.y
+
     def __sub__(self, other):
         return Vector(self.x - other.x, self.y - other.y)
 
@@ -39,6 +47,8 @@ class Vector:
     @staticmethod
     def dist(v1, v2):
         return (v2 - v1).length()
+
+
 
 if False:
     c = Vector(2,3)
