@@ -38,15 +38,6 @@ class Character(Entity):
     #                     factor += getattr(field, factor_attr)
     #     return factor
 
-    def get_available_energy(self):
-        energy = 0
-        for b in self.game.buildings:
-            for field in b.fields:
-                if not type(field) == EnergyField:
-                    continue
-                energy += field.get_effect(self.pos)
-        return energy
-
     def mine(self, resource):
         distance = Vector.dist(self.pos, resource.pos)
 

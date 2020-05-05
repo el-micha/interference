@@ -2,7 +2,7 @@ import pygame
 import default
 from entities.coordinates import Vector
 from effects.visuals import Sprite
-from effects.fields import Field, LightField
+from effects.fields import Field, LightField, EnergyField
 
 class ID:
     """Hands out unique ids and stores all id-d entities sorted by type"""
@@ -100,6 +100,12 @@ class Entity:
             if field.get_effect(self.pos) > 0:
                 return True
         return False
+
+    def get_available_energy(self):
+        energy = 0
+        for field in Field.get_fields_of_type(EnergyField):
+            energy += field.get_effect(self.pos)
+        return energy
 
     def draw(self, surface):
         if isinstance(self.sprite, pygame.Surface):

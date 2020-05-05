@@ -26,38 +26,52 @@ class Field:
         self.parent = parent
         self.game = game
         self.pos = pos
-        self.radius = radius
+        self.base_radius = radius
+        self.base_amplitude = 1
         self.color = (50, 50, 200, 60)
         self.active = True
-        self.amplitude = 1
 
         Field.register_field(self)
+
+    def get_amplitude(self):
+        return self.base_amplitude
+
+    def get_radius(self):
+        return self.base_radius
 
     def get_effect(self, point):
         if not self.active:
             return 0
         distance = Vector.dist(self.pos, point)
-        if distance <= self.radius:
-            return self.amplitude
+        if distance <= self.get_radius():
+            return self.get_amplitude()
         else:
             return 0
 
     def draw(self, surface):
-        circle = pygame.Surface((self.radius * 2 + 1, self.radius * 2 + 1), pygame.SRCALPHA)
-        pygame.draw.circle(circle, self.color, (self.radius, self.radius), self.radius)
-        surface.blit(circle, (int(self.pos.x - self.radius), int(self.pos.y - self.radius)))
+        circle = pygame.Surface((self.get_radius() * 2 + 1, self.get_radius() * 2 + 1), pygame.SRCALPHA)
+        pygame.draw.circle(circle, self.color, (self.get_radius(), self.get_radius()), self.get_radius())
+        surface.blit(circle, (int(self.pos.x - self.get_radius()), int(self.pos.y - self.get_radius())))
 
 
 class EnergyField(Field):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.amplitude = 2
+    def get_amplitude(self):
+        return self.base_amplitude * 2
 
 
 class LightField(Field):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+
+    def get_radius(self):
+        energy = 1
+        for field in Field.get_fields_of_type(EnergyField):
+            energy += field.get_effect(self.pos) / 2
+        return self.base_radius * energy
+
 
     def draw(self, surface):
         pass

@@ -16,6 +16,7 @@ from gui.menus import MainMenu
 from gui.pointers import TileHighlighter, LinePointer
 from entities.tiles import Tile, RockFloor, CoalFloor
 from effects.explosion import Explosion
+from effects.fields import Field
 import random
 
 class Game:
@@ -110,6 +111,9 @@ class Game:
         self.tick += 1
         for building in self.buildings:
             building.tick(self.tick)
+
+        # for k,v in Field.fieldmap.items():
+        #     print(k, len(v))
 
     def process_controllers(self):
         events = pygame.event.get()
