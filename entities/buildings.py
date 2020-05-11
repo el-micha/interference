@@ -23,7 +23,6 @@ class Building(Entity):
         self.size = Vector(*self.sprite.get_size())
 
     def set_position(self, pos):
-        print(f"setting pos to {pos}")
         self.pos.set(pos)
         # for field in self.fields:
         #     field.pos.set(self.pos)
