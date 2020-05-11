@@ -4,6 +4,7 @@ from entities.coordinates import Vector
 from effects.visuals import Sprite
 from effects.fields import Field, LightField, EnergyField
 
+
 class ID:
     """Hands out unique ids and stores all id-d entities sorted by type"""
     id_counter = -1
@@ -32,31 +33,31 @@ class Entity:
     - sprite
     self.sprite = SpriteLoader.get("character_sprite")
     """
+
     def __init__(self, game, pos: Vector, size: Vector):
         self.id = ID.request_id(self)
         self.game = game
-        self.pos = pos # considdle: .set or =, that is the riddle
+        self.pos = pos  # considdle: .set or =, that is the riddle
         self.size = size
         if self.size is None:
             self.size = Vector(default.TILE_SIZE, default.TILE_SIZE)
         # default sprite
         self.sprite = pygame.Surface(self.size.round(), pygame.SRCALPHA)
-        self.sprite.fill((255,255,0,128))
+        self.sprite.fill((255, 255, 0, 128))
 
         # properties
         self.width = property(self.size.x)
         self.height = property(self.size.y)
 
-
     def get_tiles_below(self):
         w, h = (self.size * 0.5).round()
         px, py = self.pos.round()
-        tiles = []
-        for x in range(px - w, px + w, default.TILE_SIZE):
-            for y in range(py - h , py + h, default.TILE_SIZE):
+        tiles = set()
+        for x in range(px - w, px + w, 1):
+            for y in range(py - h, py + h, 1):
                 tile = self.game.tile_grid.get_tile(Vector(x, y))
-                tiles.append(tile)
-        return tiles
+                tiles.add(tile)
+        return list(tiles)
 
     def intersects(self, point):
         """Assume a rectangular form around self.pos. Overwrite this if round or other form."""
@@ -109,7 +110,7 @@ class Entity:
 
     def draw(self, surface):
         if isinstance(self.sprite, pygame.Surface):
-            #TODO: using spritesize now, is this always correct?
+            # TODO: using spritesize now, is this always correct?
             sprite_size = Vector(*self.sprite.get_size())
             draw_pos = (self.pos - (sprite_size * 0.5)).round()
             surface.blit(self.sprite, draw_pos)
@@ -117,4 +118,3 @@ class Entity:
             self.sprite.draw(surface, self.pos)
         else:
             print("Entity.draw expects a sprite or overwriting of draw.")
-

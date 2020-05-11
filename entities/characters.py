@@ -1,11 +1,11 @@
 import pygame
 
 import default
-from effects.fields import EnergyField
 from entities.coordinates import Vector
 from .entities import Entity
 from .inventories import Inventory
 from effects.fields import LightField
+
 
 class Character(Entity):
     def __init__(self, *args, **kwargs):
@@ -17,7 +17,7 @@ class Character(Entity):
         self.size = Vector(int(default.TILE_SIZE / 2), int(default.TILE_SIZE / 2))
         self.reach = 64 + 64
         self.base_mining_power = 2
-        #self.base_view_distance = 200
+        # self.base_view_distance = 200
 
         self.light_field = LightField(self.game, self, pos=self.pos, radius=200)
 
@@ -66,6 +66,9 @@ class Character(Entity):
             return False
 
         if not building.is_constructable():
+            return False
+
+        if any(t in self.get_tiles_below() for t in building.get_tiles_below()):
             return False
 
         distance = Vector.dist(self.pos, building.pos)
