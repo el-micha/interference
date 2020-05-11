@@ -7,6 +7,7 @@ from gui.components import GUI, TextLabel, Rows, Window
 from gui import layouts
 from entities.coordinates import Vector
 
+
 class LinePointer(GUI):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -26,10 +27,6 @@ class TileHighlighter(GUI):
         self.hidden = False
         self.icon = pygame.image.load("art/90_highlight.png")
 
-        self.width = layouts.WINDOW_WIDTH_XS
-        self.height = layouts.WINDOW_HEIGHT_XS
-        self.pos = Vector(layouts.X_0, layouts.Y_11)
-
     def draw(self, surface):
         if self.game.paused or self.game.construction_mode:
             return
@@ -40,10 +37,27 @@ class TileHighlighter(GUI):
             (int(mx / default.TILE_SIZE) * default.TILE_SIZE, int(my / default.TILE_SIZE) * default.TILE_SIZE),
         )
 
+
+class HoverDescription(GUI):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.hidden = False
+        self.width = layouts.WINDOW_WIDTH_XS
+        self.height = layouts.WINDOW_HEIGHT_XS
+        self.pos = Vector(layouts.X_0, layouts.Y_11)
+
+    def draw(self, surface):
+        if self.game.paused or self.game.construction_mode:
+            return
+
+        mx, my = pygame.mouse.get_pos()
+
         tile = self.game.tile_grid.get_tile((mx, my))
         tile_type = tile.__class__.__name__
 
         self.children = []
+
         window = Window(
             width=self.width,
             height=self.height,

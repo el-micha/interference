@@ -13,7 +13,7 @@ from controls.controllers import CharacterController, MainMenuController, Charac
 from gui.inventories import CharacterInventory
 from gui.constructions import BuildingMenu
 from gui.menus import MainMenu
-from gui.pointers import TileHighlighter, LinePointer
+from gui.pointers import TileHighlighter, LinePointer, HoverDescription
 from entities.tiles import Tile, RockFloor, CoalFloor
 from effects.explosion import Explosion
 from effects.fields import Field
@@ -77,6 +77,7 @@ class Game:
         self.register_controller(CharacterController(self))
         self.register_interface(LinePointer(game=self))
         self.register_interface(TileHighlighter(game=self))
+        self.register_interface(HoverDescription(game=self))
         self.register_interface(CharacterInventory(game=self, hidden=False), CharacterInventoryController)
         self.register_interface(BuildingMenu(game=self, hidden=False), ConstructionController)
 
