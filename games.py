@@ -12,7 +12,7 @@ from controls.controllers import CharacterController, MainMenuController, Charac
     ConstructionController
 from gui.inventories import CharacterInventory
 from gui.constructions import BuildingMenu
-from gui.menus import MainMenu
+from gui.menus import MainMenu, FPSMenu
 from gui.pointers import TileHighlighter, LinePointer, HoverDescription
 from entities.tiles import Tile, RockFloor, CoalFloor
 from effects.explosion import Explosion
@@ -80,6 +80,7 @@ class Game:
         self.register_interface(HoverDescription(game=self))
         self.register_interface(CharacterInventory(game=self, hidden=False), CharacterInventoryController)
         self.register_interface(BuildingMenu(game=self, hidden=False), ConstructionController)
+        self.register_interface(FPSMenu(game=self, hidden=False))
 
     def register_interface(self, interface, controller_cls=None):
         self.interfaces.append(interface)
