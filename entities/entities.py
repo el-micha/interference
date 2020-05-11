@@ -1,3 +1,5 @@
+from itertools import chain
+
 import pygame
 import default
 from entities.coordinates import Vector
@@ -52,11 +54,18 @@ class Entity:
     def get_tiles_below(self):
         w, h = (self.size * 0.5).round()
         px, py = self.pos.round()
+
+        x_min = px - w
+        x_max = px + w
+        y_min = py - h
+        y_max = py + h
+
         tiles = set()
-        for x in range(px - w, px + w, 1):
-            for y in range(py - h, py + h, 1):
+        for x in chain([x_max-1], range(x_min, x_max, default.TILE_SIZE)):
+            for y in chain([y_max-1], range(y_min, y_max, default.TILE_SIZE)):
                 tile = self.game.tile_grid.get_tile(Vector(x, y))
                 tiles.add(tile)
+
         return list(tiles)
 
     def intersects(self, point):
