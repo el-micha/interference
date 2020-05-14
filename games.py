@@ -24,7 +24,7 @@ class Game:
         # pygame stuff
         pygame.init()
         self.surface = pygame.display.set_mode((settings.SCREEN_WIDTH, settings.SCREEN_HEIGHT))
-        pygame.display.set_caption("inter B=====D ference")
+        pygame.display.set_caption("interference")
         self.clock = pygame.time.Clock()
         self.font = pygame.font.SysFont(None, 24)
 

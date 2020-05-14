@@ -150,7 +150,7 @@ class EnergyDissipator(Building):
 
         self.fields = [
             EnergyField(self.game, self, self.pos, 256),
-            LightField(self.game, self, self.pos, 80)
+            LightField(self.game, self, self.pos, 50)
         ]
 
         self.stored_coal = 0
@@ -185,7 +185,7 @@ class EnergyDissipator(Building):
 
 
 class Furnace(Building):
-    name = 'Energy Dissipator'
+    name = 'Furnace'
     keyboard_shortcut = 'f'
     construction_costs = [(1, Stone)]
     suitable_floors = [RockFloor, CoalFloor]
