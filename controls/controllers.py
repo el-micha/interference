@@ -1,6 +1,6 @@
 import pygame
 
-from entities.buildings import CoalDrill, EnergyDissipator
+from entities.buildings import CoalDrill, EnergyDissipator, Furnace, Workshop, IronDrill, PartsProcessor, Assembly
 from entities.resources import Resource
 from gui.pointers import BuildingPlacer
 from entities.coordinates import Vector
@@ -96,6 +96,26 @@ class ConstructionController(Controller):
                 if self.game.construction_mode:
                     self.disable_construction_mode()
                 self.enable_construction_mode(EnergyDissipator)
+            elif event.type == pygame.KEYDOWN and event.key == pygame.K_f:
+                if self.game.construction_mode:
+                    self.disable_construction_mode()
+                self.enable_construction_mode(Furnace)
+            elif event.type == pygame.KEYDOWN and event.key == pygame.K_k:
+                if self.game.construction_mode:
+                    self.disable_construction_mode()
+                self.enable_construction_mode(Workshop)
+            elif event.type == pygame.KEYDOWN and event.key == pygame.K_l:
+                if self.game.construction_mode:
+                    self.disable_construction_mode()
+                self.enable_construction_mode(IronDrill)
+            elif event.type == pygame.KEYDOWN and event.key == pygame.K_p:
+                if self.game.construction_mode:
+                    self.disable_construction_mode()
+                self.enable_construction_mode(PartsProcessor)
+            elif event.type == pygame.KEYDOWN and event.key == pygame.K_m:
+                if self.game.construction_mode:
+                    self.disable_construction_mode()
+                self.enable_construction_mode(Assembly)
             elif event.type == pygame.KEYDOWN and (event.key == pygame.K_ESCAPE or event.key == pygame.K_q):
                 if self.game.construction_mode:
                     self.disable_construction_mode()

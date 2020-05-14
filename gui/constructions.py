@@ -1,10 +1,10 @@
 from gui import layouts
 from gui.components import GUI, Window, Rows, TextLabel
-from entities.buildings import CoalDrill, EnergyDissipator
+from entities.buildings import CoalDrill, EnergyDissipator, Furnace, Workshop, IronDrill, PartsProcessor, Assembly
 from entities.coordinates import Vector
 
 class BuildingMenu(GUI):
-    constructable_buildings = [CoalDrill, EnergyDissipator]
+    constructable_buildings = [CoalDrill, EnergyDissipator, Furnace, Workshop, IronDrill, PartsProcessor, Assembly]
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

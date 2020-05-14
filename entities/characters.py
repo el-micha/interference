@@ -19,7 +19,7 @@ class Character(Entity):
         self.base_mining_power = 2
         # self.base_view_distance = 200
 
-        self.light_field = LightField(self.game, self, pos=self.pos, radius=2000)
+        self.light_field = LightField(self.game, self, pos=self.pos, radius=800)
 
     # def get_view_distance(self):
     #     view_field_factors = 1 + self.get_available_energy()
