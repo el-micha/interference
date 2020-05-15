@@ -17,11 +17,14 @@ class TileGrid:
         self.game = game
         self.num_cols = num_cols
         self.num_rows = num_rows
+        print("num_cols: ", num_cols)
+        print("num_rows: ", num_rows)
         self.grid = None
         self.tile_mapping = TileMapping(settings.ART_DIR)
         self.tile_size = default.TILE_SIZE
-
         self.generate_tiles()
+        print("actual_cols: ", len(self.grid[0]))
+        print("actual_rows: ", len(self.grid))
 
     def generate_tiles(self):
         tile_types = [Rock, IronVein, IronVein, Rock, Rock, Rock, CoalVein, CoalVein, CoalVein, CoalVein, SilverVein]
@@ -76,7 +79,35 @@ class TileGrid:
 
         return True
 
-    def get_tiles_within_radius(self, point, r_max, r_min=1):
+    def get_tiles_within_radius(self, point, r_max):
+        """
+        Sample circle from 2d-list:
+        Start tile_size/2 away from top and get left and right offsets, which are list slice indices.
+        Continue for top - tilesize/2 - tilesize * i for line i from top, etc
+        """
+        ts = default.TILE_SIZE
+        tiles = set()
+        num_rows = int(2 * r_max / default.TILE_SIZE)
+        for row_num in range(num_rows):
+            #find y
+            y = ts * (num_rows/2 - row_num)
+            x = math.sqrt(r_max**2 - y**2)
+            pygame.draw.circle(self.game.surface, (255, 255, 255), (int(x), int(y)), 2)
+            try:
+                row = self.grid[int(point.y + y)]
+                # print(row)
+                slice_start = max(0, int(point.x - x))
+                slice_stop = min(int(point.x + x), len(row))
+                # print(slice_start, slice_stop)
+                pygame.draw.circle(self.game.surface, (100, 200, 255), (int(point.x - x), int(y)), 2)
+                pygame.draw.circle(self.game.surface, (200, 100, 255), (int(point.x + x), int(y)), 2)
+                # print(len(row[slice_start:slice_stop]))
+                tiles.update(row[slice_start:slice_stop])
+            except:
+                pass
+        return tiles
+
+    def OLD_get_tiles_within_radius(self, point, r_max, r_min=1):
         """Return list of all tiles with distance greater than r_min and smaller than r_max around point.
         Create circles with increasing radii. Sample each circle with a max distance smaller than tilesize.
         Radius increase also small, so no tiles can slip through
