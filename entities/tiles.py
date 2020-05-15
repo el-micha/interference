@@ -12,9 +12,15 @@ class Tile(Entity):
         self.art_id = 0
         self.is_blocking = False
 
+
+    # draw, draw_raw a temporary hack to have both options to determine visibility available...
     def draw(self, surface, tile_mapping):
         if not self.is_visible():
             return
+        self.draw_raw(surface, tile_mapping)
+
+
+    def draw_raw(self, surface ,tile_mapping):
         self.sprite = tile_mapping.get(self.art_id)
         super().draw(surface)
         # healthbar TODO: move this somewhere more appropriate...
@@ -26,7 +32,6 @@ class Tile(Entity):
             end = start + Vector(max_bar_length * self.durability * 0.01, 0)
             pygame.draw.line(surface, (200, 0, 0), start.round(), max_end.round(), 3)
             pygame.draw.line(surface, (200, 200, 100), start.round(), end.round(), 3)
-
 
 class RockFloor(Tile):
     def __init__(self, *args, **kwargs):
