@@ -28,6 +28,10 @@ class Game:
         self.clock = pygame.time.Clock()
         self.font = pygame.font.SysFont(None, 24)
 
+        # Entities
+        self._buildings = set()
+        self._fields = set()
+
         # game stuff ...
         self.tile_grid = TileGrid(self, int(settings.SCREEN_HEIGHT / default.TILE_SIZE),
                                   int(settings.SCREEN_WIDTH / default.TILE_SIZE))
@@ -38,10 +42,9 @@ class Game:
             for j in range(5):
                 self.tile_grid.replace_tile(Vector(32 * (1+i), 32 * (1+j)), random.choice([RockFloor, CoalFloor]))
 
-        # Entities
-        self.buildings = []
-        self.trains = []
 
+        # more entities...
+        self.trains = []
         #self.exp = Explosion(self, pos=Vector(32, 32), size=Vector(32, 32))
 
 
@@ -111,7 +114,7 @@ class Game:
         for train in self.trains:
             train.ride()
         self.tick += 1
-        for building in self.buildings:
+        for building in self._buildings:
             building.tick(self.tick)
 
         # for k,v in Field.fieldmap.items():
@@ -129,7 +132,7 @@ class Game:
         # self.surface.blit(self.building, (256, 256))
         self.character.draw(self.surface)
         # map(lambda x:x.draw(self.surface), self.buildings)
-        for building in self.buildings:
+        for building in self._buildings:
             building.draw(self.surface)
         for train in self.trains:
             train.draw(self.surface)
@@ -141,3 +144,27 @@ class Game:
         for interface in self.interfaces:
             if not interface.hidden:
                 interface.draw(self.surface)
+
+    def get_fields(self, field_type=None):
+        if field_type is None:
+            predicate = lambda _: True
+        else:
+            predicate = lambda field: type(field) == field_type
+        return list(filter(predicate, self._fields))
+
+    def add_field(self, field):
+        self._fields.add(field)
+
+    def get_buildings(self, b_type=None):
+        if b_type is None:
+            predicate = lambda _: True
+        else:
+            predicate = lambda field: type(field) == b_type
+        return list(filter(predicate, self._buildings))
+
+    def add_building(self, b):
+        # add building AND fields you asshole
+        self._buildings.add(b)
+        if hasattr(b, "fields"):
+            self._fields.update(b.fields)
+

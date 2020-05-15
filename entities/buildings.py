@@ -116,7 +116,7 @@ class CoalDrill(Building):
 
     def get_neighbours(self):
         neigh = []
-        for building in (set(self.game.buildings) - {self}):
+        for building in (set(self.game.get_buildings()) - {self}):
             # TODO: implement real neighbourhood
             if Vector.dist(self.pos, building.pos) < 32 * 5:
                 neigh.append(building)
