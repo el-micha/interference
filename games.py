@@ -124,17 +124,21 @@ class Game:
     def draw(self):
         self.surface.fill((0, 0, 0))
         self.tile_grid.draw(self.surface)
-        # self.surface.blit(self.building, (256, 256))
+
+        for field in self._fields:
+            if not field.active:
+                continue
+            field.draw(self.surface)
+
         self.character.draw(self.surface)
-        # map(lambda x:x.draw(self.surface), self.buildings)
+
         for building in self._buildings:
             building.draw(self.surface)
+
         for train in self.trains:
             train.draw(self.surface)
+
         self.draw_interfaces()
-        #debug temp TODO
-        for field in self._fields:
-            field.draw(self.surface)
 
         pygame.display.update()
 

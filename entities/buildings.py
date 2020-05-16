@@ -182,9 +182,9 @@ class EnergyDissipator(Building):
 
     def draw(self, surface):
         super().draw(surface)
-        for field in self.fields:
-            if field.active:
-                field.draw(surface)
+        # for field in self.fields:
+        #     if field.active:
+        #         field.draw(surface)
 
 
 class Furnace(Building):
