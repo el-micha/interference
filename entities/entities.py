@@ -106,7 +106,6 @@ class Entity:
 
     def is_visible(self):
         light_fields = self.game.get_fields(LightField)
-        print(len(light_fields))
         for field in light_fields:
             if field.get_effect(self.pos) > 0:
                 return True

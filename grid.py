@@ -1,4 +1,7 @@
 import os
+from multiprocessing import Process
+from timeit import default_timer as timer
+
 import pygame
 
 import default
@@ -10,7 +13,6 @@ from entities.resources import Rock, CoalVein, SilverVein, IronVein
 from entities.tiles import Tile
 from entities.coordinates import Vector
 import math
-
 
 class TileGrid:
     def __init__(self, game, num_cols, num_rows):
@@ -28,21 +30,77 @@ class TileGrid:
         grid_mapping = noise.map_noise_to_ids(grid_noise, tile_types)
         self.grid = [[None for _ in line] for line in grid_mapping]
         for i, line in enumerate(grid_mapping):
+            print(f"creating row {i} of {len(grid_mapping)}")
             for j, tile_type in enumerate(line):
                 pos = self.__grid_to_coords__(i, j) # row, column
                 self.grid[i][j] = tile_type(self.game, pos, Vector(default.TILE_SIZE, default.TILE_SIZE))
 
+
     # def draw(self, surface):
     #     for i, line in enumerate(self.grid):
     #         for j, tile in enumerate(line):
-    #             tile.draw(surface, self.tile_mapping)
+    #             tile.draw_raw(surface, self.tile_mapping)
 
     def draw(self, surface):
+        s = timer()
         visible_tiles = set()
         for light_field in self.game.get_fields(LightField):
             visible_tiles.update(self.get_tiles_within_radius(light_field.pos, light_field.get_radius()))
-        for tile in visible_tiles:
-            tile.draw_raw(surface, self.tile_mapping)
+        e0 = timer()
+        tiles_on_screen = []
+        for row in self.get_grid_view():
+            tiles_on_screen.extend(row)
+        drawable_tiles = visible_tiles.intersection(set(tiles_on_screen))
+        surface.blits([(self.tile_mapping.get(art_id), self.game.camera.apply(pos)) for art_id, pos in map(lambda x: x.get_draw_info(), drawable_tiles)])
+        e = timer()
+        print(f"gathering tiles took {e0-s} seconds")
+        print(f"blits method took {e-e0} seconds")
+        print(f"drawing tiles took {e-s} seconds")
+
+
+    def get_grid_view(self):
+        margin = 3 * default.TILE_SIZE
+        top_left = self.get_tile(self.game.camera.inverse_apply(Vector(-margin, -margin)))
+        bottom_left = self.get_tile(self.game.camera.inverse_apply(Vector(-margin, settings.SCREEN_HEIGHT + margin)))
+        top_right = self.get_tile(self.game.camera.inverse_apply(Vector(settings.SCREEN_WIDTH + margin, -margin)))
+        bottom_right = self.get_tile(self.game.camera.inverse_apply(Vector(settings.SCREEN_WIDTH + margin, settings.SCREEN_HEIGHT + margin)))
+
+        top = top_left or top_right
+        bottom = bottom_left or bottom_right
+        left = top_left or bottom_left
+        right = top_right or bottom_right
+
+        if top is not None:
+            i, j = self.__coords_to_grid__(top.pos)
+            start_row = i
+            # pygame.draw.circle(self.game.surface, (255, 255, 255), self.game.camera.apply(top.pos), 200)
+        else:
+            start_row = 0
+
+        if bottom is not None:
+            i, j = self.__coords_to_grid__(bottom.pos)
+            end_row = i
+            # pygame.draw.circle(self.game.surface, (255, 255, 255), self.game.camera.apply(bottom.pos), 200)
+        else:
+            end_row = len(self.grid)
+
+        if left is not None:
+            i, j = self.__coords_to_grid__(left.pos)
+            start_col = j
+            # pygame.draw.circle(self.game.surface, (255, 255, 255), self.game.camera.apply(left.pos), 200)
+        else:
+            start_col = 0
+
+        if right is not None:
+            i, j = self.__coords_to_grid__(right.pos)
+            end_col = j
+            # pygame.draw.circle(self.game.surface, (255, 255, 255), self.game.camera.apply(right.pos), 200)
+        else:
+            end_col = len(self.grid[0])
+
+        rows = self.grid[start_row:end_row]
+        return [row[start_col:end_col] for row in rows]
+
 
     def get_tile(self, point):
         i, j = self.__coords_to_grid__(point)
@@ -106,23 +164,6 @@ class TileGrid:
             slice_start = max(0, j_left)
             slice_stop = min(j_right, self.num_cols)
             tiles.update(row[slice_start:slice_stop])
-
-            # pygame.draw.circle(self.game.surface, (100, 200, 255), self.game.camera.apply(Vector(point.x - x, point.y)), 2)
-            # pygame.draw.circle(self.game.surface, (200, 100, 255), self.game.camera.apply(Vector(point.x + x, point.y)), 2)
-
-            # try:
-            #     row = self.grid[int(abs_y)]
-            # except:
-            #     continue
-            # # print(row)
-            # slice_start = max(0, int(point.x - x))
-            # slice_stop = min(int(point.x + x), len(row))
-            # # print(slice_start, slice_stop)
-            # pygame.draw.circle(self.game.surface, (100, 200, 255), self.game.camera.apply(Vector(point.x - x, abs_y)), 2)
-            # pygame.draw.circle(self.game.surface, (200, 100, 255), self.game.camera.apply(Vector(point.x + x, abs_y)), 2)
-            # print(len(row[slice_start:slice_stop]))
-            # tiles.update(row[slice_start:slice_stop])
-
         return tiles
 
     def old_get_tiles_within_radius(self, point, r_max, r_min=1):
@@ -162,7 +203,8 @@ class TileGrid:
 
     @staticmethod
     def __grid_to_coords__(i, j):
-        return Vector(j * default.TILE_SIZE + int(default.TILE_SIZE/2), i * default.TILE_SIZE + int(default.TILE_SIZE/2))
+        off  = default.TILE_SIZE / 2
+        return Vector(j * default.TILE_SIZE + off, i * default.TILE_SIZE + off)
 
     def __str__(self):
         s = ""
@@ -195,7 +237,7 @@ class TileMapping:
                 prefix = int(file.split("_")[0])
                 if prefix in self.tilemap:
                     print(f"Id {prefix} already exists in tilemap. Overwriting entry with {file}")
-                self.tilemap[prefix] = pygame.image.load(os.path.join(art_directory, file))
+                self.tilemap[prefix] = pygame.image.load(os.path.join(art_directory, file)).convert()
             except ValueError:
                 print(f"Failed to extract integer prefix from {file}. "
                       "Please add a unique id to the start of the filename and separate it with an underscore.")

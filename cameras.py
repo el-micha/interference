@@ -30,6 +30,10 @@ class Camera:
         """Projects `world_coords` to pygame screen positions."""
         return int(world_coords.x - self.offset.x), int(world_coords.y - self.offset.y)
 
+    def inverse_apply(self, screen_coords):
+        """Projects pygame screen positions to `world_coords`."""
+        return int(screen_coords.x + self.offset.x), int(screen_coords.y + self.offset.y)
+
     def get_mouse_coords(self):
         """Projects the pygame mouse position to world coordinates"""
         mx, my = pygame.mouse.get_pos()

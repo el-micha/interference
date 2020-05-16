@@ -96,8 +96,8 @@ def smooth_noise(width, height, iterations):
     #plt.show()
     for i in range(iterations):
         grid = smooth(grid)
-        #plt.imshow(grid)
-        #plt.show()
+        # plt.imshow(grid)
+        # plt.show()
     # plt.imshow(grid)
     # plt.show()
     return grid

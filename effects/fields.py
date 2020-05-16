@@ -33,7 +33,7 @@ class Field:
         circle = pygame.Surface((self.get_radius() * 2 + 1, self.get_radius() * 2 + 1), pygame.SRCALPHA)
         pygame.draw.circle(circle, self.color, (self.get_radius(), self.get_radius()), self.get_radius())
         draw_pos = Vector(self.pos.x - self.get_radius(), self.pos.y - self.get_radius())
-        surface.blit(circle, self.game.camera.apply(draw_pos))
+        surface.blit(circle.convert_alpha(), self.game.camera.apply(draw_pos))
 
 
 class EnergyField(Field):
