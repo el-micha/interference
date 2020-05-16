@@ -132,6 +132,9 @@ class Game:
         for train in self.trains:
             train.draw(self.surface)
         self.draw_interfaces()
+        #debug temp TODO
+        for field in self._fields:
+            field.draw(self.surface)
 
         pygame.display.update()
 

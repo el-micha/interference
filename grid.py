@@ -76,7 +76,7 @@ class TileGrid:
 
         return True
 
-    def new_get_tiles_within_radius(self, point, r_max):
+    def get_tiles_within_radius(self, point, radius):
         """
         Sample circle from 2d-list:
         Start tile_size/2 away from top and get left and right offsets, which are list slice indices.
@@ -84,27 +84,49 @@ class TileGrid:
         """
         ts = default.TILE_SIZE
         tiles = set()
-        num_rows = int(2 * r_max / default.TILE_SIZE)
+        num_rows = int(2 * radius / ts)
         for row_num in range(num_rows):
             #find y
             y = ts * (num_rows/2 - row_num)
-            x = math.sqrt(r_max**2 - y**2)
-            pygame.draw.circle(self.game.surface, (255, 255, 255), (int(x), int(y)), 2)
-            try:
-                row = self.grid[int(point.y + y)]
-                # print(row)
-                slice_start = max(0, int(point.x - x))
-                slice_stop = min(int(point.x + x), len(row))
-                # print(slice_start, slice_stop)
-                pygame.draw.circle(self.game.surface, (100, 200, 255), (int(point.x - x), int(y)), 2)
-                pygame.draw.circle(self.game.surface, (200, 100, 255), (int(point.x + x), int(y)), 2)
-                # print(len(row[slice_start:slice_stop]))
-                tiles.update(row[slice_start:slice_stop])
-            except:
-                pass
+            x = math.sqrt(radius ** 2 - y ** 2)
+
+            y = y - ts/2
+
+            left_offset = Vector(-x, y)
+            right_offset = Vector(x, y)
+
+            i, j_left = self.__coords_to_grid__(point + left_offset)
+            i, j_right = self.__coords_to_grid__(point + right_offset)
+
+            # pygame.draw.circle(self.game.surface, (255, 255, 255), self.game.camera.apply(point + left_offset), 2)
+            # pygame.draw.circle(self.game.surface, (255, 255, 255), self.game.camera.apply(point + right_offset), 2)
+
+            if i < 0 or i >= self.num_rows:
+                continue
+            row = self.grid[i]
+            slice_start = max(0, j_left)
+            slice_stop = min(j_right, self.num_cols)
+            tiles.update(row[slice_start:slice_stop])
+
+            # pygame.draw.circle(self.game.surface, (100, 200, 255), self.game.camera.apply(Vector(point.x - x, point.y)), 2)
+            # pygame.draw.circle(self.game.surface, (200, 100, 255), self.game.camera.apply(Vector(point.x + x, point.y)), 2)
+
+            # try:
+            #     row = self.grid[int(abs_y)]
+            # except:
+            #     continue
+            # # print(row)
+            # slice_start = max(0, int(point.x - x))
+            # slice_stop = min(int(point.x + x), len(row))
+            # # print(slice_start, slice_stop)
+            # pygame.draw.circle(self.game.surface, (100, 200, 255), self.game.camera.apply(Vector(point.x - x, abs_y)), 2)
+            # pygame.draw.circle(self.game.surface, (200, 100, 255), self.game.camera.apply(Vector(point.x + x, abs_y)), 2)
+            # print(len(row[slice_start:slice_stop]))
+            # tiles.update(row[slice_start:slice_stop])
+
         return tiles
 
-    def get_tiles_within_radius(self, point, r_max, r_min=1):
+    def old_get_tiles_within_radius(self, point, r_max, r_min=1):
         """Return list of all tiles with distance greater than r_min and smaller than r_max around point.
         Create circles with increasing radii. Sample each circle with a max distance smaller than tilesize.
         Radius increase also small, so no tiles can slip through
@@ -128,7 +150,7 @@ class TileGrid:
             y = point.y + math.cos(i * (2 * math.pi) / num_samples) * radius
             tile = self.get_tile(Vector(int(x), int(y)))
 
-            # pygame.draw.circle(self.game.surface, (255, 255, 255), (int(x), int(y)), 2)
+            pygame.draw.circle(self.game.surface, (255, 255, 255), self.game.camera.apply(Vector(x, y)), 2)
 
             if tile is not None:
                 tiles.append(tile)
