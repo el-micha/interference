@@ -90,7 +90,7 @@ def map_noise_to_ids(grid, ids):
 # import numpy as np
 
 def smooth_noise(width, height, iterations):
-    grid = [[random.expovariate(0.2 - 0.1*y/height) for x in range(width)] for y in range(height)]
+    grid = [[random.expovariate(0.2 - 0.1*x/width) for x in range(width)] for y in range(height)]
     print(len(grid))
     #plt.imshow(grid)
     #plt.show()

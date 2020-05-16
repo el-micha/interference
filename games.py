@@ -33,8 +33,8 @@ class Game:
         self._fields = set()
 
         # game stuff ...
-        self.tile_grid = TileGrid(self, int(settings.SCREEN_HEIGHT / default.TILE_SIZE),
-                                  int(settings.SCREEN_WIDTH / default.TILE_SIZE))
+        self.tile_grid = TileGrid(self, int(settings.SCREEN_WIDTH / default.TILE_SIZE),
+                                  int(settings.SCREEN_HEIGHT / default.TILE_SIZE))
         self.character = Character(self, Vector(default.TILE_SIZE + int(default.TILE_SIZE / 2),
                                    default.TILE_SIZE + int(default.TILE_SIZE / 2)), Vector(8, 8))
         self.tile_grid.replace_tile(self.character.pos, Tile)

@@ -17,14 +17,10 @@ class TileGrid:
         self.game = game
         self.num_cols = num_cols
         self.num_rows = num_rows
-        print("num_cols: ", num_cols)
-        print("num_rows: ", num_rows)
         self.grid = None
         self.tile_mapping = TileMapping(settings.ART_DIR)
         self.tile_size = default.TILE_SIZE
         self.generate_tiles()
-        print("actual_cols: ", len(self.grid[0]))
-        print("actual_rows: ", len(self.grid))
 
     def generate_tiles(self):
         tile_types = [Rock, IronVein, IronVein, Rock, Rock, Rock, CoalVein, CoalVein, CoalVein, CoalVein, SilverVein]
@@ -33,7 +29,8 @@ class TileGrid:
         self.grid = [[None for _ in line] for line in grid_mapping]
         for i, line in enumerate(grid_mapping):
             for j, tile_type in enumerate(line):
-                pos = self.__grid_to_coords__(i, j)
+                pos = self.__grid_to_coords__(i, j) # row, column
+                print(pos)
                 self.grid[i][j] = tile_type(self.game, pos, Vector(default.TILE_SIZE, default.TILE_SIZE))
 
     # def draw(self, surface):
@@ -79,7 +76,7 @@ class TileGrid:
 
         return True
 
-    def get_tiles_within_radius(self, point, r_max):
+    def new_get_tiles_within_radius(self, point, r_max):
         """
         Sample circle from 2d-list:
         Start tile_size/2 away from top and get left and right offsets, which are list slice indices.
@@ -107,7 +104,7 @@ class TileGrid:
                 pass
         return tiles
 
-    def OLD_get_tiles_within_radius(self, point, r_max, r_min=1):
+    def get_tiles_within_radius(self, point, r_max, r_min=1):
         """Return list of all tiles with distance greater than r_min and smaller than r_max around point.
         Create circles with increasing radii. Sample each circle with a max distance smaller than tilesize.
         Radius increase also small, so no tiles can slip through
@@ -140,11 +137,11 @@ class TileGrid:
     @staticmethod
     def __coords_to_grid__(point):
         x, y = point
-        return int(x / default.TILE_SIZE), int(y / default.TILE_SIZE)
+        return int(y / default.TILE_SIZE), int(x / default.TILE_SIZE)
 
     @staticmethod
     def __grid_to_coords__(i, j):
-        return Vector(i * default.TILE_SIZE + int(default.TILE_SIZE/2), j * default.TILE_SIZE + int(default.TILE_SIZE/2))
+        return Vector(j * default.TILE_SIZE + int(default.TILE_SIZE/2), i * default.TILE_SIZE + int(default.TILE_SIZE/2))
 
     def __str__(self):
         s = ""
