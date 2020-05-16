@@ -9,6 +9,9 @@ class Camera:
     def __init__(self):
         self.offset = Vector(0, 0)
 
+    def focus(self, world_coords):
+        self.offset = world_coords - Vector(settings.SCREEN_WIDTH / 2, settings.SCREEN_HEIGHT / 2)
+
     def scroll(self, world_coords):
         """Makes sure that `world_coords` are always visible within camera."""
         distance = world_coords - self.offset
