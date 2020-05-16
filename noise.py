@@ -86,13 +86,19 @@ def map_noise_to_ids(grid, ids):
             newgrid[i][j] = ids[get_index(elem, interval_borders)]
     return newgrid
 
+# import matplotlib.pyplot as plt
+# import numpy as np
+
 def smooth_noise(width, height, iterations):
-    grid = [[random.expovariate(0.1) for x in range(width)] for y in range(height)]
+    grid = [[random.expovariate(0.2 - 0.1*y/height) for x in range(width)] for y in range(height)]
+    print(len(grid))
     #plt.imshow(grid)
     #plt.show()
     for i in range(iterations):
         grid = smooth(grid)
         #plt.imshow(grid)
         #plt.show()
+    # plt.imshow(grid)
+    # plt.show()
     return grid
 

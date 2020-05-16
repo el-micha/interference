@@ -22,6 +22,9 @@ class Building(Entity):
         self.sprite = pygame.image.load("art/80_building.png")
         self.size = Vector(*self.sprite.get_size())
 
+    def tick(self, tick):
+        pass
+
     def set_position(self, pos):
         self.pos.set(pos)
         # for field in self.fields:
@@ -113,7 +116,7 @@ class CoalDrill(Building):
 
     def get_neighbours(self):
         neigh = []
-        for building in (set(self.game.buildings) - {self}):
+        for building in (set(self.game.get_buildings()) - {self}):
             # TODO: implement real neighbourhood
             if Vector.dist(self.pos, building.pos) < 32 * 5:
                 neigh.append(building)
@@ -150,7 +153,7 @@ class EnergyDissipator(Building):
 
         self.fields = [
             EnergyField(self.game, self, self.pos, 256),
-            LightField(self.game, self, self.pos, 80)
+            LightField(self.game, self, self.pos, 50)
         ]
 
         self.stored_coal = 0
@@ -185,10 +188,67 @@ class EnergyDissipator(Building):
 
 
 class Furnace(Building):
-    name = 'Energy Dissipator'
+    name = 'Furnace'
     keyboard_shortcut = 'f'
     construction_costs = [(1, Stone)]
     suitable_floors = [RockFloor, CoalFloor]
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+
+        self.sprite = pygame.image.load("art/87_furnace.png")
+        self.size = Vector(*self.sprite.get_size())
+
+
+class Workshop(Building):
+    name = 'Workshop'
+    keyboard_shortcut = 'k'
+    construction_costs = [(1, Stone)]
+    suitable_floors = [RockFloor, CoalFloor]
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.sprite = pygame.image.load("art/83_workshop.png")
+        self.size = Vector(*self.sprite.get_size())
+
+
+class IronDrill(Building):
+    name = 'Iron Drill'
+    keyboard_shortcut = 'l'
+    construction_costs = [(1, Stone)]
+    suitable_floors = [RockFloor, CoalFloor]
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.sprite = pygame.image.load("art/85_iron_drill.png")
+        self.size = Vector(*self.sprite.get_size())
+
+
+class PartsProcessor(Building):
+    name = 'Parts Processor'
+    keyboard_shortcut = 'p'
+    construction_costs = [(1, Stone)]
+    suitable_floors = [RockFloor, CoalFloor]
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.sprite = pygame.image.load("art/84_processor.png")
+        self.size = Vector(*self.sprite.get_size())
+
+
+class Assembly(Building):
+    name = 'Assembly'
+    keyboard_shortcut = 'm'
+    construction_costs = [(1, Stone)]
+    suitable_floors = [RockFloor, CoalFloor]
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.sprite = pygame.image.load("art/86_assembly.png")
+        self.size = Vector(*self.sprite.get_size())
+
+

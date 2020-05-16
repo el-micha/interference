@@ -105,7 +105,8 @@ class Entity:
         return True
 
     def is_visible(self):
-        light_fields = Field.get_fields_of_type(LightField)
+        light_fields = self.game.get_fields(LightField)
+        print(len(light_fields))
         for field in light_fields:
             if field.get_effect(self.pos) > 0:
                 return True
@@ -113,7 +114,7 @@ class Entity:
 
     def get_available_energy(self):
         energy = 0
-        for field in Field.get_fields_of_type(EnergyField):
+        for field in self.game.get_fields(EnergyField):
             energy += field.get_effect(self.pos)
         return energy
 

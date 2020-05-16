@@ -20,6 +20,7 @@ class Character(Entity):
         # self.base_view_distance = 200
 
         self.light_field = LightField(self.game, self, pos=self.pos, radius=200)
+        self.game.add_field(self.light_field)
 
     # def get_view_distance(self):
     #     view_field_factors = 1 + self.get_available_energy()
@@ -59,7 +60,7 @@ class Character(Entity):
             self.inventory.remove_items(resource_cls, amount)
 
         building.make_floor_blocking()
-        self.game.buildings.append(building)
+        self.game.add_building(building)
 
     def can_construct(self, building):
         if not building.is_affordable(self.inventory):

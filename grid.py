@@ -4,6 +4,7 @@ import pygame
 import default
 import noise
 import settings
+from effects.fields import LightField
 
 from entities.resources import Rock, CoalVein, SilverVein, IronVein
 from entities.tiles import Tile
@@ -32,10 +33,17 @@ class TileGrid:
                 pos = self.__grid_to_coords__(i, j)
                 self.grid[i][j] = tile_type(self.game, pos, Vector(default.TILE_SIZE, default.TILE_SIZE))
 
+    # def draw(self, surface):
+    #     for i, line in enumerate(self.grid):
+    #         for j, tile in enumerate(line):
+    #             tile.draw(surface, self.tile_mapping)
+
     def draw(self, surface):
-        for i, line in enumerate(self.grid):
-            for j, tile in enumerate(line):
-                tile.draw(surface, self.tile_mapping)
+        visible_tiles = set()
+        for light_field in self.game.get_fields(LightField):
+            visible_tiles.update(self.get_tiles_within_radius(light_field.pos, light_field.get_radius()))
+        for tile in visible_tiles:
+            tile.draw_raw(surface, self.tile_mapping)
 
     def get_tile(self, point):
         i, j = self.__coords_to_grid__(point)
@@ -75,7 +83,7 @@ class TileGrid:
         At least consider circles with r_min and r_max, even if distance is too small.
         This method could be massively improved by sampling an outer circle and considering rows of tiles at a time.
         """
-        oversampling_factor = 1.42 # at least sqrt(2) due to diagonal
+        oversampling_factor = 1.50 # at least sqrt(2) due to diagonal
         sample_distance = self.tile_size / oversampling_factor
         num_circles = int((r_max - r_min) / sample_distance)
         radii = [r_min] + [r_min + sample_distance * (i + 0.5) for i in range(num_circles)] + [r_max]
@@ -92,7 +100,7 @@ class TileGrid:
             y = point.y + math.cos(i * (2 * math.pi) / num_samples) * radius
             tile = self.get_tile(Vector(int(x), int(y)))
 
-            pygame.draw.circle(self.game.surface, (255, 255, 255), (int(x), int(y)), 2)
+            # pygame.draw.circle(self.game.surface, (255, 255, 255), (int(x), int(y)), 2)
 
             if tile is not None:
                 tiles.append(tile)

@@ -12,7 +12,7 @@ class LinePointer(GUI):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.hidden = False
+        self.hidden = True
 
     def draw(self, surface):
         if settings.DEBUG_MODE and not self.game.paused:
