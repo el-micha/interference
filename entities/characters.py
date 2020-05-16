@@ -79,4 +79,4 @@ class Character(Entity):
 
     def draw(self, surface):
         r = int(self.size.x / 2)
-        pygame.draw.circle(surface, self.color, self.pos.round(), r)
+        pygame.draw.circle(surface, self.color, self.game.camera.apply(self.pos), r)

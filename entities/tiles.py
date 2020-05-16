@@ -4,6 +4,7 @@ from entities.coordinates import Vector
 import default
 import pygame
 
+
 class Tile(Entity):
     def __init__(self, game, pos, size=Vector(default.TILE_SIZE, default.TILE_SIZE), *args, **kwargs):
         super().__init__(game, pos, size=size, *args, **kwargs)
@@ -24,8 +25,8 @@ class Tile(Entity):
             start = self.pos - Vector(max_bar_length * 0.5, -y_position)
             max_end = start + Vector(max_bar_length, 0)
             end = start + Vector(max_bar_length * self.durability * 0.01, 0)
-            pygame.draw.line(surface, (200, 0, 0), start.round(), max_end.round(), 3)
-            pygame.draw.line(surface, (200, 200, 100), start.round(), end.round(), 3)
+            pygame.draw.line(surface, (200, 0, 0), self.game.camera.apply(start), self.game.camera.apply(max_end), 3)
+            pygame.draw.line(surface, (200, 200, 100), self.game.camera.apply(start), self.game.camera.apply(end), 3)
 
 
 class RockFloor(Tile):
@@ -54,4 +55,3 @@ class IronFloor(Tile):
         super().__init__(*args, **kwargs)
 
         self.art_id = random.choice([37])
-

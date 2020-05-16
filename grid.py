@@ -101,7 +101,7 @@ class TileGrid:
     @staticmethod
     def __coords_to_grid__(point):
         x, y = point
-        return int(x / default.TILE_SIZE), int(y / default.TILE_SIZE)
+        return math.floor(x / default.TILE_SIZE), math.floor(y / default.TILE_SIZE)
 
     @staticmethod
     def __grid_to_coords__(i, j):

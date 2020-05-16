@@ -2,16 +2,19 @@ import default
 from entities.entities import Entity
 from entities.inventories import Inventory
 from entities.coordinates import Vector
-TRAIN_SPRITE_SIZE = (default.TILE_SIZE / 2)
+
+
+TRAIN_SPRITE_SIZE = default.TILE_SIZE
 
 
 class Train(Entity):
-    def __init__(self, direction: Vector, size=Vector(TRAIN_SPRITE_SIZE, TRAIN_SPRITE_SIZE), *args, **kwargs):
+    def __init__(self, direction: Vector, size=None, *args, **kwargs):
         super().__init__(size=size, *args, **kwargs)
 
         self.wagons = []
         self.direction = direction
         self.inventory = Inventory()
+        self.size = Vector(TRAIN_SPRITE_SIZE, TRAIN_SPRITE_SIZE)
 
     @property
     def capacity(self):
@@ -48,9 +51,9 @@ class Train(Entity):
     def add_wagon(self, wagon):
         dx, dy = self.direction
         if dx:
-            wagon.pos = self.pos + Vector(-dx * self.length, 0)
+            wagon.pos = self.pos - Vector(dx * self.length, 0)
         elif dy:
-            wagon.pos = self.pos + Vector(0, -dy * self.length)
+            wagon.pos = self.pos - Vector(0, dy * self.length)
 
         self.wagons.append(wagon)
 
@@ -103,7 +106,8 @@ class Wagon(Entity):
 
         # TODO: Replace with proper art
         rendered_text = self.game.font.render(self.icon, True, (255, 255, 255))
-        surface.blit(rendered_text, (self.pos.x, self.pos.y - self.size.x / 2))
+        text_pos = Vector(self.pos.x, self.pos.y - self.size.y / 4)
+        surface.blit(rendered_text, self.game.camera.apply(text_pos))
 
 
 class Engine(Wagon):

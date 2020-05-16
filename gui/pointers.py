@@ -16,7 +16,7 @@ class LinePointer(GUI):
 
     def draw(self, surface):
         if settings.DEBUG_MODE and not self.game.paused:
-            pygame.draw.line(surface, (255, 255, 0), (self.game.character.pos.x, self.game.character.pos.y),
+            pygame.draw.line(surface, (255, 255, 0), self.game.camera.apply(self.game.character.pos),
                              pygame.mouse.get_pos(), 1)
 
 
@@ -51,9 +51,8 @@ class HoverDescription(GUI):
         if self.game.paused or self.game.construction_mode:
             return
 
-        mx, my = pygame.mouse.get_pos()
-
-        tile = self.game.tile_grid.get_tile((mx, my))
+        mpos = self.game.camera.get_mouse_coords()
+        tile = self.game.tile_grid.get_tile((mpos.x, mpos.y))
         tile_type = tile.__class__.__name__
 
         self.children = []
@@ -88,7 +87,7 @@ class BuildingPlacer(GUI):
     def draw(self, surface):
         if not self.hidden:
             size = self.building.size
-            mpos = Vector(*pygame.mouse.get_pos())
+            mpos = self.game.camera.get_mouse_coords()
             mpos = mpos + Vector(default.TILE_SIZE, default.TILE_SIZE) * 0.5
 
             pos = mpos - size * 0.5
@@ -104,5 +103,5 @@ class BuildingPlacer(GUI):
             if not self.game.character.can_construct(self.building):
                 rect_surface = pygame.Surface(size.round(), pygame.SRCALPHA)
                 rect_surface.fill((255, 0, 0, 60))
-                surface.blit(rect_surface, (self.building.pos - size * 0.5).round())
+                surface.blit(rect_surface, self.game.camera.apply(self.building.pos - size * 0.5))
             self.building.draw(surface)
