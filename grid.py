@@ -30,7 +30,6 @@ class TileGrid:
         for i, line in enumerate(grid_mapping):
             for j, tile_type in enumerate(line):
                 pos = self.__grid_to_coords__(i, j) # row, column
-                print(pos)
                 self.grid[i][j] = tile_type(self.game, pos, Vector(default.TILE_SIZE, default.TILE_SIZE))
 
     # def draw(self, surface):
