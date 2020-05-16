@@ -84,11 +84,13 @@ class TileGrid:
         """
         ts = default.TILE_SIZE
         tiles = set()
-        num_rows = int(2.0 * radius / ts)
+        num_rows = int(2 * radius / ts)
         for row_num in range(num_rows):
             #find y
             y = ts * (num_rows/2 - row_num)
             x = math.sqrt(radius ** 2 - y ** 2)
+
+            y = y - ts/2
 
             left_offset = Vector(-x, y)
             right_offset = Vector(x, y)
@@ -96,7 +98,8 @@ class TileGrid:
             i, j_left = self.__coords_to_grid__(point + left_offset)
             i, j_right = self.__coords_to_grid__(point + right_offset)
 
-            # pygame.draw.circle(self.game.surface, (255, 255, 255), self.game.camera.apply(point - Vector(x, y)), 2)
+            # pygame.draw.circle(self.game.surface, (255, 255, 255), self.game.camera.apply(point + left_offset), 2)
+            # pygame.draw.circle(self.game.surface, (255, 255, 255), self.game.camera.apply(point + right_offset), 2)
 
             if i < 0 or i >= self.num_rows:
                 continue
