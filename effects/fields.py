@@ -13,6 +13,9 @@ class Field:
         self.base_amplitude = 1
         self.color = (50, 50, 200, 30)
         self.active = True
+        # lazy sprite
+        self.circle = None
+        self.old_radius = self.get_radius()
 
     def get_amplitude(self):
         return self.base_amplitude
@@ -29,9 +32,16 @@ class Field:
         else:
             return 0
 
+    def get_circle(self):
+        if self.get_radius() != self.old_radius or self.circle is None:
+            circle = pygame.Surface((self.get_radius() * 2 + 1, self.get_radius() * 2 + 1), pygame.SRCALPHA)
+            pygame.draw.circle(circle, self.color, (self.get_radius(), self.get_radius()), self.get_radius())
+            self.circle = circle
+            self.old_radius = self.get_radius()
+        return self.circle
+
     def draw(self, surface):
-        circle = pygame.Surface((self.get_radius() * 2 + 1, self.get_radius() * 2 + 1), pygame.SRCALPHA)
-        pygame.draw.circle(circle, self.color, (self.get_radius(), self.get_radius()), self.get_radius())
+        circle = self.get_circle()
         draw_pos = Vector(self.pos.x - self.get_radius(), self.pos.y - self.get_radius())
         surface.blit(circle, self.game.camera.apply(draw_pos))
 

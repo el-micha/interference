@@ -59,7 +59,7 @@ class TileGrid:
 
 
     def get_grid_view(self):
-        margin = 3 * default.TILE_SIZE
+        margin = 2 * default.TILE_SIZE
         top_left = self.get_tile(self.game.camera.inverse_apply(Vector(-margin, -margin)))
         bottom_left = self.get_tile(self.game.camera.inverse_apply(Vector(-margin, settings.SCREEN_HEIGHT + margin)))
         top_right = self.get_tile(self.game.camera.inverse_apply(Vector(settings.SCREEN_WIDTH + margin, -margin)))
