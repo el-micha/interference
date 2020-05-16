@@ -5,6 +5,7 @@ from entities.resources import Resource
 from gui.pointers import BuildingPlacer
 from entities.coordinates import Vector
 
+
 class Controller:
     def __init__(self, game, gui=None):
         self.game = game
@@ -29,20 +30,14 @@ class CharacterController(Controller):
         if pressed[pygame.K_RIGHT] or pressed[pygame.K_d]:
             self.game.character.move(Vector(4, 0))
 
-        # reuse this for tile selection & highlighting
-        # mouse_up_events = [event for event in events if event.type == pygame.MOUSEBUTTONUP]
-        # if len(mouse_up_events) > 0:
-        #     last = mouse_up_events[-1]
-        #     if last.button == 1:
-        #         mx, my = last.pos
-        #         self.game.tile_grid.remove_tile(mx, my)
+        self.game.camera.scroll(self.game.character.pos)
 
         if pygame.mouse.get_pressed() == (1, 0, 0):
             if self.game.construction_mode:
                 return
 
-            mpos = pygame.mouse.get_pos()
-            tile = self.game.tile_grid.get_tile(mpos)
+            pos = self.game.camera.get_mouse_coords()
+            tile = self.game.tile_grid.get_tile((pos.x, pos.y))
 
             if tile and isinstance(tile, Resource):
                 self.game.character.mine(tile)

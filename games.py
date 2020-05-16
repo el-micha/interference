@@ -1,10 +1,9 @@
 import pygame
 
-from entities.buildings import EnergyDissipator, CoalDrill
+from cameras import Camera
 from entities.coordinates import Vector
 import default
 import settings
-from entities.entities import ID
 from entities.trains import Train, Engine, BoringHead, Cart
 from grid import TileGrid
 from entities.characters import Character
@@ -19,10 +18,12 @@ from effects.explosion import Explosion
 from effects.fields import Field
 import random
 
+
 class Game:
     def __init__(self):
         # pygame stuff
         pygame.init()
+        self.camera = Camera()
         self.surface = pygame.display.set_mode((settings.SCREEN_WIDTH, settings.SCREEN_HEIGHT))
         pygame.display.set_caption("interference")
         self.clock = pygame.time.Clock()
@@ -40,30 +41,27 @@ class Game:
         self.tile_grid.replace_tile(self.character.pos, Tile)
         for i in range(5):
             for j in range(5):
-                self.tile_grid.replace_tile(Vector(32 * (1+i), 32 * (1+j)), random.choice([RockFloor, CoalFloor]))
+                self.tile_grid.replace_tile(Vector(32 * (1 + i), 32 * (1 + j)), random.choice([RockFloor, CoalFloor]))
 
 
         # more entities...
         self.trains = []
         #self.exp = Explosion(self, pos=Vector(32, 32), size=Vector(32, 32))
 
-
         # FIXME: Remove hardcoded trains
-        east_train = Train(game=self, pos=Vector(default.TILE_SIZE + int(default.TILE_SIZE / 2), default.TILE_SIZE * 2 + int(default.TILE_SIZE / 2)), direction=Vector(1, 0))
+        east_train = Train(game=self, pos=Vector(default.TILE_SIZE * 3 + int(default.TILE_SIZE / 2),
+                                                 default.TILE_SIZE * 3 + int(default.TILE_SIZE / 2)),
+                           direction=Vector(1, 0))
         east_train.add_wagon(BoringHead(self, None, None))
         east_train.add_wagon(Engine(self, None, None))
         east_train.add_wagon(Cart(self, None, None))
         self.trains.append(east_train)
 
         south_train = Train(game=self, pos=Vector(default.TILE_SIZE + int(default.TILE_SIZE / 2),
-                            default.TILE_SIZE * 3 + int(default.TILE_SIZE / 2)), direction=Vector(0, 1))
+                                                  default.TILE_SIZE * 3 + int(default.TILE_SIZE / 2)),
+                            direction=Vector(0, 1))
         south_train.add_wagon(Engine(self, None, None))
         self.trains.append(south_train)
-
-        for train in self.trains:
-            for wagon in train.wagons:
-                self.tile_grid.replace_tile(wagon.pos, RockFloor)
-                self.tile_grid.replace_tile(wagon.pos + Vector(-1, -1), RockFloor)
 
         # runtime management
         self.running = True

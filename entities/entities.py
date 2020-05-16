@@ -120,11 +120,10 @@ class Entity:
 
     def draw(self, surface):
         if isinstance(self.sprite, pygame.Surface):
-            # TODO: using spritesize now, is this always correct?
             sprite_size = Vector(*self.sprite.get_size())
-            draw_pos = (self.pos - (sprite_size * 0.5)).round()
-            surface.blit(self.sprite, draw_pos)
+            draw_pos = self.pos - (sprite_size * 0.5)
+            surface.blit(self.sprite, self.game.camera.apply(draw_pos))
         elif isinstance(self.sprite, Sprite):
-            self.sprite.draw(surface, self.pos)
+            self.sprite.draw(surface, self.game.camera.apply(self.pos))
         else:
             print("Entity.draw expects a sprite or overwriting of draw.")
