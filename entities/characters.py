@@ -2,6 +2,7 @@ import pygame
 
 import default
 from entities.coordinates import Vector
+from entities.items import Coal, Stone
 from .entities import Entity
 from .inventories import Inventory
 from effects.fields import LightField
@@ -11,10 +12,14 @@ class Character(Entity):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
+        self.sprite = pygame.image.load("art/10_character.png")
+        self.size = Vector(*self.sprite.get_size())
+
         self.inventory = Inventory()
+        self.inventory.add_items([Coal(), Stone()]*10)
 
         self.color = (255, 255, 0)
-        self.size = Vector(int(default.TILE_SIZE / 2), int(default.TILE_SIZE / 2))
+        # self.size = Vector(int(default.TILE_SIZE / 2), int(default.TILE_SIZE / 2))
         self.reach = 64 + 64
         self.base_mining_power = 200
         # self.base_view_distance = 200
@@ -78,6 +83,6 @@ class Character(Entity):
 
         return True
 
-    def draw(self, surface):
-        r = int(self.size.x / 2)
-        pygame.draw.circle(surface, self.color, self.game.camera.apply(self.pos), r)
+    # def draw(self, surface):
+    #     r = int(self.size.x / 2)
+    #     pygame.draw.circle(surface, self.color, self.game.camera.apply(self.pos), r)
