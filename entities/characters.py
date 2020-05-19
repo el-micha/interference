@@ -12,8 +12,8 @@ class Character(Entity):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.sprite = pygame.image.load("art/10_character.png")
-        self.size = Vector(*self.sprite.get_size())
+        self.sprite = pygame.image.load("art/12_character.png")
+        self.size = Vector(*self.sprite.get_size()) - Vector(2, 2)
 
         self.inventory = Inventory()
         self.inventory.add_items([Coal(), Stone()]*10)
