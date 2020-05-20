@@ -1,4 +1,7 @@
+import os
+
 import pygame
+import pickle
 
 from cameras import Camera
 from entities.coordinates import Vector
@@ -15,18 +18,22 @@ from gui.menus import MainMenu, FPSMenu
 from gui.pointers import TileHighlighter, LinePointer, HoverDescription
 from entities.tiles import Tile, RockFloor, CoalFloor
 from effects.explosion import Explosion
-from effects.fields import Field
 import random
 
 
 class Game:
     def __init__(self):
-        # pygame stuff
+        # Static content
         pygame.init()
-        self.surface = pygame.display.set_mode((settings.SCREEN_WIDTH, settings.SCREEN_HEIGHT))
-        pygame.display.set_caption("interference")
-        self.clock = pygame.time.Clock()
-        self.font = pygame.font.SysFont(None, 24)
+        self.surface = None
+        self.clock = None
+        self.font = None
+        self.load_static_content()
+
+        # Controls
+        self.interfaces = None
+        self.controllers = None
+        self.setup_controls()
 
         # Entities
         self._buildings = set()
@@ -37,6 +44,7 @@ class Game:
             settings.WORLD_WIDTH / 2 * default.TILE_SIZE,
             settings.WORLD_HEIGHT / 2 * default.TILE_SIZE,
         )
+
         self.camera = Camera()
         self.camera.focus(start_position)
         self.tile_grid = TileGrid(self, settings.WORLD_WIDTH, settings.WORLD_HEIGHT)
@@ -67,7 +75,13 @@ class Game:
         self.quit = False
         self.tick = 0
 
-        # interfaces
+    def load_static_content(self):
+        self.surface = pygame.display.set_mode((settings.SCREEN_WIDTH, settings.SCREEN_HEIGHT))
+        pygame.display.set_caption("interference")
+        self.clock = pygame.time.Clock()
+        self.font = pygame.font.SysFont(None, 24)
+
+    def setup_controls(self):
         self.interfaces = []
         self.controllers = []
 
@@ -111,9 +125,6 @@ class Game:
         self.tick += 1
         for building in self._buildings:
             building.tick(self.tick)
-
-        # for k,v in Field.fieldmap.items():
-        #     print(k, len(v))
 
     def process_controllers(self):
         events = pygame.event.get()
@@ -170,3 +181,40 @@ class Game:
         if hasattr(b, "fields"):
             self._fields.update(b.fields)
 
+    def __getstate__(self):
+        """
+        Returns the state when saving the game.
+        """
+
+        state = self.__dict__.copy()
+
+        # Remove unpickable objects
+        del state['surface']
+        del state['clock']
+        del state['font']
+        del state['interfaces']
+        del state['controllers']
+
+        return state
+
+    def __setstate__(self, state):
+        """
+        Restores the game state when loading the game.
+        """
+
+        self.__dict__.update(state)
+        self.load_static_content()
+
+    def save(self, saved_game):
+        print(f'Saving game to {saved_game}')
+        with open(os.path.join(settings.SAVED_GAME_DIR, saved_game), 'wb') as f:
+            pickle.dump(self, f)
+
+    def load(self, saved_game):
+        print(f'Loading game from {saved_game}')
+        with open(os.path.join(settings.SAVED_GAME_DIR, saved_game), 'rb') as f:
+            state = pickle.load(f)
+        self.__dict__.update(state.__dict__)
+
+        self.paused = False
+        self.setup_controls()

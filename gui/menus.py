@@ -33,6 +33,8 @@ class MainMenu(GUI):
         text_rows.add_child(TextLabel('(esc) Main Menu', layouts.TEXT_COLOR))
         text_rows.add_child(TextLabel('===============', layouts.TEXT_COLOR))
         text_rows.add_child(TextLabel('', layouts.TEXT_COLOR))
+        text_rows.add_child(TextLabel('(1) Save game', layouts.TEXT_COLOR))
+        text_rows.add_child(TextLabel('(2) Load game', layouts.TEXT_COLOR))
         text_rows.add_child(TextLabel('(q) Quit game', layouts.TEXT_COLOR))
 
 

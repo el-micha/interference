@@ -1,5 +1,4 @@
 import os
-from multiprocessing import Process
 from timeit import default_timer as timer
 
 import pygame
@@ -14,15 +13,21 @@ from entities.tiles import Tile
 from entities.coordinates import Vector
 import math
 
+
 class TileGrid:
     def __init__(self, game, num_cols, num_rows):
         self.game = game
         self.num_cols = num_cols
         self.num_rows = num_rows
         self.grid = None
-        self.tile_mapping = TileMapping(settings.ART_DIR)
+        self.tile_mapping = None
         self.tile_size = default.TILE_SIZE
+
+        self.load_static()
         self.generate_tiles()
+
+    def load_static(self):
+        self.tile_mapping = TileMapping(settings.ART_DIR)
 
     def generate_tiles(self):
         tile_types = [Rock, IronVein, IronVein, Rock, Rock, Rock, CoalVein, CoalVein, CoalVein, CoalVein, SilverVein]
@@ -32,9 +37,8 @@ class TileGrid:
         for i, line in enumerate(grid_mapping):
             print(f"creating row {i} of {len(grid_mapping)}")
             for j, tile_type in enumerate(line):
-                pos = self.__grid_to_coords__(i, j) # row, column
+                pos = self.__grid_to_coords__(i, j)  # row, column
                 self.grid[i][j] = tile_type(self.game, pos, Vector(default.TILE_SIZE, default.TILE_SIZE))
-
 
     # def draw(self, surface):
     #     for i, line in enumerate(self.grid):
@@ -51,19 +55,20 @@ class TileGrid:
         for row in self.get_grid_view():
             tiles_on_screen.extend(row)
         drawable_tiles = visible_tiles.intersection(set(tiles_on_screen))
-        surface.blits([(self.tile_mapping.get(art_id), self.game.camera.apply(pos)) for art_id, pos in map(lambda x: x.get_draw_info(), drawable_tiles)])
+        surface.blits([(self.tile_mapping.get(art_id), self.game.camera.apply(pos)) for art_id, pos in
+                       map(lambda x: x.get_draw_info(), drawable_tiles)])
         e = timer()
-        print(f"gathering tiles took {e0-s} seconds")
-        print(f"blits method took {e-e0} seconds")
-        print(f"drawing tiles took {e-s} seconds")
-
+        # print(f"gathering tiles took {e0-s} seconds")
+        # print(f"blits method took {e-e0} seconds")
+        # print(f"drawing tiles took {e-s} seconds")
 
     def get_grid_view(self):
         margin = 2 * default.TILE_SIZE
         top_left = self.get_tile(self.game.camera.inverse_apply(Vector(-margin, -margin)))
         bottom_left = self.get_tile(self.game.camera.inverse_apply(Vector(-margin, settings.SCREEN_HEIGHT + margin)))
         top_right = self.get_tile(self.game.camera.inverse_apply(Vector(settings.SCREEN_WIDTH + margin, -margin)))
-        bottom_right = self.get_tile(self.game.camera.inverse_apply(Vector(settings.SCREEN_WIDTH + margin, settings.SCREEN_HEIGHT + margin)))
+        bottom_right = self.get_tile(
+            self.game.camera.inverse_apply(Vector(settings.SCREEN_WIDTH + margin, settings.SCREEN_HEIGHT + margin)))
 
         top = top_left or top_right
         bottom = bottom_left or bottom_right
@@ -100,7 +105,6 @@ class TileGrid:
 
         rows = self.grid[start_row:end_row]
         return [row[start_col:end_col] for row in rows]
-
 
     def get_tile(self, point):
         i, j = self.__coords_to_grid__(point)
@@ -143,11 +147,11 @@ class TileGrid:
         tiles = set()
         num_rows = int(2 * radius / ts)
         for row_num in range(num_rows):
-            #find y
-            y = ts * (num_rows/2 - row_num)
+            # find y
+            y = ts * (num_rows / 2 - row_num)
             x = math.sqrt(radius ** 2 - y ** 2)
 
-            y = y - ts/2
+            y = y - ts / 2
 
             left_offset = Vector(-x, y)
             right_offset = Vector(x, y)
@@ -173,7 +177,7 @@ class TileGrid:
         At least consider circles with r_min and r_max, even if distance is too small.
         This method could be massively improved by sampling an outer circle and considering rows of tiles at a time.
         """
-        oversampling_factor = 1.50 # at least sqrt(2) due to diagonal
+        oversampling_factor = 1.50  # at least sqrt(2) due to diagonal
         sample_distance = self.tile_size / oversampling_factor
         num_circles = int((r_max - r_min) / sample_distance)
         radii = [r_min] + [r_min + sample_distance * (i + 0.5) for i in range(num_circles)] + [r_max]
@@ -183,8 +187,8 @@ class TileGrid:
         return tiles
 
     def get_tiles_on_circle(self, point, radius, oversampling_factor=1.5):
-        num_samples = int(2 * math.pi * radius / self.tile_size * oversampling_factor) # factor 1.5 for small corners
-        tiles = [] # dont forget to check for None
+        num_samples = int(2 * math.pi * radius / self.tile_size * oversampling_factor)  # factor 1.5 for small corners
+        tiles = []  # dont forget to check for None
         for i in range(num_samples):
             x = point.x + math.sin(i * (2 * math.pi) / num_samples) * radius
             y = point.y + math.cos(i * (2 * math.pi) / num_samples) * radius
@@ -203,7 +207,7 @@ class TileGrid:
 
     @staticmethod
     def __grid_to_coords__(i, j):
-        off  = default.TILE_SIZE / 2
+        off = default.TILE_SIZE / 2
         return Vector(j * default.TILE_SIZE + off, i * default.TILE_SIZE + off)
 
     def __str__(self):
@@ -212,7 +216,23 @@ class TileGrid:
             s += " ".join(map(str, line)) + "\n"
         return s
 
+    def __getstate__(self):
+        """
+        Returns the state when saving the game.
+        """
 
+        state = self.__dict__.copy()
+        del state['tile_mapping']
+
+        return state
+
+    def __setstate__(self, state):
+        """
+        Restores the game state when loading the game.
+        """
+
+        self.__dict__.update(state)
+        self.load_static()
 
 
 class TileMapping:
@@ -221,6 +241,7 @@ class TileMapping:
     Expects images in the directory to contain their id as a prefix of the form "01_" as in "01_background.png
     Also expects there to be at least a default image with prefix 0_"
     """
+
     def __init__(self, art_directory):
         if not pygame.get_init():
             pygame.init()
@@ -259,4 +280,3 @@ class TileMapping:
         else:
             print("Tile size not uniform. Returning set")
             return sizes
-

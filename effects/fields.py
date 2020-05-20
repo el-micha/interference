@@ -3,7 +3,6 @@ from entities.coordinates import Vector
 
 
 class Field:
-
     def __init__(self, game, parent, pos, radius):
         # for a circle: radius, for other forms: max distance from origin
         self.parent = parent
@@ -13,8 +12,7 @@ class Field:
         self.base_amplitude = 1
         self.color = (50, 50, 200, 30)
         self.active = True
-        # lazy sprite
-        self.circle = None
+        self.sprite = None  # Lazy initialized
         self.old_radius = self.get_radius()
 
     def get_amplitude(self):
@@ -32,18 +30,36 @@ class Field:
         else:
             return 0
 
-    def get_circle(self):
-        if self.get_radius() != self.old_radius or self.circle is None:
+    def get_sprite(self):
+        if self.get_radius() != self.old_radius or self.sprite is None:
             circle = pygame.Surface((self.get_radius() * 2 + 1, self.get_radius() * 2 + 1), pygame.SRCALPHA)
             pygame.draw.circle(circle, self.color, (self.get_radius(), self.get_radius()), self.get_radius())
-            self.circle = circle
+            self.sprite = circle
             self.old_radius = self.get_radius()
-        return self.circle
+        return self.sprite
 
     def draw(self, surface):
-        circle = self.get_circle()
+        sprite = self.get_sprite()
         draw_pos = Vector(self.pos.x - self.get_radius(), self.pos.y - self.get_radius())
-        surface.blit(circle, self.game.camera.apply(draw_pos))
+        surface.blit(sprite, self.game.camera.apply(draw_pos))
+
+    def __getstate__(self):
+        """
+        Returns the state when saving the game.
+        """
+
+        state = self.__dict__.copy()
+        del state['sprite']
+
+        return state
+
+    def __setstate__(self, state):
+        """
+        Restores the game state when loading the game.
+        """
+
+        self.__dict__.update(state)
+        self.sprite = None
 
 
 class EnergyField(Field):
@@ -64,7 +80,6 @@ class LightField(Field):
             energy += field.get_effect(self.pos) / 2
         return self.base_radius * energy
 
-
     def draw(self, surface):
         pass
         # self.color = (50, 50, 200, 200)
@@ -72,5 +87,3 @@ class LightField(Field):
         # pygame.draw.circle(circle, self.color, (self.get_radius(), self.get_radius()), self.get_radius())
         # draw_pos = Vector(self.pos.x - self.get_radius(), self.pos.y - self.get_radius())
         # surface.blit(circle, self.game.camera.apply(draw_pos))
-
-

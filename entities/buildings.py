@@ -1,6 +1,3 @@
-import pygame
-
-import default
 from effects.fields import EnergyField, LightField
 from .entities import Entity
 from .items import Coal
@@ -8,27 +5,25 @@ from .resources import Stone
 from .tiles import RockFloor, CoalFloor
 from entities.coordinates import Vector
 
+
 class Building(Entity):
     name = None
     description = None
     keyboard_shortcut = None
     construction_costs = []
     suitable_floors = []
+    sprite_art = 'art/80_building.png'
 
     def __init__(self, *args, **kwargs):
         super().__init__(size=None, *args, **kwargs)
 
         self.fields = []
-        self.sprite = pygame.image.load("art/80_building.png")
-        self.size = Vector(*self.sprite.get_size())
 
     def tick(self, tick):
         pass
 
     def set_position(self, pos):
         self.pos.set(pos)
-        # for field in self.fields:
-        #     field.pos.set(self.pos)
 
     @classmethod
     def is_affordable(cls, inventory):
@@ -70,12 +65,10 @@ class CoalDrill(Building):
     keyboard_shortcut = 'c'
     construction_costs = [(1, Stone)]
     suitable_floors = [CoalFloor, RockFloor]
+    sprite_art = 'art/81_coal_drill.png'
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-
-        self.sprite = pygame.image.load("art/81_coal_drill.png")
-        self.size = Vector(*self.sprite.get_size())
 
         # resources per tick
         self.base_mining_rate = 3
@@ -144,12 +137,10 @@ class EnergyDissipator(Building):
     keyboard_shortcut = 'e'
     construction_costs = [(1, Stone), (1, Coal)]
     suitable_floors = [RockFloor, CoalFloor]
+    sprite_art = 'art/82_energy_dissipator.png'
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-
-        self.sprite = pygame.image.load("art/82_energy_dissipator.png")
-        self.size = Vector(*self.sprite.get_size())
 
         self.fields = [
             EnergyField(self.game, self, self.pos, 256),
@@ -182,9 +173,6 @@ class EnergyDissipator(Building):
 
     def draw(self, surface):
         super().draw(surface)
-        # for field in self.fields:
-        #     if field.active:
-        #         field.draw(surface)
 
 
 class Furnace(Building):
@@ -192,12 +180,7 @@ class Furnace(Building):
     keyboard_shortcut = 'f'
     construction_costs = [(1, Stone)]
     suitable_floors = [RockFloor, CoalFloor]
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-        self.sprite = pygame.image.load("art/87_furnace.png")
-        self.size = Vector(*self.sprite.get_size())
+    sprite_art = 'art/87_furnace.png'
 
 
 class Workshop(Building):
@@ -205,12 +188,7 @@ class Workshop(Building):
     keyboard_shortcut = 'k'
     construction_costs = [(1, Stone)]
     suitable_floors = [RockFloor, CoalFloor]
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-        self.sprite = pygame.image.load("art/83_workshop.png")
-        self.size = Vector(*self.sprite.get_size())
+    sprite_art = 'art/83_workshop.png'
 
 
 class IronDrill(Building):
@@ -218,12 +196,7 @@ class IronDrill(Building):
     keyboard_shortcut = 'l'
     construction_costs = [(1, Stone)]
     suitable_floors = [RockFloor, CoalFloor]
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-        self.sprite = pygame.image.load("art/85_iron_drill.png")
-        self.size = Vector(*self.sprite.get_size())
+    sprite_art = 'art/85_iron_drill.png'
 
 
 class PartsProcessor(Building):
@@ -231,12 +204,7 @@ class PartsProcessor(Building):
     keyboard_shortcut = 'p'
     construction_costs = [(1, Stone)]
     suitable_floors = [RockFloor, CoalFloor]
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-        self.sprite = pygame.image.load("art/84_processor.png")
-        self.size = Vector(*self.sprite.get_size())
+    sprite_art = 'art/84_processor.png'
 
 
 class Assembly(Building):
@@ -244,11 +212,4 @@ class Assembly(Building):
     keyboard_shortcut = 'm'
     construction_costs = [(1, Stone)]
     suitable_floors = [RockFloor, CoalFloor]
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-        self.sprite = pygame.image.load("art/86_assembly.png")
-        self.size = Vector(*self.sprite.get_size())
-
-
+    sprite_art = 'art/86_assembly.png'

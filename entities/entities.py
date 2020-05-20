@@ -4,7 +4,7 @@ import pygame
 import default
 from entities.coordinates import Vector
 from effects.visuals import Sprite
-from effects.fields import Field, LightField, EnergyField
+from effects.fields import LightField, EnergyField
 
 
 class ID:
@@ -41,15 +41,31 @@ class Entity:
         self.game = game
         self.pos = pos  # considdle: .set or =, that is the riddle
         self.size = size
+        self.sprite = None
+        self.load_static()
+
+    def load_static(self):
         if self.size is None:
             self.size = Vector(default.TILE_SIZE, default.TILE_SIZE)
-        # default sprite
-        self.sprite = pygame.Surface(self.size.round(), pygame.SRCALPHA)
-        self.sprite.fill((255, 255, 0, 128))
 
-        # properties
-        self.width = property(self.size.x)
-        self.height = property(self.size.y)
+        self.load_static_sprite()
+
+    def load_static_sprite(self):
+        if hasattr(self, 'sprite_art'):
+            self.sprite = pygame.image.load(self.sprite_art)
+            self.size = Vector(*self.sprite.get_size())
+        else:
+            # Default sprite
+            self.sprite = pygame.Surface(self.size.round(), pygame.SRCALPHA)
+            self.sprite.fill((255, 255, 0, 128))
+
+    @property
+    def width(self):
+        return self.size.x
+
+    @property
+    def height(self):
+        return self.size.y
 
     def get_tiles_below(self):
         w, h = (self.size * 0.5).round()
@@ -126,3 +142,23 @@ class Entity:
             self.sprite.draw(surface, self.game.camera.apply(self.pos))
         else:
             print("Entity.draw expects a sprite or overwriting of draw.")
+
+    def __getstate__(self):
+        """
+        Returns the state when saving the game.
+        """
+
+        state = self.__dict__.copy()
+
+        if 'sprite' in state:
+            del state['sprite']
+
+        return state
+
+    def __setstate__(self, state):
+        """
+        Restores the game state when loading the game.
+        """
+
+        self.__dict__.update(state)
+        self.load_static()
