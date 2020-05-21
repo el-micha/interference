@@ -53,11 +53,21 @@ class MainMenuController(Controller):
                 self.game.quit = True
 
             if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
-                self.game.paused ^= True
-                self.gui.hidden ^= True
+                self.toggle_menu()
+
+            if not self.gui.hidden and event.type == pygame.KEYDOWN and event.key == pygame.K_1:
+                self.game.save('single.world')
+                self.toggle_menu()
+
+            if not self.gui.hidden and event.type == pygame.KEYDOWN and event.key == pygame.K_2:
+                self.game.load('single.world')
 
             if not self.gui.hidden and event.type == pygame.KEYDOWN and event.key == pygame.K_q:
                 self.game.quit = True
+
+    def toggle_menu(self):
+        self.game.paused ^= True
+        self.gui.hidden ^= True
 
 
 class CharacterInventoryController(Controller):

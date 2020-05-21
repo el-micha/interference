@@ -1,25 +1,22 @@
-import pygame
-
-import default
 from entities.coordinates import Vector
 from entities.items import Coal, Stone
 from .entities import Entity
 from .inventories import Inventory
 from effects.fields import LightField
+from events.observers import Observable
+from events.events import MiningEvent
 
 
-class Character(Entity):
+class Character(Entity, Observable):
+    sprite_art = 'art/10_character.png'
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-
-        self.sprite = pygame.image.load("art/12_character.png")
-        self.size = Vector(*self.sprite.get_size()) - Vector(2, 2)
 
         self.inventory = Inventory()
         self.inventory.add_items([Coal(), Stone()]*10)
 
         self.color = (255, 255, 0)
-        # self.size = Vector(int(default.TILE_SIZE / 2), int(default.TILE_SIZE / 2))
         self.reach = 64 + 64
         self.base_mining_power = 200
         # self.base_view_distance = 200
@@ -48,14 +45,7 @@ class Character(Entity):
         distance = Vector.dist(self.pos, resource.pos)
 
         if resource.is_mineable and distance < self.game.character.reach:
-            resource.durability -= self.get_mining_power()
-            if resource.durability < 0:
-                drops = resource.drops()
-                for drop in drops:
-                    print(f'Picked up {drop}')
-                self.inventory.add_items(drops)
-
-                self.game.tile_grid.replace_tile(resource.pos, resource.reveals())
+            self.notify_observers(MiningEvent(resource, self.get_mining_power(), self.inventory))
 
     def construct(self, building):
         if not self.can_construct(building):
@@ -82,7 +72,3 @@ class Character(Entity):
             return False
 
         return True
-
-    # def draw(self, surface):
-    #     r = int(self.size.x / 2)
-    #     pygame.draw.circle(surface, self.color, self.game.camera.apply(self.pos), r)

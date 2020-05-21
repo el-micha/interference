@@ -11,6 +11,8 @@ SCREEN_HEIGHT = 1080
 WORLD_WIDTH = 100
 WORLD_HEIGHT = 100
 
+SAVED_GAME_DIR = os.path.join(BASE_DIR, 'saves')
+
 DEBUG_MODE = False
 
 

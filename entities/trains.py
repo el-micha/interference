@@ -2,12 +2,13 @@ import default
 from entities.entities import Entity
 from entities.inventories import Inventory
 from entities.coordinates import Vector
-
+from events.events import MiningEvent
+from events.observers import Observable
 
 TRAIN_SPRITE_SIZE = default.TILE_SIZE
 
 
-class Train(Entity):
+class Train(Entity, Observable):
     def __init__(self, direction: Vector, size=None, *args, **kwargs):
         super().__init__(size=size, *args, **kwargs)
 
@@ -67,11 +68,7 @@ class Train(Entity):
             self.move(self.direction * self.speed)
 
     def mine(self, resource):
-        resource.durability -= self.mining_power
-        if resource.durability < 0:
-            drops = resource.drops()
-            self.inventory.add_items(drops)
-            self.game.tile_grid.replace_tile(resource.pos, resource.reveals())
+        self.notify_observers(MiningEvent(resource, self.mining_power, self.inventory))
 
     def move(self, delta, *args, **kwargs):
         # First check if all wagons can be moved
