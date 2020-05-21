@@ -12,6 +12,7 @@ class Tile(Entity):
         self.is_mineable = False
         self.art_id = 0
         self.is_blocking = False
+        self.blocked_by = None
 
     # draw, draw_raw a temporary hack to have both options to determine visibility available...
     def draw(self, surface, tile_mapping):
@@ -34,6 +35,9 @@ class Tile(Entity):
 
     def get_draw_info(self):
         return self.art_id, self.pos - self.size * 0.5
+
+    def is_adjacent_to(self, other_tile):
+        return Vector.dist(self.pos, other_tile.pos) < default.TILE_SIZE * 1.42 # diagonals
 
 class RockFloor(Tile):
     def __init__(self, *args, **kwargs):

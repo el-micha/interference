@@ -32,15 +32,6 @@ class Character(Entity, Observable):
         mining_field_factors = 1 + self.get_available_energy() * 2
         return self.base_mining_power * mining_field_factors
 
-    # def __get_field_factors__(self, field_type, factor_attr):
-    #     factor = 1
-    #     for b in self.game.buildings:
-    #         for field in b.fields:
-    #             if isinstance(field, field_type):
-    #                 if dist(self.x, self.y, b.x, b.y) < field.reach:
-    #                     factor += getattr(field, factor_attr)
-    #     return factor
-
     def mine(self, resource):
         distance = Vector.dist(self.pos, resource.pos)
 
@@ -55,6 +46,7 @@ class Character(Entity, Observable):
             self.inventory.remove_items(resource_cls, amount)
 
         building.make_floor_blocking()
+        building.link_with_floor()
         self.game.add_building(building)
 
     def can_construct(self, building):

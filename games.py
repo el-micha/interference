@@ -13,7 +13,7 @@ from entities.characters import Character
 from controls.controllers import CharacterController, MainMenuController, CharacterInventoryController, \
     ConstructionController
 from gui.inventories import CharacterInventory
-from gui.constructions import BuildingMenu
+from gui.constructions import ConstructionMenu
 from gui.menus import MainMenu, FPSMenu
 from gui.pointers import TileHighlighter, LinePointer, HoverDescription
 from entities.tiles import Tile, RockFloor, CoalFloor
@@ -93,7 +93,7 @@ class Game:
         self.register_interface(TileHighlighter(game=self))
         self.register_interface(HoverDescription(game=self))
         self.register_interface(CharacterInventory(game=self, hidden=False), CharacterInventoryController)
-        self.register_interface(BuildingMenu(game=self, hidden=False), ConstructionController)
+        self.register_interface(ConstructionMenu(game=self, hidden=False), ConstructionController)
         self.register_interface(FPSMenu(game=self, hidden=False))
 
     def register_interface(self, interface, controller_cls=None):
@@ -179,9 +179,24 @@ class Game:
 
     def add_building(self, b):
         # add building AND fields you asshole
+
+        # find adjacent buildings TODO: move and make more efficient
+        neighbours = set()
+        for tile in b.get_tiles_below():
+            for candidate in filter(lambda other: Vector.dist(b.pos, other.pos) < default.TILE_SIZE * 9, self._buildings):
+                other_tiles = candidate.get_tiles_below()
+                for other_tile in other_tiles:
+                    if tile.is_adjacent_to(other_tile):
+                        neighbours.add(b)
+        b.adjacent_buildings = list(neighbours)
+        for n in neighbours:
+            n.adjacent_buildings.append(b)
+
         self._buildings.add(b)
         if hasattr(b, "fields"):
             self._fields.update(b.fields)
+        # also, update building neighbourhoods:
+
 
     def __getstate__(self):
         """

@@ -3,7 +3,7 @@ from gui.components import GUI, Window, Rows, TextLabel
 from entities.buildings import CoalDrill, EnergyDissipator, Furnace, Workshop, IronDrill, PartsProcessor, Assembly
 from entities.coordinates import Vector
 
-class BuildingMenu(GUI):
+class ConstructionMenu(GUI):
     constructable_buildings = [CoalDrill, EnergyDissipator, Furnace, Workshop, IronDrill, PartsProcessor, Assembly]
 
     def __init__(self, *args, **kwargs):
@@ -43,3 +43,43 @@ class BuildingMenu(GUI):
                 text_rows.add_child(TextLabel(f'({building.keyboard_shortcut}) {building.name}', layouts.TEXT_COLOR))
 
         super().draw(surface)
+
+
+# class BuildingMenu(GUI):
+#     def __init__(self, parent_building, *args, **kwargs):
+#         super().__init__(*args, **kwargs)
+#
+#         self.width = layouts.WINDOW_WIDTH_SM
+#         self.height = layouts.WINDOW_HEIGHT_MD
+#         self.size = Vector(self.width, self.height)
+#
+#         self.parent = parent_building
+#
+#         self.pos = self.parent.pos + self.parent.size
+#
+#     def draw(self, surface):
+#         self.children = []
+#
+#         window = Window(
+#             width=self.width,
+#             height=self.height,
+#             background_color=layouts.WINDOW_BACKGROUND_COLOR,
+#             border_color=layouts.WINDOW_BORDER_COLOR,
+#         )
+#         self.add_child(window)
+#
+#         text_rows = Rows(
+#             width=window.width - 20,
+#             height=window.height - 20,
+#             pos=Vector(10, 10),
+#             background_alpha=1,
+#         )
+#         window.add_child(text_rows)
+#
+#         building_name = self.parent.name
+#         text_rows.add_child(TextLabel(building_name, layouts.TEXT_COLOR))
+#         text_rows.add_child(TextLabel('='*len(building_name), layouts.TEXT_COLOR))
+#         if hasattr(self.parent, "stored_coal"):
+#             text_rows.add_child(TextLabel(f"stored_coal: {self.parent.stored_coal}", layouts.TEXT_COLOR))
+#
+#         super().draw(surface)

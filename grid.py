@@ -49,23 +49,24 @@ class TileGrid(Observer):
     #             tile.draw_raw(surface, self.tile_mapping)
 
     def draw(self, surface):
-        s = timer()
+        # s = timer()
         visible_tiles = set()
         for light_field in self.game.get_fields(LightField):
             visible_tiles.update(self.get_tiles_within_radius(light_field.pos, light_field.get_radius()))
-        e0 = timer()
+        # e0 = timer()
         tiles_on_screen = []
         for row in self.get_grid_view():
             tiles_on_screen.extend(row)
         drawable_tiles = visible_tiles.intersection(set(tiles_on_screen))
         surface.blits([(self.tile_mapping.get(art_id), self.game.camera.apply(pos)) for art_id, pos in
                        map(lambda x: x.get_draw_info(), drawable_tiles)])
-        e = timer()
+        # e = timer()
         # print(f"gathering tiles took {e0-s} seconds")
         # print(f"blits method took {e-e0} seconds")
         # print(f"drawing tiles took {e-s} seconds")
 
     def get_grid_view(self):
+        """Get submatrix from self.grid which is in the current window view. Add a small margin around."""
         margin = 2 * default.TILE_SIZE
         top_left = self.get_tile(self.game.camera.inverse_apply(Vector(-margin, -margin)))
         bottom_left = self.get_tile(self.game.camera.inverse_apply(Vector(-margin, settings.SCREEN_HEIGHT + margin)))
@@ -78,36 +79,14 @@ class TileGrid(Observer):
         left = top_left or bottom_left
         right = top_right or bottom_right
 
-        if top is not None:
-            i, j = self.__coords_to_grid__(top.pos)
-            start_row = i
-            # pygame.draw.circle(self.game.surface, (255, 255, 255), self.game.camera.apply(top.pos), 200)
-        else:
-            start_row = 0
-
-        if bottom is not None:
-            i, j = self.__coords_to_grid__(bottom.pos)
-            end_row = i
-            # pygame.draw.circle(self.game.surface, (255, 255, 255), self.game.camera.apply(bottom.pos), 200)
-        else:
-            end_row = len(self.grid)
-
-        if left is not None:
-            i, j = self.__coords_to_grid__(left.pos)
-            start_col = j
-            # pygame.draw.circle(self.game.surface, (255, 255, 255), self.game.camera.apply(left.pos), 200)
-        else:
-            start_col = 0
-
-        if right is not None:
-            i, j = self.__coords_to_grid__(right.pos)
-            end_col = j
-            # pygame.draw.circle(self.game.surface, (255, 255, 255), self.game.camera.apply(right.pos), 200)
-        else:
-            end_col = len(self.grid[0])
+        start_row, _ = self.__coords_to_grid__(top.pos)    if top    is not None else (0, None)
+        end_row, _   = self.__coords_to_grid__(bottom.pos) if bottom is not None else (len(self.grid), None)
+        _, start_col = self.__coords_to_grid__(left.pos)   if left   is not None else (None, 0)
+        _, end_col   = self.__coords_to_grid__(right.pos)  if right  is not None else (None, len(self.grid[0]))
 
         rows = self.grid[start_row:end_row]
         return [row[start_col:end_col] for row in rows]
+
 
     def get_tile(self, point):
         i, j = self.__coords_to_grid__(point)
@@ -153,7 +132,6 @@ class TileGrid(Observer):
             # find y
             y = ts * (num_rows / 2 - row_num)
             x = math.sqrt(radius ** 2 - y ** 2)
-
             y = y - ts / 2
 
             left_offset = Vector(-x, y)
@@ -161,9 +139,6 @@ class TileGrid(Observer):
 
             i, j_left = self.__coords_to_grid__(point + left_offset)
             i, j_right = self.__coords_to_grid__(point + right_offset)
-
-            # pygame.draw.circle(self.game.surface, (255, 255, 255), self.game.camera.apply(point + left_offset), 2)
-            # pygame.draw.circle(self.game.surface, (255, 255, 255), self.game.camera.apply(point + right_offset), 2)
 
             if i < 0 or i >= self.num_rows:
                 continue
@@ -296,3 +271,4 @@ class TileMapping:
         else:
             print("Tile size not uniform. Returning set")
             return sizes
+

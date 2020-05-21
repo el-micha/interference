@@ -79,6 +79,15 @@ class CharacterInventoryController(Controller):
             if event.type == pygame.KEYDOWN and event.key == pygame.K_i:
                 self.gui.hidden ^= True
 
+# class BuildingController(Controller):
+#     def process(self, events):
+#         if self.game.paused:
+#             return
+#
+#         for event in events:
+#             if event.type == pygame.KEYDOWN and event.key == pygame.K_i:
+#                 self.gui.hidden ^= True
+
 
 class ConstructionController(Controller):
     def __init__(self, *args, **kwargs):
