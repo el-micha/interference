@@ -25,7 +25,7 @@ class ID:
         return ID.id_counter
 
 
-class Entity:
+class Entity(object):
     """
     An entity has:
     - a position in world coordinates pos = (x, y)
@@ -36,7 +36,9 @@ class Entity:
     self.sprite = SpriteLoader.get("character_sprite")
     """
 
-    def __init__(self, game, pos: Vector, size: Vector):
+    def __init__(self, game, pos: Vector, size: Vector, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
         self.id = ID.request_id(self)
         self.game = game
         self.pos = pos  # considdle: .set or =, that is the riddle

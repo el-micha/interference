@@ -3,9 +3,11 @@ from entities.items import Coal, Stone
 from .entities import Entity
 from .inventories import Inventory
 from effects.fields import LightField
+from events.observers import Observable
+from events.events import MiningEvent
 
 
-class Character(Entity):
+class Character(Entity, Observable):
     sprite_art = 'art/10_character.png'
 
     def __init__(self, *args, **kwargs):
@@ -43,14 +45,7 @@ class Character(Entity):
         distance = Vector.dist(self.pos, resource.pos)
 
         if resource.is_mineable and distance < self.game.character.reach:
-            resource.durability -= self.get_mining_power()
-            if resource.durability < 0:
-                drops = resource.drops()
-                for drop in drops:
-                    print(f'Picked up {drop}')
-                self.inventory.add_items(drops)
-
-                self.game.tile_grid.replace_tile(resource.pos, resource.reveals())
+            self.notify_observers(MiningEvent(resource, self.get_mining_power(), self.inventory))
 
     def construct(self, building):
         if not self.can_construct(building):

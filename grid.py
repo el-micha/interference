@@ -13,8 +13,11 @@ from entities.tiles import Tile
 from entities.coordinates import Vector
 import math
 
+from events.events import MiningEvent
+from events.observers import Observer
 
-class TileGrid:
+
+class TileGrid(Observer):
     def __init__(self, game, num_cols, num_rows):
         self.game = game
         self.num_cols = num_cols
@@ -233,6 +236,19 @@ class TileGrid:
 
         self.__dict__.update(state)
         self.load_static()
+
+    def notify(self, observable, event, *args, **kwargs):
+        if isinstance(event, MiningEvent):
+            event.resource.durability -= event.mining_power
+            if event.resource.durability < 0:
+                drops = event.resource.drops()
+
+                if event.inventory is not None:
+                    event.inventory.add_items(drops)
+                    for drop in drops:
+                        print(f'{observable} picked up {drop}')
+
+                self.replace_tile(event.resource.pos, event.resource.reveals())
 
 
 class TileMapping:
