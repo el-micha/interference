@@ -8,7 +8,7 @@ from events.events import MiningEvent
 
 
 class Character(Entity, Observable):
-    sprite_art = 'art/10_character.png'
+    sprite_art = 'art/12_character.png'
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

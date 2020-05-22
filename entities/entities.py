@@ -70,14 +70,8 @@ class Entity(object):
         return self.size.y
 
     def get_tiles_below(self):
-        w, h = (self.size * 0.5).round()
-        px, py = self.pos.round()
-
-        x_min = px - w
-        x_max = px + w
-        y_min = py - h
-        y_max = py + h
-
+        x_min, y_min = (self.pos - self.size * 0.5).round()
+        x_max, y_max = (self.pos + self.size * 0.5).round()
         tiles = set()
         for x in chain([x_max-1], range(x_min, x_max, default.TILE_SIZE)):
             for y in chain([y_max-1], range(y_min, y_max, default.TILE_SIZE)):
@@ -95,12 +89,9 @@ class Entity(object):
         return left <= point[0] <= right and top <= point[1] <= bottom
 
     def move(self, delta, require_valid_move=True):
+        # pos assignment changes referenced object, so other references become stale. use pos.set().
         if not require_valid_move or self.is_valid_move(delta):
-            # self.pos = self.pos + delta changes self.pos object,
-            # so fields and other stuff referencing character's pos object
-            # are not changed unless we change pos' x,y manually
             self.pos.set(self.pos + delta)
-            # self.pos = self.pos + delta
 
     def is_valid_move(self, delta):
         new_x, new_y = self.pos + delta

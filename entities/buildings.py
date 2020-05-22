@@ -54,18 +54,20 @@ class Building(Entity):
     def make_floor_blocking(self):
         for tile in self.get_tiles_below():
             tile.is_blocking = True
+            tile.highlighted = True
 
     def link_with_floor(self):
         for tile in self.get_tiles_below():
             tile.blocked_by = self
+            tile.highlighted = True
 
     def get_tiles_below(self):
         if self._tiles_below is None:
-            print("_tiles below was None, calculating once")
             self._tiles_below = super().get_tiles_below()
-        print("returning _tiles below")
-
         return self._tiles_below
+
+    def get_neighbours(self):
+        return self.adjacent_buildings
 
 class CoalDrill(Building):
     """
@@ -118,18 +120,8 @@ class CoalDrill(Building):
 
     def get_consumers(self):
         cons = [x for x in self.get_neighbours() if hasattr(x, "stored_coal")]
-        # print(f"found {len(cons)} consumers")
+        #print(f"found {len(cons)} consumers")
         return cons
-
-    def get_neighbours(self):
-        return self.adjacent_buildings
-        # neigh = []
-        # for building in (set(self.game.get_buildings()) - {self}):
-        #     # TODO: implement real neighbourhood
-        #     if Vector.dist(self.pos, building.pos) < 32 * 5:
-        #         neigh.append(building)
-        # # print(f"found {len(neigh)} neighbours")
-        # return neigh
 
     def print_stats(self):
         print(f"- - - Coal drill {self.id}: - - -")

@@ -60,6 +60,11 @@ class TileGrid(Observer):
         drawable_tiles = visible_tiles.intersection(set(tiles_on_screen))
         surface.blits([(self.tile_mapping.get(art_id), self.game.camera.apply(pos)) for art_id, pos in
                        map(lambda x: x.get_draw_info(), drawable_tiles)])
+        #lol this debug code breaks efficiency again...
+        for tile in drawable_tiles:
+            if tile.highlighted:
+                a, b = self.game.camera.apply(tile.pos - tile.size * 0.5)
+                pygame.draw.rect(surface, (200, 80, 80), pygame.Rect(a, b, default.TILE_SIZE, default.TILE_SIZE))
         # e = timer()
         # print(f"gathering tiles took {e0-s} seconds")
         # print(f"blits method took {e-e0} seconds")

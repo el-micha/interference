@@ -79,7 +79,7 @@ class Game:
 
     def load_static_content(self):
         self.surface = pygame.display.set_mode((settings.SCREEN_WIDTH, settings.SCREEN_HEIGHT))
-        pygame.display.set_caption("interference")
+        pygame.display.set_caption("dongus longus")
         self.clock = pygame.time.Clock()
         self.font = pygame.font.SysFont(None, 24)
 
@@ -182,17 +182,28 @@ class Game:
 
         # find adjacent buildings TODO: move and make more efficient
         neighbours = set()
+        print("========================================")
+        print(b.get_tiles_below())
         for tile in b.get_tiles_below():
             for candidate in filter(lambda other: Vector.dist(b.pos, other.pos) < default.TILE_SIZE * 9, self._buildings):
                 other_tiles = candidate.get_tiles_below()
+                print(f"candidate: {len(other_tiles)}")
                 for other_tile in other_tiles:
                     if tile.is_adjacent_to(other_tile):
-                        neighbours.add(b)
+                        print("yes")
+                        neighbours.add(candidate)
+        print(f"found neigbours {neighbours}")
         b.adjacent_buildings = list(neighbours)
         for n in neighbours:
             n.adjacent_buildings.append(b)
-
         self._buildings.add(b)
+
+        print("--------------------------")
+        for b in self._buildings:
+            print(b, b.pos)
+            for n in b.get_neighbours():
+                print(f"    {n}")
+
         if hasattr(b, "fields"):
             self._fields.update(b.fields)
         # also, update building neighbourhoods:

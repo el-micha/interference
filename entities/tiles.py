@@ -14,11 +14,18 @@ class Tile(Entity):
         self.is_blocking = False
         self.blocked_by = None
 
+        # debug
+        self.highlighted = False
+
     # draw, draw_raw a temporary hack to have both options to determine visibility available...
     def draw(self, surface, tile_mapping):
         if not self.is_visible():
             return
         self.draw_raw(surface, tile_mapping)
+        #if self.highlighted:
+        #    a,b = self.game.camera.apply(self.pos - self.size * 0.5)
+        #    c,d = self.game.camera.apply(self.pos + self.size * 0.5)
+        #    pygame.draw.rect(surface, (200,200,200), pygame.Rect(a,b,c,d))
 
     def draw_raw(self, surface, tile_mapping):
         self.sprite = tile_mapping.get(self.art_id)
