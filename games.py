@@ -50,7 +50,6 @@ class Game:
         self.character = Character(self, start_position + Vector(16, 16), Vector(8, 8))
         self.tile_grid = TileGrid(self, settings.WORLD_WIDTH, settings.WORLD_HEIGHT)
         self.tile_grid.replace_tile(self.character.pos, Tile)
-        self.character.register_observer(self.tile_grid)
 
         start_square = start_position - Vector(5 * default.TILE_SIZE, 5 * default.TILE_SIZE, )
         for i in range(10):
@@ -67,7 +66,6 @@ class Game:
         east_train.add_wagon(BoringHead(self, None, None))
         east_train.add_wagon(Engine(self, None, None))
         east_train.add_wagon(Cart(self, None, None))
-        east_train.register_observer(self.tile_grid)
         self.trains.append(east_train)
 
         # runtime management

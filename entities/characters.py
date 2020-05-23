@@ -3,11 +3,10 @@ from entities.items import Coal, Stone
 from .entities import Entity
 from .inventories import Inventory
 from effects.fields import LightField
-from events.observers import Observable
-from events.events import MiningEvent
+from events.events import MiningEvent, EventAggregator
 
 
-class Character(Entity, Observable):
+class Character(Entity):
     sprite_art = 'art/12_character.png'
 
     def __init__(self, *args, **kwargs):
@@ -36,7 +35,7 @@ class Character(Entity, Observable):
         distance = Vector.dist(self.pos, resource.pos)
 
         if resource.is_mineable and distance < self.game.character.reach:
-            self.notify_observers(MiningEvent(resource, self.get_mining_power(), self.inventory))
+            EventAggregator.notify(MiningEvent(resource, self.get_mining_power(), self.inventory), self)
 
     def construct(self, building):
         if not self.can_construct(building):

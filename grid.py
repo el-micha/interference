@@ -13,11 +13,10 @@ from entities.tiles import Tile
 from entities.coordinates import Vector
 import math
 
-from events.events import MiningEvent
-from events.observers import Observer
+from events.events import MiningEvent, EventAggregator
 
 
-class TileGrid(Observer):
+class TileGrid(object):
     def __init__(self, game, num_cols, num_rows):
         self.game = game
         self.num_cols = num_cols
@@ -28,6 +27,8 @@ class TileGrid(Observer):
 
         self.load_static()
         self.generate_tiles()
+
+        EventAggregator.register(self.handle_mining_event, MiningEvent)
 
     def load_static(self):
         self.tile_mapping = TileMapping(settings.ART_DIR)
@@ -217,18 +218,17 @@ class TileGrid(Observer):
         self.__dict__.update(state)
         self.load_static()
 
-    def notify(self, observable, event, *args, **kwargs):
-        if isinstance(event, MiningEvent):
-            event.resource.durability -= event.mining_power
-            if event.resource.durability < 0:
-                drops = event.resource.drops()
+    def handle_mining_event(self, event, caller):
+        event.resource.durability -= event.mining_power
+        if event.resource.durability < 0:
+            drops = event.resource.drops()
 
-                if event.inventory is not None:
-                    event.inventory.add_items(drops)
-                    for drop in drops:
-                        print(f'{observable} picked up {drop}')
+            if event.inventory is not None:
+                event.inventory.add_items(drops)
+                for drop in drops:
+                    print(f'{caller} picked up {drop}')
 
-                self.replace_tile(event.resource.pos, event.resource.reveals())
+            self.replace_tile(event.resource.pos, event.resource.reveals())
 
 
 class TileMapping:
